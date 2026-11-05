@@ -82,6 +82,19 @@ python3 scripts/build_knowledge_fixture.py   # 重新生成前端冒烟测试用
 node scripts/check_knowledge_page.mjs        # 前端渲染冒烟测试（零依赖，无需浏览器）
 ```
 
+## 合成评测样本
+
+`data/profiles/synthetic_60.json` 是 60 家合成评测样本（AP1—AP4 各 10 家、
+正常对照 20 家），全部标 `synthetic`，真实企业 0 家。每条带"按构造应当命中什么"
+与"引擎实测命中什么"两份记录，供评测指标直接使用。
+
+```bash
+python3 scripts/generate_synthetic_profiles.py          # 生成（固定种子，可复算）
+python3 scripts/generate_synthetic_profiles.py --check   # 幂等自检
+```
+
+样本设计见 `docs/synthetic_samples.md`。
+
 ## 推理层复算与一致性
 
 ```bash

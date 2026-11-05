@@ -68,13 +68,14 @@
 | 推送纪律 | 已有 | 手册第 0 节第 8 条 + 第 7 节第 7 条：每完成一项任务即提交并推送，`scripts/check_push_state.py` 自查 |
 | 知识库页面 | 已有 | 站点底部「知识库」区块：四库统计 + 分类口径 + 检索 + 原文链接 |
 | 知识库检索接口 | 已有 | `/api/knowledge/policy\|cases\|papers\|patents`，检索逻辑见 `src/advisor/knowledge/search.py` |
+| 合成评测样本 | 已有 | 60 家（AP1—AP4 各 10 家 + 对照 20 家），`data/profiles/synthetic_60.json`，真实层 0 家 |
 
 ### 已知问题 / 待补齐
 
 | 问题 | 影响 | 状态 |
 |---|---|---|
 | 后端不可用 | 用户不能实时填写企业情况并得到结果 | 已解决：`/api/evaluate` 已接入推理层，实时出四段式结果 |
-| 只有 6 个样本 | 不满足 60 家合成样本 + 1 家真实企业 | 未解决：T037—T038 |
+| 只有 6 个样本 | 不满足 60 家合成样本 + 1 家真实企业 | 部分解决：60 家合成样本已入库（T037），真实企业仍缺（T038，需人工手填） |
 | 场景等级校验偏宽 | 表单只强制校验 15 个采集项，16 个场景等级不是必填 | 已解决：T010 |
 | 场景等级提示 bug | 场景已有等级，但仍显示“尚未选择等级” | 已解决：T009 |
 | 排序公式不完整 | 当前主要用 ROI 下界，未显式加入“等级跃迁分” | 已解决：T028，排序行输出 `level_gain` 与 `priority` |
@@ -212,7 +213,7 @@ GET  /api/evaluation/report
 | T034 | 知识库 | 论文库检索入口 | 无 | `papers/` | 有分类口径和样例数据 | 已完成 | Codex | 论文库 11 篇文献 + 3 条检索入口入库，文献与检索入口分开计数。 |
 | T035 | 知识库 | 专利库检索入口 | 无 | `patents/` | 有分类口径和样例数据 | 进行中 | Codex | 专利库 5 个官方大类口径与场景映射已入库；逐件检索入口与小类数量待补（CNIPA 无公开 API）。 |
 | T036 | 知识库 | 四库统计页 | T031—T035 | `/knowledge/stats` | 数量、来源、用途可视化 | 已完成 | Codex | 统计接口与前端页面均已上线，CI 用前端冒烟测试（`node scripts/check_knowledge_page.mjs`）守着渲染路径。 |
-| T037 | 评测 | 60 家合成样本 | T004—T030 | `profiles/` | AP1—AP4 各 10 家，正常对照 20 家 | 未开始 |  |  |
+| T037 | 评测 | 60 家合成样本 | T004—T030 | `profiles/` | AP1—AP4 各 10 家，正常对照 20 家 | 已完成 | Codex | 已生成 60 家（AP1—AP4 各 10 家 + 正常对照 20 家），全部标 synthetic；构造意图与引擎实测逐家一致，等级落在预期区间；真实企业 0 家。 |
 | T038 | 评测 | 1 家真实企业 | T008 | `profiles/` | 真实层单列报告 | 未开始 |  |  |
 | T039 | 评测 | 4 组对照 | T037 | 评测结果 | 纯 RAG / 纯规则 / RAG+计算器 / 完整闭环 | 未开始 |  |  |
 | T040 | 评测 | 4 组消融 | T037 | 评测结果 | 去归因 / 去约束场景 / 去反模式 / 去判据锚定 | 未开始 |  |  |
@@ -697,6 +698,65 @@ GET  /api/evaluation/report
 - 知识库检索口径见 `docs/backend_api.md`；若要改排序或加相关性，必须在手册里登记口径变更。
 - 收工三步：`python3 -m unittest discover -s tests` → `node scripts/check_knowledge_page.mjs` →
   `python3 scripts/check_push_state.py`（未推送提交数必须为 0）。
+
+
+---
+
+## MODEL-010 · Codex · 2026-11-05
+
+### 参与范围
+- 任务 ID：T037（另补一处合成层标注缺口）
+- 模块：评测样本集
+
+### 实际完成
+- 新增 `scripts/generate_synthetic_profiles.py`：按判据规则构造 60 家合成样本
+  （AP1—AP4 各 10 家、正常对照 20 家），固定随机种子、可复算，写盘前用引擎逐家复核：
+  命中的反模式必须与构造意图完全一致、等级必须落在该 archetype 的预期区间，
+  任何一条不一致直接报错不落盘。
+- 新增 `data/profiles/synthetic_60.json`（140 KB）：每条带
+  `expected`（按构造应当命中的反模式、诊断类型、仍在一级场景对应的改造项）
+  与 `actual`（引擎实测得分、等级、命中），供 T041—T046 的指标直接使用。
+- 新增 `tests/test_synthetic_profiles.py`（8 个用例）：数量与构成、全部标 synthetic、
+  真实层为空、答案完整且选项合法、构造意图与引擎实测一致、评测可复算、
+  ground truth 改造项必须对应一级场景、生成器幂等。
+- 补齐合成层标注缺口：`precomputed/` 的 6 个样例与 `fixtures.json` 的 provenance
+  原本写"未标注"，现统一改为"合成样本（synthetic）：用于演示与回归测试，非真实企业数据"。
+- 新增 `docs/synthetic_samples.md`：样本构成、构造规则、字段口径与已知边界。
+
+### 验证方式
+- `python3 scripts/generate_synthetic_profiles.py` → 60 家；
+  AP1 43.5—49.9 规范级命中 AP1、AP2 54.2—60.6 初始级命中 AP2、
+  AP3 50.6—57.0 规范级命中 AP3、AP4 22.6—26.1 初始级命中 AP4、
+  对照 48.5—53.4 规范级无命中
+- `python3 scripts/generate_synthetic_profiles.py --check` → 幂等自检通过
+- `python3 -m unittest discover -s tests -v` → 85 个用例全部通过
+- `python3 scripts/compare_precomputed.py` → 判据层仍 6 样例 100% 一致（provenance 是元数据，不影响算分）
+
+### 更新的任务状态
+- T037：未开始 → 已完成
+- 当前状态快照：已知问题表"只有 6 个样本"改为部分解决；补 1 行已完成能力
+
+### 变更记录
+- 新增：`scripts/generate_synthetic_profiles.py`、`data/profiles/synthetic_60.json`、
+  `tests/test_synthetic_profiles.py`、`docs/synthetic_samples.md`
+- 修改：`precomputed/*.json`（仅 provenance 元数据）、`README.md`、`docs/model_handoff.md`
+- **未改动** 判据层、推理层逻辑、知识库数据文件
+
+### 遗留问题
+- T038 的 1 家真实企业样本仍未做，需要人工提供手填画像与公开评测结论。
+- 样本不覆盖 S02/S04/S05/S12—S15 这 7 个场景（路径表无对应改造项），
+  这 7 个场景的改造建议暂时无法用样本验证。
+- 合成样本只能证明规则实现没有系统性偏差，不能证明业务结论正确；
+  ROI 测算偏差（T045）要等真实企业样本。
+- T039—T048（4 组对照、4 组消融、六项指标、评测报告）仍未开始，
+  但本次已把 T041—T046 需要的 ground truth 备齐。
+
+### 给下一个模型的交接提示
+- 下一步做 **T039/T040 对照与消融**，再接 T041—T046 指标与 T047/T048 报告。
+  对照消融要复用 `data/profiles/synthetic_60.json`，不要另造一套样本。
+- 指标脚本请放 `scripts/`，报告放 `data/evaluation/`；真实层与合成层必须分列报告。
+- 收工三步：`python3 -m unittest discover -s tests` →
+  `python3 scripts/compare_precomputed.py` → `python3 scripts/check_push_state.py`。
 
 ---
 
