@@ -549,6 +549,10 @@ GET  /api/evaluation/report
 - `node --check app.js`
 - `python3 -c "from fastapi.testclient import TestClient; ..."` → `/api/evaluate`、`/api/knowledge/stats`、
   静态首页均返回 200，四段式字段齐全
+- **本轮未能做浏览器实机验证**：执行环境的回环 HTTP 被网络策略拦截（curl 与应用内浏览器均
+  连不上 127.0.0.1），改用 FastAPI TestClient 覆盖同一套 ASGI 路由，并用契约测试
+  固定前端渲染器读到的全部字段。下一步模型请在能联网的本机起一次
+  `python3 api/main.py`，肉眼确认四段式渲染。
 
 ### 更新的任务状态
 - T019、T023—T030、T031—T034、T050、T055、T056：未开始 → 已完成
