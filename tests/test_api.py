@@ -71,6 +71,98 @@ class ApiTests(unittest.TestCase):
         self.assertTrue(data["policy_notes"])
         self.assertEqual(data["do_not"][0]["pattern_id"], "AP1")
 
+    def test_evaluate_response_matches_frontend_contract(self):
+        """前端渲染器（app.js）读到的每个字段都必须存在。"""
+        payload = json.loads(
+            (ROOT / "precomputed/ap1_只买设备不联网.json").read_text(encoding="utf-8")
+        )
+        data = self.client.post("/api/evaluate", json=payload["profile"]).json()
+
+        for key in (
+            "profile",
+            "evaluation",
+            "level_judgement",
+            "item_results",
+            "scenario_results",
+            "diagnosis",
+            "pathway",
+            "ranking",
+            "do_not",
+            "scenario_evidence",
+            "policy_notes",
+            "policy_notes_status",
+            "roi_assumptions",
+            "meta",
+        ):
+            self.assertIn(key, data)
+
+        for key in ("total_score", "level_name", "rule_gaps", "scenario_levels_source"):
+            self.assertIn(key, data["evaluation"])
+
+        for row in data["level_judgement"]:
+            for key in ("level", "name", "satisfied", "note"):
+                self.assertIn(key, row)
+
+        for entry in data["diagnosis"]:
+            for key in (
+                "bottleneck",
+                "bottleneck_type",
+                "evidence",
+                "hit_items",
+                "hit_scenarios",
+                "max_score_gain",
+                "basis_kind",
+                "evidence_refs",
+            ):
+                self.assertIn(key, entry)
+
+        for step in data["pathway"]:
+            for key in (
+                "step",
+                "action",
+                "target_scenario",
+                "target_items",
+                "cost_range",
+                "depends_on",
+                "expected",
+                "acceptance",
+                "evidence_refs",
+            ):
+                self.assertIn(key, step)
+            self.assertEqual(len(step["cost_range"]), 2)
+            for metric in step["expected"]:
+                for key in ("indicator", "metric", "expect"):
+                    self.assertIn(key, metric)
+
+        for row in data["ranking"]:
+            for key in (
+                "rank",
+                "name",
+                "target_scenario",
+                "cost_range",
+                "benefit_range",
+                "roi_low",
+                "roi_high",
+                "blocked_by",
+                "evidence_refs",
+            ):
+                self.assertIn(key, row)
+
+        for item in data["do_not"]:
+            for key in ("pattern_id", "name", "basis", "evidence", "basis_kind", "evidence_refs"):
+                self.assertIn(key, item)
+
+        for row in data["scenario_results"]:
+            for key in ("id", "name", "level", "judgment", "level_desc", "next_level"):
+                self.assertIn(key, row)
+            self.assertIn("quote", row["judgment"])
+
+        for key in ("formula", "conservatism", "elasticity", "benefit_bases", "scale_factor"):
+            self.assertIn(key, data["roi_assumptions"])
+
+        for key in ("mode", "criteria_source", "scenario_source", "document", "generated_at"):
+            self.assertIn(key, data["meta"])
+
     def test_knowledge_stats(self):
         response = self.client.get("/api/knowledge/stats")
         self.assertEqual(response.status_code, 200)
