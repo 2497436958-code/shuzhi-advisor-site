@@ -95,6 +95,30 @@ python3 scripts/generate_synthetic_profiles.py --check   # 幂等自检
 
 样本设计见 `docs/synthetic_samples.md`。
 
+## 评测报告
+
+```bash
+python3 scripts/build_evaluation_report.py    # 跑 8 个组、算 6 项指标、出报告
+```
+
+输出 `data/evaluation/report.md`（人读）与 `data/evaluation/report.json`（接口用，
+`GET /api/evaluation/report`）。报告覆盖**合成层 60 家**，真实层 0 家并如实标注。
+
+当前结论（合成层）：
+
+| 指标 | 实测 | 门槛 | 结论 |
+|---|---|---|---|
+| T041 诊断准确率 F1 | 100.0% | ≥80% | 达标 |
+| T042 归因路径命中率 | 83.7% | ≥70% | 达标 |
+| T043 排序一致性 Top-3 | 67.8% | ≥70% | **未达标**（已定位原因，见报告） |
+| T044 反模式检出率 / 误报率 | 100.0% / 0.0% | ≥85% / ≤15% | 达标 |
+| T045 ROI 测算偏差 | — | ≤20% | 不可测（需真实企业样本） |
+| T046 跨行业泛化衰减 | 0.0% | ≤10pp | 达标 |
+
+四组对照（纯 RAG / 纯规则 / RAG+计算器 / 完整闭环）与四组消融（去归因 /
+去约束场景 / 去反模式 / 去判据锚定）都在报告里，各自关掉了什么写在
+`src/advisor/evaluation/variants.py` 的文档字符串里。
+
 ## 推理层复算与一致性
 
 ```bash

@@ -112,7 +112,18 @@ def constraint_count_by_level(
     return counts
 
 
-def evaluate_profile(profile: dict[str, Any], criteria: dict[str, Any]) -> dict[str, Any]:
+def evaluate_profile(
+    profile: dict[str, Any],
+    criteria: dict[str, Any],
+    levels: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """按官方判据算分定级。
+
+    ``levels`` 默认用 ``thresholds.LEVELS``（与官方附件（二）一致）。
+    评测消融需要换门槛时才传别的表，口径相同只是去掉某一条要求，
+    平时不要传。
+    """
+    thresholds = levels if levels is not None else LEVELS
     answers = profile.get("answers", {})
     item_results: list[dict[str, Any]] = []
     dimension_points: dict[str, float] = {}
@@ -164,7 +175,7 @@ def evaluate_profile(profile: dict[str, Any], criteria: dict[str, Any]) -> dict[
 
     highest_level = None
     unmet: list[str] = []
-    for threshold in LEVELS:
+    for threshold in thresholds:
         level = threshold["level"]
         reasons: list[str] = []
         if total_score < threshold["min_score"]:

@@ -17,6 +17,7 @@
    1
   ],
   "control": [
+   1,
    2
   ]
  },
@@ -4661,6 +4662,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -4767,6 +4769,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -4873,6 +4876,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -4979,6 +4983,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -5085,6 +5090,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -5191,6 +5197,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -5297,6 +5304,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -5403,6 +5411,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -5509,6 +5518,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -5615,6 +5625,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -5721,6 +5732,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -5827,6 +5839,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -5933,6 +5946,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -6039,6 +6053,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -6145,6 +6160,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -6251,6 +6267,7 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "常规二级",
     "action_ids": [
      "P-NET",
      "P-SEC",
@@ -6357,11 +6374,16 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "约束性场景不足",
     "action_ids": [
+     "P-MKT",
+     "P-MES",
+     "P-PLAN",
+     "P-QC",
      "P-NET",
      "P-SEC",
      "P-ENERGY",
-     "P-PLAN"
+     "P-ANA"
     ]
    },
    "profile": {
@@ -6423,20 +6445,20 @@
     "scenario_levels": {
      "S01": 2,
      "S02": 2,
-     "S03": 2,
+     "S03": 1,
      "S04": 2,
      "S05": 2,
-     "S06": 2,
-     "S07": 2,
+     "S06": 1,
+     "S07": 1,
      "S08": 1,
      "S09": 1,
      "S10": 1,
      "S11": 1,
      "S12": 1,
-     "S13": 2,
+     "S13": 1,
      "S14": 2,
      "S15": 2,
-     "S16": 2
+     "S16": 1
     },
     "revenue_wan": 6350,
     "digital_spend_wan": 115,
@@ -6447,8 +6469,8 @@
    },
    "actual": {
     "total_score": 49.98,
-    "level": 2,
-    "level_name": "规范级",
+    "level": 1,
+    "level_name": "初始级",
     "antipatterns": []
    }
   },
@@ -6463,11 +6485,16 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "约束性场景不足",
     "action_ids": [
+     "P-MKT",
+     "P-MES",
+     "P-PLAN",
+     "P-QC",
      "P-NET",
      "P-SEC",
      "P-ENERGY",
-     "P-PLAN"
+     "P-ANA"
     ]
    },
    "profile": {
@@ -6529,20 +6556,20 @@
     "scenario_levels": {
      "S01": 2,
      "S02": 2,
-     "S03": 2,
+     "S03": 1,
      "S04": 2,
      "S05": 2,
-     "S06": 2,
-     "S07": 2,
+     "S06": 1,
+     "S07": 1,
      "S08": 1,
      "S09": 1,
      "S10": 1,
      "S11": 1,
      "S12": 1,
-     "S13": 2,
+     "S13": 1,
      "S14": 2,
      "S15": 2,
-     "S16": 2
+     "S16": 1
     },
     "revenue_wan": 12050,
     "digital_spend_wan": 270,
@@ -6553,8 +6580,8 @@
    },
    "actual": {
     "total_score": 48.48,
-    "level": 2,
-    "level_name": "规范级",
+    "level": 1,
+    "level_name": "初始级",
     "antipatterns": []
    }
   },
@@ -6569,11 +6596,16 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "约束性场景不足",
     "action_ids": [
+     "P-MKT",
+     "P-MES",
+     "P-PLAN",
+     "P-QC",
      "P-NET",
      "P-SEC",
      "P-ENERGY",
-     "P-PLAN"
+     "P-ANA"
     ]
    },
    "profile": {
@@ -6635,20 +6667,20 @@
     "scenario_levels": {
      "S01": 2,
      "S02": 2,
-     "S03": 2,
+     "S03": 1,
      "S04": 2,
      "S05": 2,
-     "S06": 2,
-     "S07": 2,
+     "S06": 1,
+     "S07": 1,
      "S08": 1,
      "S09": 1,
      "S10": 1,
      "S11": 1,
      "S12": 1,
-     "S13": 2,
+     "S13": 1,
      "S14": 2,
      "S15": 2,
-     "S16": 2
+     "S16": 1
     },
     "revenue_wan": 1900,
     "digital_spend_wan": 60,
@@ -6659,8 +6691,8 @@
    },
    "actual": {
     "total_score": 49.98,
-    "level": 2,
-    "level_name": "规范级",
+    "level": 1,
+    "level_name": "初始级",
     "antipatterns": []
    }
   },
@@ -6675,11 +6707,16 @@
     "antipatterns": [],
     "diagnosis_types": [],
     "bottleneck_scenarios": [],
+    "variant": "约束性场景不足",
     "action_ids": [
+     "P-MKT",
+     "P-MES",
+     "P-PLAN",
+     "P-QC",
      "P-NET",
      "P-SEC",
      "P-ENERGY",
-     "P-PLAN"
+     "P-ANA"
     ]
    },
    "profile": {
@@ -6741,20 +6778,20 @@
     "scenario_levels": {
      "S01": 2,
      "S02": 2,
-     "S03": 2,
+     "S03": 1,
      "S04": 2,
      "S05": 2,
-     "S06": 2,
-     "S07": 2,
+     "S06": 1,
+     "S07": 1,
      "S08": 1,
      "S09": 1,
      "S10": 1,
      "S11": 1,
      "S12": 1,
-     "S13": 2,
+     "S13": 1,
      "S14": 2,
      "S15": 2,
-     "S16": 2
+     "S16": 1
     },
     "revenue_wan": 5800,
     "digital_spend_wan": 110,
@@ -6765,8 +6802,8 @@
    },
    "actual": {
     "total_score": 48.48,
-    "level": 2,
-    "level_name": "规范级",
+    "level": 1,
+    "level_name": "初始级",
     "antipatterns": []
    }
   }

@@ -1,0 +1,1364 @@
+{
+ "schema_version": "1.0",
+ "generated_at": "2026-11-05T10:17:00+00:00",
+ "layers": {
+  "synthetic": {
+   "count": 60,
+   "source": "data/profiles/synthetic_60.json",
+   "composition": {
+    "total": 60,
+    "AP1": 10,
+    "AP2": 10,
+    "AP3": 10,
+    "AP4": 10,
+    "control": 20
+   },
+   "note": "全部为合成样本（真实层 0 家）"
+  },
+  "real": {
+   "count": 0,
+   "source": null,
+   "note": "真实企业样本未提供（T038），本报告不含真实层结论"
+  }
+ },
+ "systems": {
+  "control_rag": {
+   "label": "纯 RAG（只检索）",
+   "kind": "control",
+   "capabilities": {
+    "scoring": false,
+    "knowledge": true,
+    "diagnosis": false,
+    "pathway": false,
+    "ranking": false,
+    "antipattern": false,
+    "constraint": false,
+    "anchor": false
+   },
+   "metrics": {
+    "T041_diagnosis_f1": {
+     "micro_f1": 0.0,
+     "macro_f1": 0.0,
+     "bottleneck_micro_f1": 0.0,
+     "tp": 0,
+     "fp": 0,
+     "fn": 200
+    },
+    "T042_path_hit_rate": {
+     "hit_rate": 0.0,
+     "mean_sample_rate": 0.0,
+     "covered_samples": 60,
+     "expected_actions": 356,
+     "hit_actions": 0
+    },
+    "T043_ranking_top3": {
+     "top3_overlap": 0.0,
+     "samples": 60,
+     "by_archetype": {
+      "AP1": 0.0,
+      "AP2": 0.0,
+      "AP3": 0.0,
+      "AP4": 0.0,
+      "control": 0.0
+     },
+     "by_expected_action_count": {
+      "4": {
+       "samples": 26,
+       "overlap": 0.0
+      },
+      "5": {
+       "samples": 10,
+       "overlap": 0.0
+      },
+      "8": {
+       "samples": 14,
+       "overlap": 0.0
+      },
+      "9": {
+       "samples": 10,
+       "overlap": 0.0
+      }
+     }
+    },
+    "T044_antipattern": {
+     "detection_rate": 0.0,
+     "false_positive_rate": 0.0,
+     "tp": 0,
+     "fn": 40,
+     "fp": 0,
+     "predicted_positive": 0
+    },
+    "T045_roi_deviation": {
+     "implementation_max_gap": 0.0,
+     "elasticity_switch_median_gap": 0.0,
+     "elasticity_switch_max_gap": 0.0,
+     "elasticity_switch_samples": 0,
+     "elasticity_switch_examples": [],
+     "true_deviation": null,
+     "true_deviation_note": "合成样本没有真值，真实 ROI 偏差需 T038 真实企业样本"
+    },
+    "T046_generalization": {
+     "overall_bottleneck_f1": 0.0,
+     "worst_industry": "五金制品",
+     "worst_industry_f1": 0.0,
+     "degradation": 0.0,
+     "by_industry": {
+      "五金制品": {
+       "samples": 6,
+       "micro_f1": 0.0,
+       "bottleneck_micro_f1": 0.0
+      },
+      "化工": {
+       "samples": 6,
+       "micro_f1": 0.0,
+       "bottleneck_micro_f1": 0.0
+      },
+      "医疗器械": {
+       "samples": 6,
+       "micro_f1": 0.0,
+       "bottleneck_micro_f1": 0.0
+      },
+      "原材料": {
+       "samples": 6,
+       "micro_f1": 0.0,
+       "bottleneck_micro_f1": 0.0
+      },
+      "机械加工": {
+       "samples": 6,
+       "micro_f1": 0.0,
+       "bottleneck_micro_f1": 0.0
+      },
+      "汽车零部件": {
+       "samples": 6,
+       "micro_f1": 0.0,
+       "bottleneck_micro_f1": 0.0
+      },
+      "电子电器": {
+       "samples": 6,
+       "micro_f1": 0.0,
+       "bottleneck_micro_f1": 0.0
+      },
+      "纺织": {
+       "samples": 6,
+       "micro_f1": 0.0,
+       "bottleneck_micro_f1": 0.0
+      },
+      "装备制造": {
+       "samples": 6,
+       "micro_f1": 0.0,
+       "bottleneck_micro_f1": 0.0
+      },
+      "食品": {
+       "samples": 6,
+       "micro_f1": 0.0,
+       "bottleneck_micro_f1": 0.0
+      }
+     }
+    },
+    "level_agreement": {
+     "agreement": 0.0,
+     "samples": 60
+    },
+    "evidence_quality": {
+     "evidence_complete_rate": 0.0,
+     "hit_item_precision": 0.0,
+     "conclusions": 0
+    },
+    "ranking_stability": {
+     "flip_rate": 0.0,
+     "samples": 0,
+     "trials": 20,
+     "note": "每个改造项的成本与收益各自独立抖动 ±20%（20 轮，系数由 crc32 推出），Top-3 换人比例"
+    }
+   }
+  },
+  "control_rules": {
+   "label": "纯规则（只用判据层）",
+   "kind": "control",
+   "capabilities": {
+    "scoring": true,
+    "knowledge": false,
+    "diagnosis": true,
+    "pathway": false,
+    "ranking": false,
+    "antipattern": true,
+    "constraint": true,
+    "anchor": true
+   },
+   "metrics": {
+    "T041_diagnosis_f1": {
+     "micro_f1": 1.0,
+     "macro_f1": 1.0,
+     "bottleneck_micro_f1": 1.0,
+     "tp": 200,
+     "fp": 0,
+     "fn": 0
+    },
+    "T042_path_hit_rate": {
+     "hit_rate": 0.0,
+     "mean_sample_rate": 0.0,
+     "covered_samples": 60,
+     "expected_actions": 356,
+     "hit_actions": 0
+    },
+    "T043_ranking_top3": {
+     "top3_overlap": 0.0,
+     "samples": 60,
+     "by_archetype": {
+      "AP1": 0.0,
+      "AP2": 0.0,
+      "AP3": 0.0,
+      "AP4": 0.0,
+      "control": 0.0
+     },
+     "by_expected_action_count": {
+      "4": {
+       "samples": 26,
+       "overlap": 0.0
+      },
+      "5": {
+       "samples": 10,
+       "overlap": 0.0
+      },
+      "8": {
+       "samples": 14,
+       "overlap": 0.0
+      },
+      "9": {
+       "samples": 10,
+       "overlap": 0.0
+      }
+     }
+    },
+    "T044_antipattern": {
+     "detection_rate": 1.0,
+     "false_positive_rate": 0.0,
+     "tp": 40,
+     "fn": 0,
+     "fp": 0,
+     "predicted_positive": 40
+    },
+    "T045_roi_deviation": {
+     "implementation_max_gap": 0.0,
+     "elasticity_switch_median_gap": 0.0,
+     "elasticity_switch_max_gap": 0.0,
+     "elasticity_switch_samples": 0,
+     "elasticity_switch_examples": [],
+     "true_deviation": null,
+     "true_deviation_note": "合成样本没有真值，真实 ROI 偏差需 T038 真实企业样本"
+    },
+    "T046_generalization": {
+     "overall_bottleneck_f1": 1.0,
+     "worst_industry": "五金制品",
+     "worst_industry_f1": 1.0,
+     "degradation": 0.0,
+     "by_industry": {
+      "五金制品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "化工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "医疗器械": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "原材料": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "机械加工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "汽车零部件": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "电子电器": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "纺织": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "装备制造": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "食品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      }
+     }
+    },
+    "level_agreement": {
+     "agreement": 1.0,
+     "samples": 60
+    },
+    "evidence_quality": {
+     "evidence_complete_rate": 1.0,
+     "hit_item_precision": 0.7775,
+     "conclusions": 200
+    },
+    "ranking_stability": {
+     "flip_rate": 0.0,
+     "samples": 0,
+     "trials": 20,
+     "note": "每个改造项的成本与收益各自独立抖动 ±20%（20 轮，系数由 crc32 推出），Top-3 换人比例"
+    }
+   }
+  },
+  "control_rag_calculator": {
+   "label": "RAG + 计算器",
+   "kind": "control",
+   "capabilities": {
+    "scoring": true,
+    "knowledge": true,
+    "diagnosis": true,
+    "pathway": false,
+    "ranking": false,
+    "antipattern": true,
+    "constraint": true,
+    "anchor": true
+   },
+   "metrics": {
+    "T041_diagnosis_f1": {
+     "micro_f1": 1.0,
+     "macro_f1": 1.0,
+     "bottleneck_micro_f1": 1.0,
+     "tp": 200,
+     "fp": 0,
+     "fn": 0
+    },
+    "T042_path_hit_rate": {
+     "hit_rate": 0.0,
+     "mean_sample_rate": 0.0,
+     "covered_samples": 60,
+     "expected_actions": 356,
+     "hit_actions": 0
+    },
+    "T043_ranking_top3": {
+     "top3_overlap": 0.0,
+     "samples": 60,
+     "by_archetype": {
+      "AP1": 0.0,
+      "AP2": 0.0,
+      "AP3": 0.0,
+      "AP4": 0.0,
+      "control": 0.0
+     },
+     "by_expected_action_count": {
+      "4": {
+       "samples": 26,
+       "overlap": 0.0
+      },
+      "5": {
+       "samples": 10,
+       "overlap": 0.0
+      },
+      "8": {
+       "samples": 14,
+       "overlap": 0.0
+      },
+      "9": {
+       "samples": 10,
+       "overlap": 0.0
+      }
+     }
+    },
+    "T044_antipattern": {
+     "detection_rate": 1.0,
+     "false_positive_rate": 0.0,
+     "tp": 40,
+     "fn": 0,
+     "fp": 0,
+     "predicted_positive": 40
+    },
+    "T045_roi_deviation": {
+     "implementation_max_gap": 0.0,
+     "elasticity_switch_median_gap": 0.0,
+     "elasticity_switch_max_gap": 0.0,
+     "elasticity_switch_samples": 0,
+     "elasticity_switch_examples": [],
+     "true_deviation": null,
+     "true_deviation_note": "合成样本没有真值，真实 ROI 偏差需 T038 真实企业样本"
+    },
+    "T046_generalization": {
+     "overall_bottleneck_f1": 1.0,
+     "worst_industry": "五金制品",
+     "worst_industry_f1": 1.0,
+     "degradation": 0.0,
+     "by_industry": {
+      "五金制品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "化工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "医疗器械": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "原材料": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "机械加工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "汽车零部件": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "电子电器": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "纺织": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "装备制造": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "食品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      }
+     }
+    },
+    "level_agreement": {
+     "agreement": 1.0,
+     "samples": 60
+    },
+    "evidence_quality": {
+     "evidence_complete_rate": 1.0,
+     "hit_item_precision": 0.7775,
+     "conclusions": 200
+    },
+    "ranking_stability": {
+     "flip_rate": 0.0,
+     "samples": 0,
+     "trials": 20,
+     "note": "每个改造项的成本与收益各自独立抖动 ±20%（20 轮，系数由 crc32 推出），Top-3 换人比例"
+    }
+   }
+  },
+  "control_full": {
+   "label": "完整闭环",
+   "kind": "control",
+   "capabilities": {
+    "scoring": true,
+    "knowledge": true,
+    "diagnosis": true,
+    "pathway": true,
+    "ranking": true,
+    "antipattern": true,
+    "constraint": true,
+    "anchor": true
+   },
+   "metrics": {
+    "T041_diagnosis_f1": {
+     "micro_f1": 1.0,
+     "macro_f1": 1.0,
+     "bottleneck_micro_f1": 1.0,
+     "tp": 200,
+     "fp": 0,
+     "fn": 0
+    },
+    "T042_path_hit_rate": {
+     "hit_rate": 0.8371,
+     "mean_sample_rate": 0.8861,
+     "covered_samples": 60,
+     "expected_actions": 356,
+     "hit_actions": 298
+    },
+    "T043_ranking_top3": {
+     "top3_overlap": 0.6778,
+     "samples": 60,
+     "by_archetype": {
+      "AP1": 1.0,
+      "AP2": 0.3333,
+      "AP3": 0.6667,
+      "AP4": 0.3333,
+      "control": 0.8667
+     },
+     "by_expected_action_count": {
+      "4": {
+       "samples": 26,
+       "overlap": 1.0
+      },
+      "5": {
+       "samples": 10,
+       "overlap": 0.6667
+      },
+      "8": {
+       "samples": 14,
+       "overlap": 0.3333
+      },
+      "9": {
+       "samples": 10,
+       "overlap": 0.3333
+      }
+     }
+    },
+    "T044_antipattern": {
+     "detection_rate": 1.0,
+     "false_positive_rate": 0.0,
+     "tp": 40,
+     "fn": 0,
+     "fp": 0,
+     "predicted_positive": 40
+    },
+    "T045_roi_deviation": {
+     "implementation_max_gap": 0.000179,
+     "elasticity_switch_median_gap": 10.2566,
+     "elasticity_switch_max_gap": 57.0,
+     "elasticity_switch_samples": 204,
+     "elasticity_switch_examples": [
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      },
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      },
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      }
+     ],
+     "true_deviation": null,
+     "true_deviation_note": "合成样本没有真值，真实 ROI 偏差需 T038 真实企业样本"
+    },
+    "T046_generalization": {
+     "overall_bottleneck_f1": 1.0,
+     "worst_industry": "五金制品",
+     "worst_industry_f1": 1.0,
+     "degradation": 0.0,
+     "by_industry": {
+      "五金制品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "化工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "医疗器械": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "原材料": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "机械加工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "汽车零部件": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "电子电器": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "纺织": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "装备制造": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "食品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      }
+     }
+    },
+    "level_agreement": {
+     "agreement": 1.0,
+     "samples": 60
+    },
+    "evidence_quality": {
+     "evidence_complete_rate": 1.0,
+     "hit_item_precision": 0.7775,
+     "conclusions": 200
+    },
+    "ranking_stability": {
+     "flip_rate": 0.1617,
+     "samples": 60,
+     "trials": 20,
+     "note": "每个改造项的成本与收益各自独立抖动 ±20%（20 轮，系数由 crc32 推出），Top-3 换人比例"
+    }
+   }
+  },
+  "ablation_no_attribution": {
+   "label": "消融·去归因",
+   "kind": "ablation",
+   "capabilities": {
+    "scoring": true,
+    "knowledge": true,
+    "diagnosis": true,
+    "pathway": false,
+    "ranking": false,
+    "antipattern": true,
+    "constraint": true,
+    "anchor": true
+   },
+   "metrics": {
+    "T041_diagnosis_f1": {
+     "micro_f1": 1.0,
+     "macro_f1": 1.0,
+     "bottleneck_micro_f1": 1.0,
+     "tp": 200,
+     "fp": 0,
+     "fn": 0
+    },
+    "T042_path_hit_rate": {
+     "hit_rate": 0.0,
+     "mean_sample_rate": 0.0,
+     "covered_samples": 60,
+     "expected_actions": 356,
+     "hit_actions": 0
+    },
+    "T043_ranking_top3": {
+     "top3_overlap": 0.0,
+     "samples": 60,
+     "by_archetype": {
+      "AP1": 0.0,
+      "AP2": 0.0,
+      "AP3": 0.0,
+      "AP4": 0.0,
+      "control": 0.0
+     },
+     "by_expected_action_count": {
+      "4": {
+       "samples": 26,
+       "overlap": 0.0
+      },
+      "5": {
+       "samples": 10,
+       "overlap": 0.0
+      },
+      "8": {
+       "samples": 14,
+       "overlap": 0.0
+      },
+      "9": {
+       "samples": 10,
+       "overlap": 0.0
+      }
+     }
+    },
+    "T044_antipattern": {
+     "detection_rate": 1.0,
+     "false_positive_rate": 0.0,
+     "tp": 40,
+     "fn": 0,
+     "fp": 0,
+     "predicted_positive": 40
+    },
+    "T045_roi_deviation": {
+     "implementation_max_gap": 0.0,
+     "elasticity_switch_median_gap": 0.0,
+     "elasticity_switch_max_gap": 0.0,
+     "elasticity_switch_samples": 0,
+     "elasticity_switch_examples": [],
+     "true_deviation": null,
+     "true_deviation_note": "合成样本没有真值，真实 ROI 偏差需 T038 真实企业样本"
+    },
+    "T046_generalization": {
+     "overall_bottleneck_f1": 1.0,
+     "worst_industry": "五金制品",
+     "worst_industry_f1": 1.0,
+     "degradation": 0.0,
+     "by_industry": {
+      "五金制品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "化工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "医疗器械": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "原材料": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "机械加工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "汽车零部件": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "电子电器": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "纺织": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "装备制造": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "食品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      }
+     }
+    },
+    "level_agreement": {
+     "agreement": 1.0,
+     "samples": 60
+    },
+    "evidence_quality": {
+     "evidence_complete_rate": 1.0,
+     "hit_item_precision": 0.7775,
+     "conclusions": 200
+    },
+    "ranking_stability": {
+     "flip_rate": 0.0,
+     "samples": 0,
+     "trials": 20,
+     "note": "每个改造项的成本与收益各自独立抖动 ±20%（20 轮，系数由 crc32 推出），Top-3 换人比例"
+    }
+   }
+  },
+  "ablation_no_constraint": {
+   "label": "消融·去约束场景",
+   "kind": "ablation",
+   "capabilities": {
+    "scoring": true,
+    "knowledge": true,
+    "diagnosis": true,
+    "pathway": true,
+    "ranking": true,
+    "antipattern": true,
+    "constraint": false,
+    "anchor": true
+   },
+   "metrics": {
+    "T041_diagnosis_f1": {
+     "micro_f1": 1.0,
+     "macro_f1": 1.0,
+     "bottleneck_micro_f1": 1.0,
+     "tp": 200,
+     "fp": 0,
+     "fn": 0
+    },
+    "T042_path_hit_rate": {
+     "hit_rate": 0.8371,
+     "mean_sample_rate": 0.8861,
+     "covered_samples": 60,
+     "expected_actions": 356,
+     "hit_actions": 298
+    },
+    "T043_ranking_top3": {
+     "top3_overlap": 0.6778,
+     "samples": 60,
+     "by_archetype": {
+      "AP1": 1.0,
+      "AP2": 0.3333,
+      "AP3": 0.6667,
+      "AP4": 0.3333,
+      "control": 0.8667
+     },
+     "by_expected_action_count": {
+      "4": {
+       "samples": 26,
+       "overlap": 1.0
+      },
+      "5": {
+       "samples": 10,
+       "overlap": 0.6667
+      },
+      "8": {
+       "samples": 14,
+       "overlap": 0.3333
+      },
+      "9": {
+       "samples": 10,
+       "overlap": 0.3333
+      }
+     }
+    },
+    "T044_antipattern": {
+     "detection_rate": 1.0,
+     "false_positive_rate": 0.0,
+     "tp": 40,
+     "fn": 0,
+     "fp": 0,
+     "predicted_positive": 40
+    },
+    "T045_roi_deviation": {
+     "implementation_max_gap": 0.000179,
+     "elasticity_switch_median_gap": 10.2566,
+     "elasticity_switch_max_gap": 57.0,
+     "elasticity_switch_samples": 204,
+     "elasticity_switch_examples": [
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      },
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      },
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      }
+     ],
+     "true_deviation": null,
+     "true_deviation_note": "合成样本没有真值，真实 ROI 偏差需 T038 真实企业样本"
+    },
+    "T046_generalization": {
+     "overall_bottleneck_f1": 1.0,
+     "worst_industry": "五金制品",
+     "worst_industry_f1": 1.0,
+     "degradation": 0.0,
+     "by_industry": {
+      "五金制品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "化工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "医疗器械": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "原材料": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "机械加工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "汽车零部件": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "电子电器": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "纺织": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "装备制造": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "食品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      }
+     }
+    },
+    "level_agreement": {
+     "agreement": 0.9333,
+     "samples": 60
+    },
+    "evidence_quality": {
+     "evidence_complete_rate": 1.0,
+     "hit_item_precision": 0.7775,
+     "conclusions": 200
+    },
+    "ranking_stability": {
+     "flip_rate": 0.1617,
+     "samples": 60,
+     "trials": 20,
+     "note": "每个改造项的成本与收益各自独立抖动 ±20%（20 轮，系数由 crc32 推出），Top-3 换人比例"
+    }
+   }
+  },
+  "ablation_no_antipattern": {
+   "label": "消融·去反模式",
+   "kind": "ablation",
+   "capabilities": {
+    "scoring": true,
+    "knowledge": true,
+    "diagnosis": true,
+    "pathway": true,
+    "ranking": true,
+    "antipattern": false,
+    "constraint": true,
+    "anchor": true
+   },
+   "metrics": {
+    "T041_diagnosis_f1": {
+     "micro_f1": 0.8889,
+     "macro_f1": 0.8857,
+     "bottleneck_micro_f1": 0.0,
+     "tp": 160,
+     "fp": 0,
+     "fn": 40
+    },
+    "T042_path_hit_rate": {
+     "hit_rate": 0.8371,
+     "mean_sample_rate": 0.8861,
+     "covered_samples": 60,
+     "expected_actions": 356,
+     "hit_actions": 298
+    },
+    "T043_ranking_top3": {
+     "top3_overlap": 0.6778,
+     "samples": 60,
+     "by_archetype": {
+      "AP1": 1.0,
+      "AP2": 0.3333,
+      "AP3": 0.6667,
+      "AP4": 0.3333,
+      "control": 0.8667
+     },
+     "by_expected_action_count": {
+      "4": {
+       "samples": 26,
+       "overlap": 1.0
+      },
+      "5": {
+       "samples": 10,
+       "overlap": 0.6667
+      },
+      "8": {
+       "samples": 14,
+       "overlap": 0.3333
+      },
+      "9": {
+       "samples": 10,
+       "overlap": 0.3333
+      }
+     }
+    },
+    "T044_antipattern": {
+     "detection_rate": 0.0,
+     "false_positive_rate": 0.0,
+     "tp": 0,
+     "fn": 40,
+     "fp": 0,
+     "predicted_positive": 0
+    },
+    "T045_roi_deviation": {
+     "implementation_max_gap": 0.000179,
+     "elasticity_switch_median_gap": 10.2566,
+     "elasticity_switch_max_gap": 57.0,
+     "elasticity_switch_samples": 204,
+     "elasticity_switch_examples": [
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      },
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      },
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      }
+     ],
+     "true_deviation": null,
+     "true_deviation_note": "合成样本没有真值，真实 ROI 偏差需 T038 真实企业样本"
+    },
+    "T046_generalization": {
+     "overall_bottleneck_f1": 0.0,
+     "worst_industry": "五金制品",
+     "worst_industry_f1": 0.0,
+     "degradation": 0.0,
+     "by_industry": {
+      "五金制品": {
+       "samples": 6,
+       "micro_f1": 0.8889,
+       "bottleneck_micro_f1": 0.0
+      },
+      "化工": {
+       "samples": 6,
+       "micro_f1": 0.8889,
+       "bottleneck_micro_f1": 0.0
+      },
+      "医疗器械": {
+       "samples": 6,
+       "micro_f1": 0.8889,
+       "bottleneck_micro_f1": 0.0
+      },
+      "原材料": {
+       "samples": 6,
+       "micro_f1": 0.8889,
+       "bottleneck_micro_f1": 0.0
+      },
+      "机械加工": {
+       "samples": 6,
+       "micro_f1": 0.8889,
+       "bottleneck_micro_f1": 0.0
+      },
+      "汽车零部件": {
+       "samples": 6,
+       "micro_f1": 0.8889,
+       "bottleneck_micro_f1": 0.0
+      },
+      "电子电器": {
+       "samples": 6,
+       "micro_f1": 0.8889,
+       "bottleneck_micro_f1": 0.0
+      },
+      "纺织": {
+       "samples": 6,
+       "micro_f1": 0.8889,
+       "bottleneck_micro_f1": 0.0
+      },
+      "装备制造": {
+       "samples": 6,
+       "micro_f1": 0.8889,
+       "bottleneck_micro_f1": 0.0
+      },
+      "食品": {
+       "samples": 6,
+       "micro_f1": 0.8889,
+       "bottleneck_micro_f1": 0.0
+      }
+     }
+    },
+    "level_agreement": {
+     "agreement": 1.0,
+     "samples": 60
+    },
+    "evidence_quality": {
+     "evidence_complete_rate": 1.0,
+     "hit_item_precision": 0.86,
+     "conclusions": 160
+    },
+    "ranking_stability": {
+     "flip_rate": 0.1617,
+     "samples": 60,
+     "trials": 20,
+     "note": "每个改造项的成本与收益各自独立抖动 ±20%（20 轮，系数由 crc32 推出），Top-3 换人比例"
+    }
+   }
+  },
+  "ablation_no_anchor": {
+   "label": "消融·去判据锚定",
+   "kind": "ablation",
+   "capabilities": {
+    "scoring": true,
+    "knowledge": true,
+    "diagnosis": true,
+    "pathway": true,
+    "ranking": true,
+    "antipattern": true,
+    "constraint": true,
+    "anchor": false
+   },
+   "metrics": {
+    "T041_diagnosis_f1": {
+     "micro_f1": 1.0,
+     "macro_f1": 1.0,
+     "bottleneck_micro_f1": 1.0,
+     "tp": 200,
+     "fp": 0,
+     "fn": 0
+    },
+    "T042_path_hit_rate": {
+     "hit_rate": 0.8371,
+     "mean_sample_rate": 0.8861,
+     "covered_samples": 60,
+     "expected_actions": 356,
+     "hit_actions": 298
+    },
+    "T043_ranking_top3": {
+     "top3_overlap": 0.6778,
+     "samples": 60,
+     "by_archetype": {
+      "AP1": 1.0,
+      "AP2": 0.3333,
+      "AP3": 0.6667,
+      "AP4": 0.3333,
+      "control": 0.8667
+     },
+     "by_expected_action_count": {
+      "4": {
+       "samples": 26,
+       "overlap": 1.0
+      },
+      "5": {
+       "samples": 10,
+       "overlap": 0.6667
+      },
+      "8": {
+       "samples": 14,
+       "overlap": 0.3333
+      },
+      "9": {
+       "samples": 10,
+       "overlap": 0.3333
+      }
+     }
+    },
+    "T044_antipattern": {
+     "detection_rate": 1.0,
+     "false_positive_rate": 0.0,
+     "tp": 40,
+     "fn": 0,
+     "fp": 0,
+     "predicted_positive": 40
+    },
+    "T045_roi_deviation": {
+     "implementation_max_gap": 0.000179,
+     "elasticity_switch_median_gap": 10.2566,
+     "elasticity_switch_max_gap": 57.0,
+     "elasticity_switch_samples": 204,
+     "elasticity_switch_examples": [
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      },
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      },
+      {
+       "action_id": "P-MES",
+       "engine_roi_low": 0.204,
+       "case_backed_roi_low": 1.1932
+      }
+     ],
+     "true_deviation": null,
+     "true_deviation_note": "合成样本没有真值，真实 ROI 偏差需 T038 真实企业样本"
+    },
+    "T046_generalization": {
+     "overall_bottleneck_f1": 1.0,
+     "worst_industry": "五金制品",
+     "worst_industry_f1": 1.0,
+     "degradation": 0.0,
+     "by_industry": {
+      "五金制品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "化工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "医疗器械": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "原材料": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "机械加工": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "汽车零部件": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "电子电器": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "纺织": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "装备制造": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      },
+      "食品": {
+       "samples": 6,
+       "micro_f1": 1.0,
+       "bottleneck_micro_f1": 1.0
+      }
+     }
+    },
+    "level_agreement": {
+     "agreement": 1.0,
+     "samples": 60
+    },
+    "evidence_quality": {
+     "evidence_complete_rate": 0.0,
+     "hit_item_precision": 0.0,
+     "conclusions": 200
+    },
+    "ranking_stability": {
+     "flip_rate": 0.1617,
+     "samples": 60,
+     "trials": 20,
+     "note": "每个改造项的成本与收益各自独立抖动 ±20%（20 轮，系数由 crc32 推出），Top-3 换人比例"
+    }
+   }
+  }
+ },
+ "thresholds": {
+  "T041_diagnosis_f1": {
+   "metric": "diagnosis_f1",
+   "op": ">=",
+   "value": 0.8
+  },
+  "T042_path_hit_rate": {
+   "metric": "hit_rate",
+   "op": ">=",
+   "value": 0.7
+  },
+  "T043_ranking_top3": {
+   "metric": "top3_overlap",
+   "op": ">=",
+   "value": 0.7
+  },
+  "T044_antipattern_detection": {
+   "metric": "detection_rate",
+   "op": ">=",
+   "value": 0.85
+  },
+  "T044_antipattern_false_positive": {
+   "metric": "false_positive_rate",
+   "op": "<=",
+   "value": 0.15
+  },
+  "T045_roi_deviation": {
+   "metric": "true_deviation",
+   "op": "<=",
+   "value": 0.2
+  },
+  "T046_generalization": {
+   "metric": "degradation",
+   "op": "<=",
+   "value": 0.1
+  }
+ },
+ "verdicts": {
+  "T041_diagnosis_f1": {
+   "value": 1.0,
+   "status": "达标",
+   "threshold": ">= 0.8"
+  },
+  "T042_path_hit_rate": {
+   "value": 0.8371,
+   "status": "达标",
+   "threshold": ">= 0.7"
+  },
+  "T043_ranking_top3": {
+   "value": 0.6778,
+   "status": "未达标",
+   "threshold": ">= 0.7"
+  },
+  "T044_antipattern_detection": {
+   "value": 1.0,
+   "status": "达标",
+   "threshold": ">= 0.85"
+  },
+  "T044_antipattern_false_positive": {
+   "value": 0.0,
+   "status": "达标",
+   "threshold": "<= 0.15"
+  },
+  "T045_roi_deviation": {
+   "value": null,
+   "status": "不可测",
+   "threshold": "<= 0.2"
+  },
+  "T046_generalization": {
+   "value": 0.0,
+   "status": "达标",
+   "threshold": "<= 0.1"
+  }
+ }
+}

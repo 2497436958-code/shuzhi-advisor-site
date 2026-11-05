@@ -163,6 +163,14 @@ class ApiTests(unittest.TestCase):
         for key in ("mode", "criteria_source", "scenario_source", "document", "generated_at"):
             self.assertIn(key, data["meta"])
 
+    def test_evaluation_report(self):
+        response = self.client.get("/api/evaluation/report")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["layers"]["synthetic"]["count"], 60)
+        self.assertEqual(data["layers"]["real"]["count"], 0)
+        self.assertEqual(len(data["systems"]), 8)
+
     def test_knowledge_stats(self):
         response = self.client.get("/api/knowledge/stats")
         self.assertEqual(response.status_code, 200)

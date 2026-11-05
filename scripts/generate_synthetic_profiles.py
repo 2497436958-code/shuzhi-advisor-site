@@ -228,7 +228,13 @@ def build_ap4(rng: random.Random, index: int) -> tuple[dict, dict, dict]:
 
 
 def build_control(rng: random.Random, index: int) -> tuple[dict, dict, dict]:
-    """正常对照：二级规范级企业，不命中任何反模式。"""
+    """正常对照：二级规范级企业，不命中任何反模式。
+
+    其中 4 家做成"场景数够、约束性场景不够"的边界形态：
+    6 个场景达到二级，但达到二级的约束性场景只有 1 个（官方要求不少于 3 个），
+    按官方口径只能判初始级。这一组专门用来检验"约束性场景"这条要求是否真的起作用
+    （消融组"去约束场景"会去��它，判定就会跳到规范级）。
+    """
     answers = solid_answers()
     scenarios = base_scenarios()
     expected = {
@@ -236,6 +242,14 @@ def build_control(rng: random.Random, index: int) -> tuple[dict, dict, dict]:
         "diagnosis_types": [],
         "bottleneck_scenarios": [],
     }
+    if index >= 16:
+        for scenario_id in scenarios:
+            scenarios[scenario_id] = 1
+        for scenario_id in ("S01", "S02", "S04", "S05", "S14", "S15"):
+            scenarios[scenario_id] = 2
+        expected["variant"] = "约束性场景不足"
+    else:
+        expected["variant"] = "常规二级"
     return answers, scenarios, expected
 
 
@@ -253,7 +267,8 @@ EXPECTED_LEVELS = {
     "AP2": [1],
     "AP3": [2],
     "AP4": [1],
-    "control": [2],
+    # 对照组里 16 家常规二级 + 4 家"约束性场景不足"（官方口径判初始级）
+    "control": [1, 2],
 }
 
 

@@ -64,18 +64,25 @@ def benefit_range(
 
 
 def roi_range(
-    action: dict[str, Any], bases: dict[str, float]
+    action: dict[str, Any], bases: dict[str, float], scale: float = 1.0
 ) -> tuple[float, float, float, float]:
-    """ROI 区间。下界用最小收益配最大成本，上界反之。"""
+    """ROI 区间。下界用最小收益配最大成本，上界反之。
+
+    分子分母必须用同一个规模系数：收益基数按营业收入折算，
+    投入区间也按同一系数折算，ROI 才是比值、不随企业规模变化。
+    """
     low, high = benefit_range(action, bases)
-    cost_low, cost_high = action["cost_range"]
+    cost_low, cost_high = (
+        action["cost_range"][0] * scale,
+        action["cost_range"][1] * scale,
+    )
     if cost_high <= 0:
         raise ValueError(f"改造项 {action['action_id']} 的成本区间非法")
     return low, high, low / cost_high, high / cost_low
 
 
 def priority_score(
-    action: dict[str, Any], bases: dict[str, float], gain: float
+    action: dict[str, Any], bases: dict[str, float], gain: float, scale: float = 1.0
 ) -> float:
     """优先级 P = (等级跃迁分 + 关联成效改善) ÷ 投入成本。
 
@@ -83,7 +90,7 @@ def priority_score(
     只用于同一依赖层内的排序，不作为业务结论数。
     """
     low, _ = benefit_range(action, bases)
-    cost_high = action["cost_range"][1]
+    cost_high = action["cost_range"][1] * scale
     return round((gain + low) / cost_high, 4) if cost_high else 0.0
 
 
@@ -104,7 +111,7 @@ def build_ranking(
 
     rows: list[dict[str, Any]] = []
     for action in actions:
-        low, high, roi_low, roi_high = roi_range(action, bases)
+        low, high, roi_low, roi_high = roi_range(action, bases, scale)
         gain = level_gain(action, items)
         scenario_id = action["target_scenario"]
         refs = []
@@ -123,13 +130,16 @@ def build_ranking(
                 "name": action["action_name"],
                 "action_id": action["action_id"],
                 "target_scenario": scenario_id,
-                "cost_range": [round(action["cost_range"][0] * scale, 2), round(action["cost_range"][1] * scale, 2)],
+                "cost_range": [
+                    round(action["cost_range"][0] * scale, 2),
+                    round(action["cost_range"][1] * scale, 2),
+                ],
                 "benefit_range": [round(low, 1), round(high, 1)],
                 "roi_low": round(roi_low, 4),
                 "roi_high": round(roi_high, 4),
                 "blocked_by": list(action.get("blocked_by") or []),
                 "level_gain": gain,
-                "priority": priority_score(action, bases, gain),
+                "priority": priority_score(action, bases, gain, scale),
                 "evidence_refs": ev.ensure_evidence(action["action_name"], refs),
             }
         )

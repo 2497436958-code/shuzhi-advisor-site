@@ -173,6 +173,18 @@ def get_knowledge_patents(q: str = "", limit: int = 50, offset: int = 0) -> dict
     return result
 
 
+@app.get("/api/evaluation/report")
+def get_evaluation_report() -> dict[str, Any]:
+    """评测报告（合成层）。真实层为空时如实返回 count=0。"""
+    path = ROOT / "data" / "evaluation" / "report.json"
+    if not path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail="评测报告尚未生成，请先运行 scripts/build_evaluation_report.py",
+        )
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 @app.get("/api/knowledge/stats")
 def get_knowledge_stats() -> dict[str, Any]:
     """四类知识库的数量与口径。"""
