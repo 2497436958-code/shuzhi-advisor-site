@@ -26,3 +26,20 @@ python3 scripts/recompute_profile.py path/to/profile.json
 ```
 
 详细说明见 `docs/criteria_recompute.md`。
+
+## 开发环境
+
+- Python：3.10 或以上；判据层只依赖标准库。
+- Node.js：仅用于 `node --check app.js` 的前端语法检查。
+- 本地预览：`python3 -m http.server 8081`。
+
+### 常用验证
+
+```bash
+python3 scripts/verify_criteria.py
+python3 -m unittest discover -s tests -v
+node --check app.js
+git diff --check
+```
+
+CI 会在 Python 3.10 / 3.11 / 3.12 下运行判据层校验和单元测试，并检查前端语法。

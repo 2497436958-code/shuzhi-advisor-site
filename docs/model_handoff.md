@@ -167,8 +167,8 @@ GET  /api/evaluation/report
 |---|---|---|---|---|---|---|---|---|
 | T000 | 工程化 | 确认源码仓库、分支、运行方式 | 无 | 可本地启动的仓库 | `git clone` 后可运行，前端可打开 | 已完成 | Codex | 已克隆 `work/shuzhi-advisor-site`；本地 8081 可打开静态站。 |
 | T001 | 工程化 | 建立 Git 分支与提交规范 | T000 | 分支规范说明 | 不允许直接改主干，提交有说明 | 已完成 | Codex | 已创建 `fix/scene-level-hint`；本次只提交该任务相关修改。 |
-| T002 | 工程化 | 建立后端依赖与环境说明 | T000 | `requirements.txt`、README | 新模型可按 README 启动 | 未开始 |  |  |
-| T003 | 工程化 | 建立 CI | T000 | GitHub Actions | push 后自动跑测试 | 未开始 |  |  |
+| T002 | 工程化 | 建立后端依赖与环境说明 | T000 | `requirements.txt`、README | 新模型可按 README 启动 | 已完成 | Codex | 已补充 Python/Node 环境说明；当前判据层只用标准库。 |
+| T003 | 工程化 | 建立 CI | T000 | GitHub Actions | push 后自动跑测试 | 已完成 | Codex | CI 在 Python 3.10/3.11/3.12 跑判据校验、测试和前端语法检查。 |
 | T004 | 判据层 | 固化 15 个采集项 | 无 | `criteria.json` 或 DB | 数量、权重、选项、题型一致 | 已完成 | Codex | `precomputed/criteria.json` 结构校验通过，15 项权重合计 1.0。 |
 | T005 | 判据层 | 固化 16 个应用场景 | T004 | 场景定义文件 | 16 个场景、约束性标记、四级描述完整 | 已完成 | Codex | 16 个场景、约束性标记、四级描述均已通过校验。 |
 | T006 | 判据层 | 实现打分引擎 | T004 | `engine.py` | 单选/多选/官方口径缺口可复算 | 已完成 | Codex | 新增确定性打分器，6 个预计算样本全部复算通过。 |
@@ -417,6 +417,44 @@ GET  /api/evaluation/report
 - 下一步可以先做 T002/T003，把 Python 环境和 CI 固化。
 - 或者继续 T008：请用户提供 1 家真实企业的手填数据。
 - 不要让模型参与算分；所有判据层计算必须走 `advisor.scoring.engine`。
+
+---
+
+## MODEL-005 · Codex · 2026-11-05
+
+### 参与范围
+- 任务 ID：T002、T003
+- 模块：开发环境、CI
+
+### 实际完成
+- 新增 `requirements.txt`，当前只声明判据层无第三方依赖，后端依赖留待接入后固定。
+- 更新 `README.md`，补充 Python 3.10+、Node.js 检查、本地预览和常用验证命令。
+- 新增 `.github/workflows/ci.yml`。
+- CI 覆盖 Python 3.10 / 3.11 / 3.12，并执行判据层校验、单元测试、前端语法检查和空白符检查。
+
+### 验证方式
+- `python3 -m pip install -q -r requirements.txt`
+- `python3 scripts/verify_criteria.py`
+- `python3 -m unittest discover -s tests -v`
+- `node --check app.js`
+- `git diff --check`
+- `ruby -e "require 'yaml'; YAML.load_file('.github/workflows/ci.yml')"`
+- 全部通过。
+
+### 更新的任务状态
+- T002：未开始 → 已完成
+- T003：未开始 → 已完成
+
+### 遗留问题
+- CI 尚未推送到远端，未在 GitHub Actions 实际执行。
+- 后端依赖尚未确定，`requirements.txt` 只保留说明。
+- `/api/evaluate` 还没有接入确定性打分器。
+
+### 给下一个模型的交接提示
+- 从 `fix/scene-level-hint` 分支继续。
+- 下一步建议做 T016—T020：搭建最小后端接口，并把 `/api/evaluate` 接到 `advisor.scoring.engine`。
+- 后端新增依赖时必须同步更新 `requirements.txt`、README 和 CI。
+- 不要让模型参与算分。
 
 ---
 
