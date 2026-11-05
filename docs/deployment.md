@@ -52,7 +52,7 @@ ADVISOR_CORS_ORIGINS="https://2497436958-code.github.io" python3 api/main.py
 
 ### Render
 
-仓库根目录放 `render.yaml`：
+仓库根目录已放好 `render.yaml`（Render 蓝图），可直接用：
 
 ```yaml
 services:
@@ -70,6 +70,8 @@ services:
 
 ### Docker
 
+仓库根目录已放好 `Dockerfile`（本地起镜像时用）：
+
 ```dockerfile
 FROM python:3.12-slim
 WORKDIR /app
@@ -85,6 +87,18 @@ CMD ["uvicorn", "advisor.web.api:app", "--app-dir", "src", "--host", "0.0.0.0", 
 - 健康检查打 `GET /api/health`，返回 `status=ok` 与判据层规模；
 - 跨域来源用环境变量配，别改代码；
 - 后端与静态站版本要对齐（前端契约变了就要同步部署后端）。
+
+## 部署前检查清单
+
+- [ ] `python3 -m unittest discover -s tests` 通过（含 API 契约与静态白名单用例）
+- [ ] `python3 scripts/check_push_state.py` 通过（没有未推送的提交）
+- [ ] 后端镜像能起来：`GET /api/health` 返回 `status=ok`
+- [ ] 前后端同源部署：CORS 留空即可；分开部署：`ADVISOR_CORS_ORIGINS` 只写具体域名
+- [ ] 静态目录白名单生效：`/src/advisor/web/api.py` 与 `/.git/config` 返回 404
+- [ ] **真实企业数据不放进公开环境**（本站 `data/` 目录公开可见）
+
+> 本机没有 Docker daemon，`Dockerfile` 只做了静态校验（起命令、依赖、路径与
+> `render.yaml` 一致），镜像构建需在有 Docker 的环境补一次。
 
 ## 安全注意
 

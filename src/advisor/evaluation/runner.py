@@ -98,8 +98,11 @@ def _metric_value(metrics: dict[str, Any], task: str) -> float | None:
     return None
 
 
-def run_evaluation() -> dict[str, Any]:
-    """跑完 8 个组，产出报告数据。"""
+def run_evaluation(ranking_policy: str = "roi") -> dict[str, Any]:
+    """跑完 8 个组，产出报告数据。
+
+    ``ranking_policy`` 默认 ``roi``（现状口径）；其余取值只用于 T043 的口径对比。
+    """
     dataset = json.loads(SAMPLES_PATH.read_text(encoding="utf-8"))
     samples = dataset["samples"]
     criteria = load_criteria(ROOT / "precomputed" / "criteria.json")
@@ -108,7 +111,9 @@ def run_evaluation() -> dict[str, Any]:
     conclusions_by_system: dict[str, list[dict[str, Any]]] = {}
     for system in CONTROL_SYSTEMS + ABLATION_SYSTEMS:
         conclusions_by_system[system] = [
-            build_conclusion(system, sample["profile"], criteria, knowledge)
+            build_conclusion(
+                system, sample["profile"], criteria, knowledge, ranking_policy=ranking_policy
+            )
             for sample in samples
         ]
 
@@ -130,6 +135,7 @@ def run_evaluation() -> dict[str, Any]:
     return {
         "schema_version": "1.0",
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "ranking_policy": ranking_policy,
         "layers": {
             "synthetic": {
                 "count": len(samples),

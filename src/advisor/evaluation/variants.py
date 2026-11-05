@@ -123,13 +123,74 @@ def _retrieve(profile: dict[str, Any], criteria: dict[str, Any], knowledge: Any,
     ]
 
 
+# 排序口径候选（T043 未达标，待人工裁决）。见 docs/decisions/T043_ranking.md。
+#   roi             现状：按 ROI 下界排序（主控文档第 8 节"排序取下界"）
+#   priority_p      按 P =（等级跃迁分 + 关联成效改善）÷ 投入成本 排序
+#   bottleneck_first 先覆盖已诊断瓶颈的改造项，其余按 ROI 下界
+#   unblock_first   先按能解锁的一级约束性场景数，再按 ROI 下界
+RANKING_POLICIES = ("roi", "priority_p", "bottleneck_first", "unblock_first")
+
+
+def _reorder_ranking(
+    rows: list[dict[str, Any]],
+    policy: str,
+    diagnosis: list[dict[str, Any]],
+    scenario_levels: dict[str, int],
+    action_table: dict[str, Any],
+    constraint_scenarios: set[str],
+) -> list[dict[str, Any]]:
+    """按候选口径重排排序行（数值不变，只换顺序）。"""
+    if policy == "roi":
+        ordered = rows
+    elif policy == "priority_p":
+        ordered = sorted(rows, key=lambda row: (-row["priority"], row["action_id"]))
+    elif policy == "bottleneck_first":
+        hit_items = {item for entry in diagnosis for item in entry["hit_items"]}
+        hit_scenarios = {sid for entry in diagnosis for sid in entry["hit_scenarios"]}
+
+        def touches_bottleneck(row: dict[str, Any]) -> bool:
+            action = action_table.get(row["action_id"], {})
+            if row["target_scenario"] in hit_scenarios:
+                return True
+            return bool(set(action.get("target_items") or []) & hit_items)
+
+        ordered = sorted(
+            rows,
+            key=lambda row: (0 if touches_bottleneck(row) else 1, -row["roi_low"], row["action_id"]),
+        )
+    elif policy == "unblock_first":
+        def unblock(row: dict[str, Any]) -> int:
+            action = action_table.get(row["action_id"], {})
+            return sum(
+                1
+                for scenario_id in action.get("target_scenarios") or []
+                if scenario_levels.get(scenario_id, 9) <= 1 and scenario_id in constraint_scenarios
+            )
+
+        ordered = sorted(rows, key=lambda row: (-unblock(row), -row["roi_low"], row["action_id"]))
+    else:
+        raise ValueError(f"未知的排序口径：{policy}")
+
+    reordered = []
+    for index, row in enumerate(ordered, start=1):
+        item = dict(row)
+        item["rank"] = index
+        reordered.append(item)
+    return reordered
+
+
 def build_conclusion(
     system: str,
     profile: dict[str, Any],
     criteria: dict[str, Any],
     knowledge: Any,
+    ranking_policy: str = "roi",
 ) -> dict[str, Any]:
-    """跑一组（对照或消融），返回结构化结论。"""
+    """跑一组（对照或消融），返回结构化结论。
+
+    ``ranking_policy`` 只影响排序顺序，用于 T043 的口径对比；
+    正式结论一律用默认的 ``roi``。
+    """
     if system not in SYSTEMS:
         raise ValueError(f"未知的评测组：{system}")
     caps = CAPABILITIES[system]
@@ -214,6 +275,19 @@ def build_conclusion(
             knowledge.benefit_bases,
             knowledge.content,
         )
+        rows = _reorder_ranking(
+            rows,
+            ranking_policy,
+            conclusion["diagnosis"],
+            profile.get("scenario_levels") or {},
+            knowledge.pathways.get("actions") or {},
+            {
+                scenario["id"]
+                for scenario in effective_criteria["scenarios"]
+                if scenario.get("constraint")
+            },
+        )
+        conclusion["ranking_policy"] = ranking_policy
         conclusion["ranking"] = [
             {
                 "rank": row["rank"],

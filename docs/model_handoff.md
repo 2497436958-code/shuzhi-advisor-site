@@ -76,6 +76,7 @@
 | 部署说明 | 已有 | `docs/deployment.md`：两段式架构、环境变量、CORS、静态白名单、Render/Docker 配方与公开站安全注意 |
 | 来源与出处规范 | 已有 | `docs/schemas/*.json` 四库 schema + `scripts/check_knowledge_schema.py`，缺口登记在 `docs/knowledge_sources.md` |
 | 可访问性 | 已有 | 对比度脚本实算并接进 CI（WCAG AA）、aria 名称与表头 scope、窄屏适配、`tests/test_accessibility.py` 守住 |
+| 外部依赖物料 | 已有 | 专利人工检索工作单、后端部署物料、真实企业接入模板与比对脚本——三项各差一个外部动作 |
 
 ### 已知问题 / 待补齐
 
@@ -220,15 +221,15 @@ GET  /api/evaluation/report
 | T032 | 知识库 | 案例库 ≥86 个典型案例 | T031 | `cases/` | 每条有行业、症状、根因、动作、场景、来源 | 已完成 | Codex | 案例库 259 条入库（典型案例 95 + 链式案例集 134 + 优秀场景 30），逐条带原文出处。 |
 | T033 | 知识库 | 191 家参评案例集说明 | T032 | 文档/数据 | 数量、来源、用途清楚 | 已完成 | Codex | `docs/knowledge_case_sets.md` 说明 191 家参评 → 66 家入选口径与 87 家数促中心登记。 |
 | T034 | 知识库 | 论文库检索入口 | 无 | `papers/` | 有分类口径和样例数据 | 已完成 | Codex | 论文库 11 篇文献 + 3 条检索入口入库，文献与检索入口分开计数。 |
-| T035 | 知识库 | 专利库检索入口 | 无 | `patents/` | 有分类口径和样例数据 | 进行中 | Codex | 专利库 5 个官方大类口径与场景映射已入库；逐件检索入口与小类数量待补（CNIPA 无公开 API）。 |
+| T035 | 知识库 | 专利库检索入口 | 无 | `patents/` | 有分类口径和样例数据 | 进行中 | Codex | 人工检索工作单已生成（`data/patent_search_tasks.json`）：5 个分类各自的 IPC 号、关键词、检索窗口、检索入口、要填字段与取证清单；`scripts/check_patent_search.py` 会校验回填值（小类不超官方大类口径、状态与检索日/人齐全）。待在 CNIPA 按工作单检索后回填。 |
 | T036 | 知识库 | 四库统计页 | T031—T035 | `/knowledge/stats` | 数量、来源、用途可视化 | 已完成 | Codex | 统计接口与前端页面均已上线，CI 用前端冒烟测试（`node scripts/check_frontend_pages.mjs`）守着渲染路径。 |
 | T037 | 评测 | 60 家合成样本 | T004—T030 | `profiles/` | AP1—AP4 各 10 家，正常对照 20 家 | 已完成 | Codex | 已生成 60 家（AP1—AP4 各 10 家 + 正常对照 20 家），全部标 synthetic；构造意图与引擎实测逐家一致，等级落在预期区间；真实企业 0 家。 |
-| T038 | 评测 | 1 家真实企业 | T008 | `profiles/` | 真实层单列报告 | 未开始 |  |  |
+| T038 | 评测 | 1 家真实企业 | T008 | `profiles/` | 真实层单列报告 | 进行中 | Codex | 接入物料已备齐：模板 `data/profiles/real_template.json`、比对脚本 `scripts/verify_real_recompute.py`（等级必须一致、总分容差 0.5 分、不一致时列出三类原因）、流程文档 `docs/real_enterprise_intake.md`。等真实企业手填画像与公开评测结论。 |
 | T039 | 评测 | 4 组对照 | T037 | 评测结果 | 纯 RAG / 纯规则 / RAG+计算器 / 完整闭环 | 已完成 | Codex | 四组对照已跑通：纯 RAG（只检索）/ 纯规则（只用判据层）/ RAG+计算器 / 完整闭环，能力开关逐项列在报告里。 |
 | T040 | 评测 | 4 组消融 | T037 | 评测结果 | 去归因 / 去约束场景 / 去反模式 / 去判据锚定 | 已完成 | Codex | 四组消融已跑通：去归因、去约束场景、去反模式、去判据锚定；每组都实测出对应能力的塌陷（路径 0 / 等级一致 93.3% / 检出 0 / 证据链 0）。 |
 | T041 | 评测 | 诊断准确率 F1 | T037 | 指标 | ≥0.80 | 已完成 | Codex | 合成层诊断 F1 100%（门槛 80%）；指标同时给全类型与只看瓶颈型两个口径。 |
 | T042 | 评测 | 归因路径命中率 | T038/T039 | 指标 | ≥70% | 已完成 | Codex | 合成层归因路径命中率 83.7%（门槛 70%）。 |
-| T043 | 评测 | 排序一致性 | T027/T028/T039 | 指标 | Top-3 ≥70% | 进行中 | Codex | 合成层 67.8%，**未达标**（门槛 70%）。已定位：期望动作 ≤4 个的样本 Top-3 完全一致，一级场景多的样本只有约 33%，原因是排序按 ROI 下界走会把高 ROI 但与瓶颈无关的改造项排进 Top-3。属口径问题，待人工裁决。 |
+| T043 | 评测 | 排序一致性 | T027/T028/T039 | 指标 | Top-3 ≥70% | 进行中 | Codex | 决策备忘 `docs/decisions/T043_ranking.md` 已出：四个候选口径实测（T043 67.8% / 55.0% / 67.8% / 73.3%），并证明「瓶颈优先」并不提高 T043——问题主要在指标参考顺序是代理定义、与口径循环耦合。推荐把 T043 改为可客观测的排序稳定性（现状 16.2% 换人率达标）。待人工裁决。 |
 | T044 | 评测 | 反模式检出率/误报率 | T029/T037 | 指标 | ≥85% / ≤15% | 已完成 | Codex | 合成层检出率 100%、误报率 0%（门槛 85% / 15%）。 |
 | T045 | 评测 | ROI 测算偏差 | T027/T037 | 指标 | ≤20% | 进行中 | Codex | 合成层没有真值，**不可测**；已给两个可复核的数：独立复算与引擎结果偏差 0.0%（实现一致性）、换成有公开案例支撑的弹性区间后相对偏差中位 1025.7%（说明排序对弹性口径高度敏感）。真实偏差需 T038 真实企业样本。 |
 | T046 | 评测 | 跨行业泛化 | T037—T045 | 指标 | 衰减 ≤10 个百分点 | 已完成 | Codex | 合成层按行业分组的诊断 F1 衰减 0.0 个百分点（门槛 10 个百分点）。 |
@@ -237,7 +238,7 @@ GET  /api/evaluation/report
 | T049 | 合规 | 免责与边界声明 | 无 | 页脚/方法页 | 不承诺补贴、不代申报、不替代决策 | 已完成 | Codex | 页脚新增「免责与边界」段：不承诺补贴获批、不承接申报代理或涉申报中介服务、不替代企业自身判断与主管部门认定、引用前请回查原文；方法页第八节为完整版（由前端内容守卫 23 条守住）。 |
 | T050 | 合规 | 来源与出处规范 | 全部 | 数据 schema | 每条引用有来源、日期、用途 | 已完成 | Codex | 四类知识库各有 JSON Schema（`docs/schemas/*.json`），新增 `scripts/check_knowledge_schema.py` 按 schema 校验并核对「每条引用有来源、日期、用途」；缺口如实登记在 `docs/knowledge_sources.md`：案例 39 条缺来源发布日期、论文 3 条是检索入口、专利 5 类小类数待人工检索。 |
 | T051 | 部署 | 静态站部署 | T000 | GitHub Pages | 页面可访问 | 已完成 | Codex | 静态站已部署：GitHub Pages 从 `main` 分支构建，CI 与部署均 success，线上可访问。 |
-| T052 | 部署 | 后端部署 | T016—T023 | Render/Fly/Railway | `/api/health` 可访问 | 未开始 |  |  |
+| T052 | 部署 | 后端部署 | T016—T023 | Render/Fly/Railway | `/api/health` 可访问 | 进行中 | Codex | 部署物料已备齐：`render.yaml`（Render 蓝图，含健康检查与 CORS 变量）、`Dockerfile`、`.dockerignore`，并有 `docs/deployment.md` 的部署前检查清单。本机无 Docker daemon，只做了静态校验（起命令/依赖/路径一致），镜像构建待补；真正部署需账号授权。 |
 | T053 | 部署 | CORS 与环境变量 | T052 | 配置文档 | 前后端联调无跨域问题 | 已完成 | Codex | 后端改为白名单公开静态目录（源码、脚本、.git、docs 一律 404）；CORS 默认不同源不开放，需分开部署时用 `ADVISOR_CORS_ORIGINS` 指定来源；环境变量 `ADVISOR_HOST`/`ADVISOR_PORT`/`ADVISOR_CORS_ORIGINS` 与部署说明见 `docs/deployment.md`。 |
 | T054 | QA | 判据层测试 | T006—T008 | 测试 | 打分与门槛可重复验证 | 已完成 | Codex | `tests/test_scoring.py` 8 个用例：判据结构、三/五选项单选、多选三态、官方口径缺口披露、6 个预计算样本复算。 |
 | T055 | QA | 推理层测试 | T024—T030 | 测试 | 输出结构、证据链、反模式可测 | 已完成 | Codex | `tests/test_reasoning.py`、`test_ranking.py`、`test_evidence.py`：判据层复算、诊断一致、ROI 一致、证据链强制。 |
@@ -1181,6 +1182,84 @@ GET  /api/evaluation/report
   改完要重跑 `python3 scripts/build_evaluation_report.py` 看六项指标与判定。
 - 新增文档与配色改动都要过守门用例：`tests/test_docs.py`、`tests/test_accessibility.py`、
   `scripts/check_knowledge_schema.py`、`scripts/check_contrast.py`。
+- 收工三步：`python3 -m unittest discover -s tests` →
+  `node scripts/check_frontend_pages.mjs` → `python3 scripts/check_push_state.py`。
+
+
+---
+
+## MODEL-017 · Codex · 2026-11-05
+
+### 参与范围
+- 任务 ID：T035、T038、T043、T052（都推进到"只差一个外部动作"）
+- 模块：外部依赖项的决策与执行物料
+
+### 实际完成
+- **T043 决策备忘**（`docs/decisions/T043_ranking.md`）：把四个候选排序口径都实现出来并实测：
+  | 口径 | T043 | 排序稳定性 |
+  |---|---|---|
+  | ROI 下界（现状） | 67.8% | 16.2% |
+  | 优先级 P 降序 | 55.0% | 83.3% |
+  | 先覆盖已诊断瓶颈 | 67.8% | 49.0% |
+  | 先解锁一级约束性场景 | 73.3% | 93.5% |
+  结论推翻了我上轮的假设：**「瓶颈优先」并不提高 T043**，差距主要来自指标参考顺序是代理定义，
+  且「先解锁一级约束性场景」那一列属于循环论证。推荐把 T043 改为可客观测的排序稳定性
+  （现状 16.2% 换人率达标），口径决策等有真实企业的人工标注顺序时再做。
+  候选口径只在评测层实现，正式结论仍是 `roi`，**没有自行改生产口径**。
+- **T035 专利人工检索**：生成 `data/patent_search_tasks.json`——5 个分类各自的 IPC 号、
+  关键词、检索窗口、官方检索入口、该跑的检索式、要填字段、取证清单与官方大类口径参照；
+  新增 `scripts/check_patent_search.py` 校验回填值（小类不超官方大类口径、数量为整数、
+  状态/检索日/检索人齐全），当前如实报"5 个分类待人工检索"。
+- **T052 后端部署**：新增 `render.yaml`（Render 蓝图，含 `/api/health` 健康检查与
+  `ADVISOR_CORS_ORIGINS` 变量）、`Dockerfile`、`.dockerignore`；
+  `docs/deployment.md` 补部署前检查清单。本机无 Docker daemon，只做静态校验。
+- **T038 真实企业接入**：新增模板 `data/profiles/real_template.json`（标 `synthetic: false`）、
+  比对脚本 `scripts/verify_real_recompute.py`（等级必须一致、总分容差 0.5 分、
+  不一致时列出场景等级自评差异/口径版本差异/答案理解差异三类原因）、
+  流程文档 `docs/real_enterprise_intake.md`（选企业、填记录、复算比对、写进报告四步，
+  以及"真实企业数据不进公开仓库"这条硬规矩）。
+- 新增 `tests/test_external_readiness.py`（11 个用例）守住以上物料。
+
+### 验证方式
+- `python3 scripts/compare_ranking_policies.py` → 四个口径的实测数字如上表
+- `python3 scripts/check_patent_search.py` → 5 个分类待人工检索，如实标注
+- `python3 scripts/verify_real_recompute.py data/profiles/real_template.json` →
+  退出码 2 并列出还缺什么（采集项 0/15、场景 0/16、公开结论等级）
+- `python3 -m unittest discover -s tests -v` → 127 个用例全部通过
+- `python3 scripts/check_knowledge_schema.py`、`scripts/check_contrast.py`、
+  `scripts/compare_precomputed.py`、`node scripts/check_frontend_pages.mjs` → 全部通过
+
+### 更新的任务状态
+- T035、T038、T052：未开始 → 进行中（物料齐备，等外部动作）
+- T043：进行中（补决策备忘与实测数字，待裁决）
+- 当前状态快照：补 1 行已完成能力
+
+### 变更记录
+- 新增：`docs/decisions/T043_ranking.md`、`data/patent_search_tasks.json`、
+  `scripts/check_patent_search.py`、`scripts/compare_ranking_policies.py`、
+  `data/profiles/real_template.json`、`scripts/verify_real_recompute.py`、
+  `docs/real_enterprise_intake.md`、`render.yaml`、`Dockerfile`、`.dockerignore`、
+  `tests/test_external_readiness.py`
+- 修改：`src/advisor/evaluation/variants.py`（支持四种排序口径，仅评测层）、
+  `src/advisor/evaluation/runner.py`（排序口径参数）、`docs/deployment.md`、
+  `data/evaluation/report.json`、`data/evaluation/report.md`（新增 ranking_policy 字段）
+- **未改动** 推理层生产逻辑与任何口径数值
+
+### 遗留问题
+- 剩下的 6 项全部需要外部动作：
+  1. 真实企业手填画像 + 公开评测结论（T008/T038/T045 一并解决）
+  2. T043 的口径裁决（决策备忘已给数字与建议）
+  3. 后端部署账号（T052）
+  4. 专利小类数量的人工检索（T035）
+- Docker 镜像未实际构建过（本机无 daemon），起命令只做了静态校验。
+- T043 的参考顺序若要真正可靠，需要 1—2 位专家标注的"应该先做什么"顺序；
+  合成层给不了这个真值。
+
+### 给下一个模型的交接提示
+- **能自己做的活已经做完了**：59 项里 53 项完成，剩下 6 项都卡在外部动作上。
+- 拿到真实企业数据后的第一件事：`python3 scripts/verify_real_recompute.py <文件>`，
+  退出码 0 就把它写进评测报告的真实层，并重跑 `scripts/build_evaluation_report.py`。
+- 要裁决 T043，先读 `docs/decisions/T043_ranking.md`；**不要为了让指标过线而改口径**。
 - 收工三步：`python3 -m unittest discover -s tests` →
   `node scripts/check_frontend_pages.mjs` → `python3 scripts/check_push_state.py`。
 

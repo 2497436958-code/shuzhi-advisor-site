@@ -1,0 +1,28 @@
+{
+ "id": "REAL-001",
+ "name": "",
+ "synthetic": false,
+ "provenance": "",
+ "source": {
+  "public_conclusion_url": "",
+  "public_conclusion_source": "",
+  "evaluated_by": "",
+  "evaluated_at": ""
+ },
+ "published_conclusion": {
+  "level": null,
+  "level_name": "",
+  "total_score": null,
+  "note": "从公开评测结论原样抄录；公开结论没有分数就留空"
+ },
+ "profile": {
+  "answers": {},
+  "scenario_levels": {},
+  "revenue_wan": null,
+  "digital_spend_wan": null,
+  "energy_wan": null,
+  "headcount": null,
+  "cost_wan": null,
+  "province": ""
+ }
+}

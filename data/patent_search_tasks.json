@@ -1,0 +1,446 @@
+{
+ "schema_version": "1.0",
+ "purpose": "把专利小类数量的人工检索变成可执行、可校验的工作单",
+ "source": "data/knowledge/patents.json",
+ "manual_protocol": [
+  "1. 登录国家知识产权局专利检索及分析系统（pss-system.cponline.cnipa.gov.cn），检索范围选“中国专利”。",
+  "2. 对每个类别按 ipc 字段逐条检索，时间限定公开日 2021-01-01 至检索日。",
+  "3. 记录“专利申请量（发明 + 实用新型）”与“授权量”两个数，并截图保存检索式与结果页。",
+  "4. 同一申请号按最早公开日去重；同日多公开的按申请号计一次。",
+  "5. 回填 applications_cn / grants_cn 后，把 collection_status 改为“已人工检索”，并填写 collected_at（检索日）与 collected_by（检索人）。",
+  "6. 回填后重跑 tools/check_knowledge.py：校验器要求“有数字”必须同时满足“已人工检索 + 检索日 + 检索人”。"
+ ],
+ "attempted_sources": [
+  {
+   "name": "Google Patents 公开索引（xhr/query）",
+   "tried_at": "2026-11-05",
+   "queries": [
+    "q=(G05B19/418 OR G06Q10/06)&country=CN&after=publication:20210101 → 124892",
+    "q=IPC:G05B19/418&country=CN（未加日期限定）→ 57740",
+    "q=MES 制造执行系统&country=CN&after=publication:20210101 → 5"
+   ],
+   "observation": "三条查询条件互不相同（日期范围 / IPC 写法 / 关键词），数字本不可比；且未加日期限定的第二条（57740）反而小于限定近 5 年的第一条（124892），说明 IPC 与日期过滤均未真正生效。抽样前 5 条的分类与查询意图不符（查 MES 返回“工件收集点单元”），status=GRANT 过滤后总数几乎不变。",
+   "conclusion": "该索引不按 IPC 严格过滤、计数被截断，不能作为本项目“5 类申请量/授权量”的口径来源。已放弃，不采用其数字。"
+  }
+ ],
+ "tasks": [
+  {
+   "id": "PATENT-CAT-01",
+   "category": "工业软件（MES/ERP/APS）",
+   "status": "待人工检索",
+   "ipc_class": "G05",
+   "ipc_class_desc": "控制；调节（含 G05B 工业控制）",
+   "ipc_numbers": [
+    "G05B19/418",
+    "G06Q10/06",
+    "G06Q10/08"
+   ],
+   "keywords": [
+    "制造执行系统",
+    "生产计划排程",
+    "企业资源计划",
+    "车间管理"
+   ],
+   "maps_to_scenarios": [
+    "S05",
+    "S06"
+   ],
+   "search_window": "近 5 年（2021-01-01 至检索日）",
+   "counting_rule": "按 IPC 主分类 + 关键词检索，分别统计中国申请人的专利申请量（发明 + 实用新型）与授权量；同一申请号按最早公开日去重，一件计一次",
+   "search_entry": "https://pss-system.cponline.cnipa.gov.cn/",
+   "queries_to_run": [
+    {
+     "type": "ipc",
+     "value": "G05B19/418",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "ipc",
+     "value": "G06Q10/06",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "ipc",
+     "value": "G06Q10/08",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "keyword",
+     "value": "制造执行系统",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "生产计划排程",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "企业资源计划",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "车间管理",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    }
+   ],
+   "fields_to_fill": {
+    "applications_cn": null,
+    "grants_cn": null
+   },
+   "evidence_to_capture": [
+    "检索式截图（含 IPC 与日期限定）",
+    "结果列表截图（含总件数）",
+    "授权检索结果截图"
+   ],
+   "on_completion": [
+    "回填 data/knowledge/patents.json 的 categories[PATENT-CAT-01].applications_cn / grants_cn",
+    "把 status 改为「已人工检索」",
+    "在 meta 填 collected_at（检索日）与 collected_by（检索人）",
+    "重跑 python3 scripts/check_patent_search.py 与 scripts/check_knowledge_schema.py"
+   ],
+   "official_aggregate_reference": {
+    "ipc_class": "G05",
+    "year": 2024,
+    "applications_cn": 31569,
+    "grants_cn": 18741,
+    "note": "官方 IPC 大类口径，只作上限参照，不能当小类数量用"
+   }
+  },
+  {
+   "id": "PATENT-CAT-02",
+   "category": "自动化产线与工业机器人",
+   "status": "待人工检索",
+   "ipc_class": "B25",
+   "ipc_class_desc": "手动工具；机械手（含 B25J 机器人）",
+   "ipc_numbers": [
+    "B23K",
+    "B25J",
+    "B65G"
+   ],
+   "keywords": [
+    "自动化生产线",
+    "工业机器人",
+    "柔性加工",
+    "焊接机器人"
+   ],
+   "maps_to_scenarios": [
+    "S06",
+    "S08"
+   ],
+   "search_window": "近 5 年（2021-01-01 至检索日）",
+   "counting_rule": "按 IPC 主分类 + 关键词检索，分别统计中国申请人的专利申请量（发明 + 实用新型）与授权量；同一申请号按最早公开日去重，一件计一次",
+   "search_entry": "https://pss-system.cponline.cnipa.gov.cn/",
+   "queries_to_run": [
+    {
+     "type": "ipc",
+     "value": "B23K",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "ipc",
+     "value": "B25J",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "ipc",
+     "value": "B65G",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "keyword",
+     "value": "自动化生产线",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "工业机器人",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "柔性加工",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "焊接机器人",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    }
+   ],
+   "fields_to_fill": {
+    "applications_cn": null,
+    "grants_cn": null
+   },
+   "evidence_to_capture": [
+    "检索式截图（含 IPC 与日期限定）",
+    "结果列表截图（含总件数）",
+    "授权检索结果截图"
+   ],
+   "on_completion": [
+    "回填 data/knowledge/patents.json 的 categories[PATENT-CAT-02].applications_cn / grants_cn",
+    "把 status 改为「已人工检索」",
+    "在 meta 填 collected_at（检索日）与 collected_by（检索人）",
+    "重跑 python3 scripts/check_patent_search.py 与 scripts/check_knowledge_schema.py"
+   ],
+   "official_aggregate_reference": {
+    "ipc_class": "B25",
+    "year": 2024,
+    "applications_cn": 71412,
+    "grants_cn": 46179,
+    "note": "官方 IPC 大类口径，只作上限参照，不能当小类数量用"
+   }
+  },
+  {
+   "id": "PATENT-CAT-03",
+   "category": "机器视觉与在线检测",
+   "status": "待人工检索",
+   "ipc_class": "G01",
+   "ipc_class_desc": "测量；测试（含 G01N 检测）",
+   "ipc_numbers": [
+    "G01N21/88",
+    "G06T7/00",
+    "B07C5/34"
+   ],
+   "keywords": [
+    "机器视觉",
+    "缺陷检测",
+    "外观检测",
+    "尺寸测量"
+   ],
+   "maps_to_scenarios": [
+    "S07"
+   ],
+   "search_window": "近 5 年（2021-01-01 至检索日）",
+   "counting_rule": "按 IPC 主分类 + 关键词检索，分别统计中国申请人的专利申请量（发明 + 实用新型）与授权量；同一申请号按最早公开日去重，一件计一次",
+   "search_entry": "https://pss-system.cponline.cnipa.gov.cn/",
+   "queries_to_run": [
+    {
+     "type": "ipc",
+     "value": "G01N21/88",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "ipc",
+     "value": "G06T7/00",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "ipc",
+     "value": "B07C5/34",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "keyword",
+     "value": "机器视觉",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "缺陷检测",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "外观检测",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "尺寸测量",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    }
+   ],
+   "fields_to_fill": {
+    "applications_cn": null,
+    "grants_cn": null
+   },
+   "evidence_to_capture": [
+    "检索式截图（含 IPC 与日期限定）",
+    "结果列表截图（含总件数）",
+    "授权检索结果截图"
+   ],
+   "on_completion": [
+    "回填 data/knowledge/patents.json 的 categories[PATENT-CAT-03].applications_cn / grants_cn",
+    "把 status 改为「已人工检索」",
+    "在 meta 填 collected_at（检索日）与 collected_by（检索人）",
+    "重跑 python3 scripts/check_patent_search.py 与 scripts/check_knowledge_schema.py"
+   ],
+   "official_aggregate_reference": {
+    "ipc_class": "G01",
+    "year": 2024,
+    "applications_cn": 369164,
+    "grants_cn": 227643,
+    "note": "官方 IPC 大类口径，只作上限参照，不能当小类数量用"
+   }
+  },
+  {
+   "id": "PATENT-CAT-04",
+   "category": "AGV 与智能仓储",
+   "status": "待人工检索",
+   "ipc_class": "B65",
+   "ipc_class_desc": "输送；包装；贮存（含 B65G 搬运）",
+   "ipc_numbers": [
+    "B65G1/04",
+    "B66F9/06",
+    "G05D1/02"
+   ],
+   "keywords": [
+    "自动导引车",
+    "立体仓库",
+    "仓储机器人",
+    "智能分拣"
+   ],
+   "maps_to_scenarios": [
+    "S12"
+   ],
+   "search_window": "近 5 年（2021-01-01 至检索日）",
+   "counting_rule": "按 IPC 主分类 + 关键词检索，分别统计中国申请人的专利申请量（发明 + 实用新型）与授权量；同一申请号按最早公开日去重，一件计一次",
+   "search_entry": "https://pss-system.cponline.cnipa.gov.cn/",
+   "queries_to_run": [
+    {
+     "type": "ipc",
+     "value": "B65G1/04",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "ipc",
+     "value": "B66F9/06",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "ipc",
+     "value": "G05D1/02",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "keyword",
+     "value": "自动导引车",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "立体仓库",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "仓储机器人",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "智能分拣",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    }
+   ],
+   "fields_to_fill": {
+    "applications_cn": null,
+    "grants_cn": null
+   },
+   "evidence_to_capture": [
+    "检索式截图（含 IPC 与日期限定）",
+    "结果列表截图（含总件数）",
+    "授权检索结果截图"
+   ],
+   "on_completion": [
+    "回填 data/knowledge/patents.json 的 categories[PATENT-CAT-04].applications_cn / grants_cn",
+    "把 status 改为「已人工检索」",
+    "在 meta 填 collected_at（检索日）与 collected_by（检索人）",
+    "重跑 python3 scripts/check_patent_search.py 与 scripts/check_knowledge_schema.py"
+   ],
+   "official_aggregate_reference": {
+    "ipc_class": "B65",
+    "year": 2024,
+    "applications_cn": 249632,
+    "grants_cn": 178524,
+    "note": "官方 IPC 大类口径，只作上限参照，不能当小类数量用"
+   }
+  },
+  {
+   "id": "PATENT-CAT-05",
+   "category": "工业互联网平台与数据采集",
+   "status": "待人工检索",
+   "ipc_class": "H04",
+   "ipc_class_desc": "电通信技术（含 H04L 数据传输）",
+   "ipc_numbers": [
+    "H04L67/12",
+    "G05B19/05",
+    "H04W4/38"
+   ],
+   "keywords": [
+    "工业互联网",
+    "边缘计算网关",
+    "设备数据采集",
+    "标识解析"
+   ],
+   "maps_to_scenarios": [
+    "S08",
+    "S16"
+   ],
+   "search_window": "近 5 年（2021-01-01 至检索日）",
+   "counting_rule": "按 IPC 主分类 + 关键词检索，分别统计中国申请人的专利申请量（发明 + 实用新型）与授权量；同一申请号按最早公开日去重，一件计一次",
+   "search_entry": "https://pss-system.cponline.cnipa.gov.cn/",
+   "queries_to_run": [
+    {
+     "type": "ipc",
+     "value": "H04L67/12",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "ipc",
+     "value": "G05B19/05",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "ipc",
+     "value": "H04W4/38",
+     "note": "按 IPC 逐条检索，公开日限定 2021-01-01 至检索日"
+    },
+    {
+     "type": "keyword",
+     "value": "工业互联网",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "边缘计算网关",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "设备数据采集",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    },
+    {
+     "type": "keyword",
+     "value": "标识解析",
+     "note": "关键词检索（IPC 之外的中文关键词）"
+    }
+   ],
+   "fields_to_fill": {
+    "applications_cn": null,
+    "grants_cn": null
+   },
+   "evidence_to_capture": [
+    "检索式截图（含 IPC 与日期限定）",
+    "结果列表截图（含总件数）",
+    "授权检索结果截图"
+   ],
+   "on_completion": [
+    "回填 data/knowledge/patents.json 的 categories[PATENT-CAT-05].applications_cn / grants_cn",
+    "把 status 改为「已人工检索」",
+    "在 meta 填 collected_at（检索日）与 collected_by（检索人）",
+    "重跑 python3 scripts/check_patent_search.py 与 scripts/check_knowledge_schema.py"
+   ],
+   "official_aggregate_reference": {
+    "ipc_class": "H04",
+    "year": 2024,
+    "applications_cn": 139778,
+    "grants_cn": 82197,
+    "note": "官方 IPC 大类口径，只作上限参照，不能当小类数量用"
+   }
+  }
+ ]
+}
