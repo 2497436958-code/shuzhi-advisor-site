@@ -1,13 +1,15 @@
-/* 前端知识库页面冒烟测试（零依赖，Node 内置能力即可）。
+/* 前端页面冒烟测试（零依赖，Node 内置能力即可）。
  *
- * 为什么需要它：知识库页面是纯前端渲染，CI 里没有浏览器，
+ * 为什么需要它：知识库页面与评测报告页面都是纯前端渲染，CI 里没有浏览器，
  * 只靠 `node --check app.js` 只能查语法，查不出运行时报错与字段错位。
  * 这里用最小 DOM 桩 + fetch 桩把 app.js 的启动流程真跑一遍，检查：
  *   1. app.js 请求的所有元素 id 都能在 index.html 里找到；
  *   2. 知识库区块能渲染出四库统计、四个库块、条目与原文链接；
- *   3. 检索与筛选会发出正确请求，并把结果回填到页面。
+ *   3. 检索与筛选会发出正确请求，并把结果回填到页面；
+ *   4. 评测报告区块能渲染出样本层分列、七行指标表、四组对照与四组消融，
+ *      且"真实层 0 家"如实出现在页面上。
  *
- * 用法：node scripts/check_knowledge_page.mjs
+ * 用法：node scripts/check_frontend_pages.mjs
  */
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -225,6 +227,7 @@ const document = {
 const fixture = JSON.parse(read("scripts/fixtures/knowledge_api.json"));
 const criteria = JSON.parse(read("precomputed/criteria.json"));
 const fixtures = JSON.parse(read("precomputed/fixtures.json"));
+const evaluation = JSON.parse(read("data/evaluation/report.json"));
 const calls = [];
 
 function respond(body) {
@@ -240,6 +243,8 @@ const fetchStub = async (url) => {
   if (path.endsWith("api/fixtures")) return respond(fixtures);
   if (path.endsWith("api/scenario_evidence")) return respond({ available: true, judgments: {} });
   if (path.endsWith("api/knowledge/stats")) return respond(fixture.stats);
+  if (path.endsWith("api/evaluation/report")) return respond(evaluation);
+  if (path.endsWith("data/evaluation/report.json")) return respond(evaluation);
   for (const key of ["policy", "cases", "papers", "patents"]) {
     if (path.endsWith("api/knowledge/" + key)) return respond(fixture[key]);
   }
@@ -362,6 +367,41 @@ if (roleValue) {
   );
 }
 
+/* ---- 评测报告页面 ---- */
+
+const evalBody = registry.get("evaluation-body");
+check(Boolean(evalBody) && evalBody.children.length > 1, "评测报告区块没有渲染出来");
+
+const evalTables = evalBody ? evalBody.querySelectorAll("table") : [];
+check(evalTables.length === 3, `评测报告应有 3 张表（指标 / 对照 / 消融），实际 ${evalTables.length}`);
+
+const metricRows = evalTables[0] ? evalTables[0].querySelectorAll("tbody tr") : [];
+check(metricRows.length === 7, `指标表应有 7 行，实际 ${metricRows.length}`);
+
+const statusTags = evalBody ? evalBody.querySelectorAll("table tbody tr td .tag") : [];
+const statuses = statusTags.map((tag) => tag.textContent);
+check(
+  statuses.includes("达标") || statuses.includes("未达标") || statuses.includes("不可测"),
+  "指标表没有渲染出结论标签",
+);
+
+const controlRows = evalTables[1] ? evalTables[1].querySelectorAll("tbody tr") : [];
+check(controlRows.length === 4, `对照表应有 4 行，实际 ${controlRows.length}`);
+
+const ablationRows = evalTables[2] ? evalTables[2].querySelectorAll("tbody tr") : [];
+check(ablationRows.length === 4, `消融表应有 4 行，实际 ${ablationRows.length}`);
+
+const evalText = evalBody ? evalBody.textContent : "";
+check(evalText.includes("真实层"), "评测报告没有显示样本层分列");
+check(
+  evalText.includes(String(evaluation.layers.real.count)),
+  "评测报告没有如实显示真实层的家数",
+);
+check(
+  evalText.includes(evaluation.verdicts.T043_ranking_top3.status),
+  "评测报告没有如实显示 T043 的结论状态",
+);
+
 if (missingIds.size) {
   failures.push("app.js 请求了 index.html 里不存在的 id：" + [...missingIds].join("、"));
 }
@@ -372,7 +412,8 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("知识库页面冒烟测试通过");
+console.log("前端页面冒烟测试通过");
 console.log(`  统计卡片 ${statCards.length} 个，库块 ${libBlocks.length} 个`);
 console.log(`  渲染条目 ${knowledgeBody.querySelectorAll(".kb-item").length} 条`);
+console.log(`  评测报告：指标表 ${metricRows.length} 行、对照 ${controlRows.length} 组、消融 ${ablationRows.length} 组`);
 console.log(`  fetch 调用 ${calls.length} 次，缺失 id ${missingIds.size} 个`);

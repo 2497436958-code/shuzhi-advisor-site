@@ -117,6 +117,7 @@
     renderFixturePicker();
     bindActions();
     loadKnowledge();
+    loadEvaluation();
   }
 
   /* ------------------------------------------------------------ 表单渲染 */
@@ -1193,6 +1194,211 @@
       }
       paintKbLibrary(key);
     }
+  }
+
+  /* ------------------------------------------------------------ 评测报告 */
+
+  const EVAL_METRIC_ORDER = [
+    "T041_diagnosis_f1",
+    "T042_path_hit_rate",
+    "T043_ranking_top3",
+    "T044_antipattern_detection",
+    "T044_antipattern_false_positive",
+    "T045_roi_deviation",
+    "T046_generalization",
+  ];
+
+  const EVAL_CAPABILITY_ORDER = [
+    "scoring", "knowledge", "diagnosis", "pathway", "ranking", "antipattern", "anchor",
+  ];
+
+  const EVAL_ABLATION_DROPPED = {
+    ablation_no_attribution: "归因路径与排序",
+    ablation_no_constraint: "约束性场景数要求",
+    ablation_no_antipattern: "AP1—AP4 检测",
+    ablation_no_anchor: "结论与采集项/场景的锚定",
+  };
+
+  function evalPct(value) {
+    return value === null || value === undefined ? "—" : (value * 100).toFixed(1) + "%";
+  }
+
+  function evalStatusTag(status) {
+    const cls = status === "达标" ? "tag-good" : status === "未达标" ? "tag-bad" : "tag-warn";
+    return el("span", { class: "tag " + cls, text: status });
+  }
+
+  function renderEvalLayers(report) {
+    const layers = report.layers || {};
+    const cards = [];
+    for (const [key, label] of [["synthetic", "合成层"], ["real", "真实层"]]) {
+      const layer = layers[key] || {};
+      cards.push(el("div", { class: "kb-stat" }, [
+        el("span", { class: "kb-stat-label", text: label }),
+        el("span", { class: "kb-stat-value" }, [
+          el("strong", { text: String(layer.count === undefined ? "—" : layer.count) }),
+          el("em", { text: "家" }),
+        ]),
+        el("span", { class: "kb-stat-note", text: layer.note || "" }),
+      ]));
+    }
+    const block = el("div", { class: "kb-lib" }, [
+      el("div", { class: "kb-lib-head" }, [el("h3", { class: "kb-lib-title", text: "样本层" })]),
+      el("p", { class: "kb-lib-desc", text: "合成层与真实层分开统计、分开报告，不混写。" }),
+      el("div", { class: "kb-overview" }, cards),
+    ]);
+    const composition = (layers.synthetic || {}).composition || {};
+    const detail = Object.keys(composition)
+      .filter((key) => key !== "total")
+      .map((key) => key + " " + composition[key] + " 家")
+      .join("、");
+    if (detail) {
+      block.appendChild(el("p", { class: "kb-item-meta", text: "合成层构成：" + detail }));
+    }
+    return block;
+  }
+
+  function renderEvalMetrics(report) {
+    const table = el("table");
+    table.appendChild(el("caption", {
+      text: "门槛与结论取自主控文档；不达标与不可测如实标注，不做粉饰。",
+    }));
+    table.appendChild(el("thead", {}, [el("tr", {}, [
+      el("th", { text: "指标" }),
+      el("th", { text: "口径" }),
+      el("th", { text: "实测" }),
+      el("th", { text: "门槛" }),
+      el("th", { text: "结论" }),
+    ])]));
+    const tbody = el("tbody");
+    for (const task of EVAL_METRIC_ORDER) {
+      const info = (report.metric_info || {})[task] || {};
+      const verdict = (report.verdicts || {})[task] || {};
+      tbody.appendChild(el("tr", {}, [
+        el("td", {}, [el("strong", { text: info.label || task })]),
+        el("td", { text: info.basis || "" }),
+        el("td", { class: "num", text: evalPct(verdict.value) }),
+        el("td", { class: "num", text: verdict.threshold || "—" }),
+        el("td", {}, [evalStatusTag(verdict.status || "不可测")]),
+      ]));
+    }
+    table.appendChild(tbody);
+    return el("section", { class: "kb-lib" }, [
+      el("div", { class: "kb-lib-head" }, [
+        el("h3", { class: "kb-lib-title", text: "完整闭环的六项指标" }),
+        el("span", { class: "kb-count", text: "合成层" }),
+      ]),
+      el("div", { class: "table-wrap" }, [table]),
+    ]);
+  }
+
+  function renderEvalControls(report) {
+    const labels = report.capability_labels || {};
+    const table = el("table");
+    table.appendChild(el("caption", {
+      text: "每组只关掉一项能力；关掉什么写在 src/advisor/evaluation/variants.py 的文档字符串里。",
+    }));
+    const head = el("tr", {}, [el("th", { text: "组" })]);
+    for (const key of EVAL_CAPABILITY_ORDER) {
+      head.appendChild(el("th", { text: labels[key] || key }));
+    }
+    table.appendChild(el("thead", {}, [head]));
+    const tbody = el("tbody");
+    for (const [system, info] of Object.entries(report.systems || {})) {
+      if (info.kind !== "control") continue;
+      const row = el("tr", {}, [el("td", {}, [el("strong", { text: info.label })] )]);
+      for (const key of EVAL_CAPABILITY_ORDER) {
+        row.appendChild(el("td", { class: "num", text: info.capabilities[key] ? "✓" : "—" }));
+      }
+      tbody.appendChild(row);
+    }
+    table.appendChild(tbody);
+    return el("section", { class: "kb-lib" }, [
+      el("div", { class: "kb-lib-head" }, [
+        el("h3", { class: "kb-lib-title", text: "四组对照" }),
+      ]),
+      el("div", { class: "table-wrap" }, [table]),
+    ]);
+  }
+
+  function renderEvalAblations(report) {
+    const table = el("table");
+    table.appendChild(el("caption", {
+      text: "消融组把对应能力打掉后的实测值；塌陷就是该能力在闭环里的贡献。",
+    }));
+    table.appendChild(el("thead", {}, [el("tr", {}, [
+      el("th", { text: "组" }),
+      el("th", { text: "关掉了什么" }),
+      el("th", { text: "诊断 F1" }),
+      el("th", { text: "路径命中" }),
+      el("th", { text: "Top-3 一致" }),
+      el("th", { text: "检出率" }),
+      el("th", { text: "误报率" }),
+      el("th", { text: "等级一致" }),
+      el("th", { text: "证据链完整" }),
+    ])]));
+    const tbody = el("tbody");
+    for (const [system, info] of Object.entries(report.systems || {})) {
+      if (info.kind !== "ablation") continue;
+      const metrics = info.metrics || {};
+      tbody.appendChild(el("tr", {}, [
+        el("td", {}, [el("strong", { text: info.label })]),
+        el("td", { text: EVAL_ABLATION_DROPPED[system] || "" }),
+        el("td", { class: "num", text: evalPct(metrics["T041_diagnosis_f1"]["bottleneck_micro_f1"]) }),
+        el("td", { class: "num", text: evalPct(metrics["T042_path_hit_rate"]["hit_rate"]) }),
+        el("td", { class: "num", text: evalPct(metrics["T043_ranking_top3"]["top3_overlap"]) }),
+        el("td", { class: "num", text: evalPct(metrics["T044_antipattern"]["detection_rate"]) }),
+        el("td", { class: "num", text: evalPct(metrics["T044_antipattern"]["false_positive_rate"]) }),
+        el("td", { class: "num", text: evalPct(metrics["level_agreement"]["agreement"]) }),
+        el("td", { class: "num", text: evalPct(metrics["evidence_quality"]["evidence_complete_rate"]) }),
+      ]));
+    }
+    table.appendChild(tbody);
+    return el("section", { class: "kb-lib" }, [
+      el("div", { class: "kb-lib-head" }, [
+        el("h3", { class: "kb-lib-title", text: "四组消融" }),
+      ]),
+      el("div", { class: "table-wrap" }, [table]),
+    ]);
+  }
+
+  function renderEvalNotes(report) {
+    const notes = report.notes || [];
+    if (!notes.length) return null;
+    const list = el("ul", { class: "kb-list" });
+    for (const note of notes) {
+      list.appendChild(el("li", { class: "kb-item", text: note }));
+    }
+    return el("section", { class: "kb-lib" }, [
+      el("div", { class: "kb-lib-head" }, [
+        el("h3", { class: "kb-lib-title", text: "已知边界" }),
+      ]),
+      list,
+    ]);
+  }
+
+  async function loadEvaluation() {
+    const host = $("#evaluation-body");
+    if (!host) return;
+    host.textContent = "";
+    host.appendChild(el("p", { class: "placeholder", text: "正在加载评测报告…" }));
+    let report;
+    try {
+      report = state.mode === "online"
+        ? await fetchJSON("api/evaluation/report")
+        : await fetchJSON("data/evaluation/report.json");
+    } catch (err) {
+      host.textContent = "";
+      host.appendChild(el("p", { class: "placeholder", text: "评测报告加载失败：" + err.message }));
+      return;
+    }
+    host.textContent = "";
+    host.appendChild(renderEvalLayers(report));
+    host.appendChild(renderEvalMetrics(report));
+    host.appendChild(renderEvalControls(report));
+    host.appendChild(renderEvalAblations(report));
+    const notes = renderEvalNotes(report);
+    if (notes) host.appendChild(notes);
   }
 
   /* ------------------------------------------------------------ 交互 */

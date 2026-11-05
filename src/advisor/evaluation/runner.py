@@ -26,6 +26,48 @@ ROOT = Path(__file__).resolve().parents[3]
 SAMPLES_PATH = ROOT / "data" / "profiles" / "synthetic_60.json"
 EVALUATION_DIR = ROOT / "data" / "evaluation"
 
+# 每项指标的口径说明（人读报告与前端页面共用这一份）
+METRIC_INFO = {
+    "T041_diagnosis_f1": {
+        "label": "诊断准确率 F1",
+        "basis": "只看有区分度的瓶颈型（反模式型 + 场景断层），参考值是样本按构造应当出现的瓶颈类型",
+    },
+    "T042_path_hit_rate": {
+        "label": "归因路径命中率",
+        "basis": "仍在一级的场景所对应的改造项，有多少出现在系统的路径段里",
+    },
+    "T043_ranking_top3": {
+        "label": "排序一致性 Top-3",
+        "basis": "系统 Top-3 与独立算出的应先做顺序（先解锁一级约束性场景多者先做）的重合率",
+    },
+    "T044_antipattern_detection": {
+        "label": "反模式检出率",
+        "basis": "样本按构造应当命中的反模式，有多少被检出",
+    },
+    "T044_antipattern_false_positive": {
+        "label": "反模式误报率",
+        "basis": "检出的反模式里，有多少是样本没有的",
+    },
+    "T045_roi_deviation": {
+        "label": "ROI 测算偏差",
+        "basis": "相对真值的偏差；合成层无真值，只给实现一致性与弹性口径切换偏差",
+    },
+    "T046_generalization": {
+        "label": "跨行业泛化衰减",
+        "basis": "按行业分组的诊断 F1，最差行业相对总体的差",
+    },
+}
+
+# 报告里必须写明的已知边界
+REPORT_NOTES = [
+    "本报告只覆盖合成层：合成样本能证明规则实现没有系统性偏差，不能证明业务结论正确。",
+    "T043 的参考顺序是代理定义（先解锁一级约束性场景多者先做，再按可回收分数），"
+    "主控文档未定义参考顺序，换一个定义数字会变；要拿到有意义的数需要人工标注顺序。",
+    "路径表只覆盖 9 个场景，S02/S04/S05/S12—S15 无法用样本验证。",
+    "真实层 0 家：本报告不含任何真实企业的评测结论，不得用合成层数字替代。",
+    "当前 ROI 用的成效弹性是演示口径，没有公开案例支撑，只用于排序。",
+]
+
 # 主控文档给出的验收门槛
 THRESHOLDS = {
     "T041_diagnosis_f1": {"metric": "diagnosis_f1", "op": ">=", "value": 0.80},
@@ -111,7 +153,19 @@ def run_evaluation() -> dict[str, Any]:
             for system in CONTROL_SYSTEMS + ABLATION_SYSTEMS
         },
         "thresholds": THRESHOLDS,
+        "metric_info": METRIC_INFO,
         "verdicts": verdicts,
+        "notes": REPORT_NOTES,
+        "capability_labels": {
+            "scoring": "算分定级",
+            "knowledge": "知识库",
+            "diagnosis": "诊断",
+            "pathway": "归因路径",
+            "ranking": "ROI 排序",
+            "antipattern": "反模式",
+            "constraint": "约束性场景要求",
+            "anchor": "判据锚定",
+        },
     }
 
 
@@ -189,13 +243,7 @@ def render_markdown(report: dict[str, Any]) -> str:
     add("| 指标 | 口径 | 实测 | 门槛 | 结论 |")
     add("|---|---|---|---|---|")
     metric_text = {
-        "T041_diagnosis_f1": "诊断准确率 F1（只看有区分度的瓶颈型）",
-        "T042_path_hit_rate": "归因路径命中率（一级场景对应改造项出现在路径段）",
-        "T043_ranking_top3": "排序一致性 Top-3（与独立算出的应先做顺序重合）",
-        "T044_antipattern_detection": "反模式检出率",
-        "T044_antipattern_false_positive": "反模式误报率",
-        "T045_roi_deviation": "ROI 测算偏差（相对真值）",
-        "T046_generalization": "跨行业泛化衰减",
+        task: f"{info['label']}（{info['basis']}）" for task, info in METRIC_INFO.items()
     }
     for task, rule in THRESHOLDS.items():
         verdict = report["verdicts"][task]
@@ -236,11 +284,8 @@ def render_markdown(report: dict[str, Any]) -> str:
 
     add("## 五、已知边界")
     add("")
-    add("- 合成层只能证明**规则实现没有系统性偏差**，不能证明业务结论正确。")
-    add("- T043 的参考顺序是代理定义（先解锁一级约束性场景多者先做，再按可回收分数），"
-        "主控文档未定义参考顺序，换一个定义数字会变。")
-    add("- 路径表只覆盖 9 个场景，S02/S04/S05/S12—S15 无法用样本验证。")
-    add("- 真实层 0 家，本报告不含任何真实企业的评测结论。")
+    for note in REPORT_NOTES:
+        add(f"- {note}")
     add("")
     return "\n".join(lines) + "\n"
 

@@ -79,8 +79,12 @@ uvicorn advisor.web.api:app --app-dir src --reload --port 8000
 
 ```bash
 python3 scripts/build_knowledge_fixture.py   # 重新生成前端冒烟测试用的接口样例
-node scripts/check_knowledge_page.mjs        # 前端渲染冒烟测试（零依赖，无需浏览器）
+node scripts/check_frontend_pages.mjs        # 前端渲染冒烟测试（零依赖，无需浏览器）
 ```
+
+站点的「评测报告」区块展示四组对照、四组消融与六项指标的实测值与门槛判定，
+数据来自 `data/evaluation/report.json`（在线时走 `GET /api/evaluation/report`）。
+不达标与不可测的指标如实标注，真实层家数如实显示。
 
 ## 合成评测样本
 

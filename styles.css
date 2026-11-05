@@ -471,6 +471,7 @@ details.evidence-block > summary { cursor: pointer; font-size: 13px; color: var(
 .kb-select:disabled { background: var(--bg-3); color: var(--muted); }
 .kb-status { font-size: 12px; color: var(--muted); }
 
+.kb-lib .table-wrap { margin-top: 10px; }
 .kb-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .kb-item {
   border: 1px solid var(--line); border-left: 3px solid var(--line-strong);

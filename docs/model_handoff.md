@@ -193,7 +193,7 @@ GET  /api/evaluation/report
 | T011 | 前端 | 企业画像表单完善 | T010 | 表单 UI | 基线、采集项、场景清晰可填 | 未开始 |  |  |
 | T012 | 前端 | 四段式结果页优化 | T006/T008 | 结果页 | 诊断、路径、排序、政策注记阅读体验清晰 | 未开始 |  |  |
 | T013 | 前端 | 知识库页面 | P2 | `/knowledge` | 四类知识源数量、分类、样例可见 | 已完成 | Codex | 知识库页面已上线：四库统计 + 分类口径 + 关键词与分类下拉检索 + 原文链接；离线模式可浏览不检索。 |
-| T014 | 前端 | 评测报告页面 | P4 | `/evaluation` | 报告数字和样本分层可访问 | 未开始 |  |  |
+| T014 | 前端 | 评测报告页面 | P4 | `/evaluation` | 报告数字和样本分层可访问 | 已完成 | Codex | 「评测报告」区块已上线：样本层分列、七行指标表（口径/实测/门槛/结论）、四组对照能力矩阵、四组消融对照表、已知边界；不达标与不可测如实标注，真实层家数如实显示。 |
 | T015 | 前端 | 方法页 | P3/P4 | `/method` | 讲清公式、口径、局限、合规边界 | 未开始 |  |  |
 | T016 | 后端 | 实现 `/api/health` | T000 | API | 前端可判断在线/离线 | 已完成 | Codex | 返回在线状态与判据层规模；前端可切换到实时模式。 |
 | T017 | 后端 | 实现 `/api/criteria` | T004/T005 | API | 前端可渲染完整表单 | 已完成 | Codex | 返回 15 采集项、16 场景和四级门槛。 |
@@ -215,7 +215,7 @@ GET  /api/evaluation/report
 | T033 | 知识库 | 191 家参评案例集说明 | T032 | 文档/数据 | 数量、来源、用途清楚 | 已完成 | Codex | `docs/knowledge_case_sets.md` 说明 191 家参评 → 66 家入选口径与 87 家数促中心登记。 |
 | T034 | 知识库 | 论文库检索入口 | 无 | `papers/` | 有分类口径和样例数据 | 已完成 | Codex | 论文库 11 篇文献 + 3 条检索入口入库，文献与检索入口分开计数。 |
 | T035 | 知识库 | 专利库检索入口 | 无 | `patents/` | 有分类口径和样例数据 | 进行中 | Codex | 专利库 5 个官方大类口径与场景映射已入库；逐件检索入口与小类数量待补（CNIPA 无公开 API）。 |
-| T036 | 知识库 | 四库统计页 | T031—T035 | `/knowledge/stats` | 数量、来源、用途可视化 | 已完成 | Codex | 统计接口与前端页面均已上线，CI 用前端冒烟测试（`node scripts/check_knowledge_page.mjs`）守着渲染路径。 |
+| T036 | 知识库 | 四库统计页 | T031—T035 | `/knowledge/stats` | 数量、来源、用途可视化 | 已完成 | Codex | 统计接口与前端页面均已上线，CI 用前端冒烟测试（`node scripts/check_frontend_pages.mjs`）守着渲染路径。 |
 | T037 | 评测 | 60 家合成样本 | T004—T030 | `profiles/` | AP1—AP4 各 10 家，正常对照 20 家 | 已完成 | Codex | 已生成 60 家（AP1—AP4 各 10 家 + 正常对照 20 家），全部标 synthetic；构造意图与引擎实测逐家一致，等级落在预期区间；真实企业 0 家。 |
 | T038 | 评测 | 1 家真实企业 | T008 | `profiles/` | 真实层单列报告 | 未开始 |  |  |
 | T039 | 评测 | 4 组对照 | T037 | 评测结果 | 纯 RAG / 纯规则 / RAG+计算器 / 完整闭环 | 已完成 | Codex | 四组对照已跑通：纯 RAG（只检索）/ 纯规则（只用判据层）/ RAG+计算器 / 完整闭环，能力开关逐项列在报告里。 |
@@ -227,7 +227,7 @@ GET  /api/evaluation/report
 | T045 | 评测 | ROI 测算偏差 | T027/T037 | 指标 | ≤20% | 进行中 | Codex | 合成层没有真值，**不可测**；已给两个可复核的数：独立复算与引擎结果偏差 0.0%（实现一致性）、换成有公开案例支撑的弹性区间后相对偏差中位 1025.7%（说明排序对弹性口径高度敏感）。真实偏差需 T038 真实企业样本。 |
 | T046 | 评测 | 跨行业泛化 | T037—T045 | 指标 | 衰减 ≤10 个百分点 | 已完成 | Codex | 合成层按行业分组的诊断 F1 衰减 0.0 个百分点（门槛 10 个百分点）。 |
 | T047 | 评测 | 评测报告生成 | T037—T046 | `/evaluation/report.md` | 人可读报告含真实层/合成层 | 已完成 | Codex | 人读报告 `data/evaluation/report.md`：样本层分列、四组对照、四组消融、六项指标与门槛判定、已知边界。 |
-| T048 | 评测 | 评测报告 JSON | T047 | API | 页面和接口一致 | 进行中 | Codex | 报告 JSON `data/evaluation/report.json` 与接口 `GET /api/evaluation/report` 已就绪；前端评测报告页面未做（T014）。 |
+| T048 | 评测 | 评测报告 JSON | T047 | API | 页面和接口一致 | 已完成 | Codex | 报告 JSON、接口 `GET /api/evaluation/report` 与前端页面三者一致，页面直接读同一份 JSON。 |
 | T049 | 合规 | 免责与边界声明 | 无 | 页脚/方法页 | 不承诺补贴、不代申报、不替代决策 | 未开始 |  |  |
 | T050 | 合规 | 来源与出处规范 | 全部 | 数据 schema | 每条引用有来源、日期、用途 | 进行中 | Codex | 入库条目均有来源、日期与链接；统一 schema 文件待落地。 |
 | T051 | 部署 | 静态站部署 | T000 | GitHub Pages | 页面可访问 | 未开始 |  |  |
@@ -836,6 +836,66 @@ GET  /api/evaluation/report
   改完要重跑 `python3 scripts/build_evaluation_report.py` 看 T043 是否过线。
 - 收工三步：`python3 -m unittest discover -s tests` →
   `python3 scripts/compare_precomputed.py` → `python3 scripts/check_push_state.py`。
+
+
+---
+
+## MODEL-012 · Codex · 2026-11-05
+
+### 参与范围
+- 任务 ID：T014、T048
+- 模块：前端评测报告页面
+
+### 实际完成
+- 前端新增「评测报告」区块（顶栏加入口）：样本层分列（合成层 / 真实层）、
+  完整闭环六项指标的七行表（口径、实测、门槛、结论）、四组对照的能力矩阵、
+  四组消融的指标对照表、已知边界清单。
+- 报告 JSON 里补上 `metric_info`（每项指标的口径说明）、`notes`（已知边界）、
+  `capability_labels`（能力名称），人读 Markdown 报告与前端页面共用同一份，
+  以后改口径只改一处。
+- 前端冒烟测试从 `scripts/check_knowledge_page.mjs` 改名为
+  `scripts/check_frontend_pages.mjs`，并扩到两个页面：新增对评测报告的断言
+  （三张表、七行指标、四组对照、四组消融、结论标签、"真实层 0 家"如实显示、
+  T043 的状态如实显示）。CI 同步改名。
+- 页面只做展示，不重算任何数字：数据来自 `data/evaluation/report.json`
+  （在线时走 `GET /api/evaluation/report`），离线模式读同一份静态文件。
+
+### 验证方式
+- `node scripts/check_frontend_pages.mjs` → 统计卡片 4、库块 4、渲染条目 10、
+  指标表 7 行、对照 4 组、消融 4 组、缺失 id 0
+- `python3 -m unittest discover -s tests -v` → 94 个用例全部通过
+- `node --check app.js`、`git diff --check` → 通过
+- CI 与 Pages：两条分支 CI success，Pages 部署 success
+
+### 更新的任务状态
+- T014：未开始 → 已完成
+- T048：进行中 → 已完成
+- T036 行里的冒烟测试脚本名同步为新名
+
+### 变更记录
+- 修改：`index.html`（区块与顶栏入口）、`app.js`（评测报告渲染）、
+  `styles.css`、`src/advisor/evaluation/runner.py`（口径与边界进 JSON）、
+  `scripts/check_frontend_pages.mjs`（改名与扩展）、`.github/workflows/ci.yml`、`README.md`
+- 重命名：`scripts/check_knowledge_page.mjs` → `scripts/check_frontend_pages.mjs`
+- **未改动** 判据层、推理层逻辑、知识库与样本数据
+
+### 遗留问题
+- T043（排序一致性 67.8%）仍未达标、T045（ROI 偏差）仍不可测，
+  原因与待裁决项见 MODEL-011，本轮未改口径。
+- 页面是纯展示层：报告是构建期产物，线上不会随输入重算；
+  要做"随样本实时重算"的评测页需要另开任务。
+- 真实层仍是 0 家，页面上的"真实层 0 家"是如实显示，不是遗漏。
+
+### 给下一个模型的交接提示
+- 前端还剩三页没做：**T011 企业画像表单完善**、**T012 四段式结果页优化**、
+  **T015 方法页**。方法页内容已经在 `docs/reasoning_layer.md` 与
+  `docs/synthetic_samples.md` 里，改写成页面即可。
+- 动页面前先跑 `node scripts/check_frontend_pages.mjs`，改完再跑一遍；
+  页面字段对不上时它会直接报"缺失 id"或表格行数不对。
+- 口径类改动（判据、门槛、ROI、优先级、选步规则）**必须先人工裁决**，
+  不要自己改；改完要重跑 `python3 scripts/build_evaluation_report.py`。
+- 收工三步：`python3 -m unittest discover -s tests` →
+  `node scripts/check_frontend_pages.mjs` → `python3 scripts/check_push_state.py`。
 
 ---
 
