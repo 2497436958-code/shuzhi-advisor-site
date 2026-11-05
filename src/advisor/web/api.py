@@ -11,10 +11,12 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -63,11 +65,57 @@ fixtures_payload = _read_json(FIXTURES_PATH)
 scenario_evidence = _read_json(SCENARIO_EVIDENCE_PATH)
 knowledge = load_knowledge()
 
-app = FastAPI(
-    title="数改指导智能体",
-    version="0.2.0",
-    description="面向中小企业数字化改造的确定性评测与决策支持接口。",
-)
+
+def cors_origins() -> list[str]:
+    """允许跨域访问的前端来源。
+
+    默认空（不同源不开放）：前后端同源部署时不需要 CORS。
+    前后端分开部署时，用环境变量 ``ADVISOR_CORS_ORIGINS`` 指定，
+    多个来源用逗号分隔，例如 ``https://example.github.io``。
+    """
+    raw = os.environ.get("ADVISOR_CORS_ORIGINS", "")
+    return [item.strip() for item in raw.split(",") if item.strip()]
+
+
+class PublicStatic(StaticFiles):
+    """只公开站��需要的静态文件。
+
+    仓库根目录里还有源码、脚本、测试与 ``.git``，整个挂出去等于把
+    工程结构和数据加工逻辑一并公开，所以这里用白名单限制可访问路径。
+    """
+
+    ALLOWED_FILES = {"index.html", "app.js", "styles.css"}
+    ALLOWED_DIRS = {"precomputed", "data", "official"}
+
+    async def get_response(self, path: str, scope: Any):
+        relative = path.lstrip("/")
+        head = relative.split("/", 1)[0]
+        # 根路径在 Starlette 里会变成 "."，两种写法都放行（交给 StaticFiles 找 index.html）
+        if relative in self.ALLOWED_FILES or head in self.ALLOWED_DIRS or relative in ("", "."):
+            return await super().get_response(path, scope)
+        raise HTTPException(status_code=404, detail="Not Found")
+
+
+def create_app(cors: list[str] | None = None) -> FastAPI:
+    """建应用。``cors`` 为空表示不同源不开放。"""
+    application = FastAPI(
+        title="数改指导智能体",
+        version="0.2.0",
+        description="面向中小企业数字化改造的确定性评测与决策支持接口。",
+    )
+    origins = cors if cors is not None else cors_origins()
+    if origins:
+        application.add_middleware(
+            CORSMiddleware,
+            allow_origins=origins,
+            allow_credentials=False,
+            allow_methods=["GET", "POST"],
+            allow_headers=["Accept", "Content-Type"],
+        )
+    return application
+
+
+app = create_app()
 
 
 @app.get("/api/health")
@@ -236,5 +284,5 @@ def get_knowledge_stats() -> dict[str, Any]:
     }
 
 
-# 该挂载放在 API 路由之后，用于本地联调静态前端。
-app.mount("/", StaticFiles(directory=ROOT, html=True), name="static")
+# 该挂载放在 API 路由之后，用于本地联调静态前端；只公开白名单里的路径。
+app.mount("/", PublicStatic(directory=ROOT, html=True), name="static")

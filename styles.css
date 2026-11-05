@@ -528,3 +528,10 @@ a.kb-item-title:hover { color: var(--accent); text-decoration: underline; }
 }
 .policy-fold > summary { cursor: pointer; font-size: 13px; color: var(--accent); }
 .policy-fold-body { display: grid; gap: 12px; margin-top: 12px; }
+
+.footer-disclaimer {
+  max-width: 1120px; margin: 16px auto 0; padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.footer-disclaimer p { font-size: 12px; color: var(--muted); margin: 0; }
+.footer-disclaimer strong { color: var(--ink-2); }

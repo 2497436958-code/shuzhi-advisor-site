@@ -72,6 +72,8 @@
 | 评测报告 | 已有 | `data/evaluation/report.md` + `report.json` + `GET /api/evaluation/report`，含四组对照与四组消融 |
 | 方法与口径页 | 已有 | 站点底部「方法与口径」区块：公式、口径、局限、合规边界、可复算入口 |
 | 结果页优化 | 已有 | 结论摘要条、诊断/路径导语、排序表含等级跃迁分与优先级、政策注记折叠 |
+| 免责与边界声明 | 已有 | 页脚「免责与边界」段 + 方法页第八节 + `docs/demo.md` 追问答法，三处一致 |
+| 部署说明 | 已有 | `docs/deployment.md`：两段式架构、环境变量、CORS、静态白名单、Render/Docker 配方与公开站安全注意 |
 
 ### 已知问题 / 待补齐
 
@@ -230,16 +232,16 @@ GET  /api/evaluation/report
 | T046 | 评测 | 跨行业泛化 | T037—T045 | 指标 | 衰减 ≤10 个百分点 | 已完成 | Codex | 合成层按行业分组的诊断 F1 衰减 0.0 个百分点（门槛 10 个百分点）。 |
 | T047 | 评测 | 评测报告生成 | T037—T046 | `/evaluation/report.md` | 人可读报告含真实层/合成层 | 已完成 | Codex | 人读报告 `data/evaluation/report.md`：样本层分列、四组对照、四组消融、六项指标与门槛判定、已知边界。 |
 | T048 | 评测 | 评测报告 JSON | T047 | API | 页面和接口一致 | 已完成 | Codex | 报告 JSON、接口 `GET /api/evaluation/report` 与前端页面三者一致，页面直接读同一份 JSON。 |
-| T049 | 合规 | 免责与边界声明 | 无 | 页脚/方法页 | 不承诺补贴、不代申报、不替代决策 | 未开始 |  |  |
+| T049 | 合规 | 免责与边界声明 | 无 | 页脚/方法页 | 不承诺补贴、不代申报、不替代决策 | 已完成 | Codex | 页脚新增「免责与边界」段：不承诺补贴获批、不承接申报代理或涉申报中介服务、不替代企业自身判断与主管部门认定、引用前请回查原文；方法页第八节为完整版（由前端内容守卫 23 条守住）。 |
 | T050 | 合规 | 来源与出处规范 | 全部 | 数据 schema | 每条引用有来源、日期、用途 | 进行中 | Codex | 入库条目均有来源、日期与链接；统一 schema 文件待落地。 |
 | T051 | 部署 | 静态站部署 | T000 | GitHub Pages | 页面可访问 | 已完成 | Codex | 静态站已部署：GitHub Pages 从 `main` 分支构建，CI 与部署均 success，线上可访问。 |
 | T052 | 部署 | 后端部署 | T016—T023 | Render/Fly/Railway | `/api/health` 可访问 | 未开始 |  |  |
-| T053 | 部署 | CORS 与环境变量 | T052 | 配置文档 | 前后端联调无跨域问题 | 未开始 |  |  |
+| T053 | 部署 | CORS 与环境变量 | T052 | 配置文档 | 前后端联调无跨域问题 | 已完成 | Codex | 后端改为白名单公开静态目录（源码、脚本、.git、docs 一律 404）；CORS 默认不同源不开放，需分开部署时用 `ADVISOR_CORS_ORIGINS` 指定来源；环境变量 `ADVISOR_HOST`/`ADVISOR_PORT`/`ADVISOR_CORS_ORIGINS` 与部署说明见 `docs/deployment.md`。 |
 | T054 | QA | 判据层测试 | T006—T008 | 测试 | 打分与门槛可重复验证 | 已完成 | Codex | `tests/test_scoring.py` 8 个用例：判据结构、三/五选项单选、多选三态、官方口径缺口披露、6 个预计算样本复算。 |
 | T055 | QA | 推理层测试 | T024—T030 | 测试 | 输出结构、证据链、反模式可测 | 已完成 | Codex | `tests/test_reasoning.py`、`test_ranking.py`、`test_evidence.py`：判据层复算、诊断一致、ROI 一致、证据链强制。 |
 | T056 | QA | API 测试 | T016—T023 | 测试 | 接口输入输出和错误处理可测 | 已完成 | Codex | `tests/test_api.py` 覆盖 health/criteria/fixtures/evaluate/knowledge stats/四个检索端点与 404、422 分支。 |
 | T057 | QA | 前端可访问性 | T009—T015 | UI 检查 | 键盘、aria、对比度、移动端可用 | 进行中 | Codex | 知识库页面的检索框、筛选下拉与计数都带 aria 标注；全站可访问性审计未做。 |
-| T058 | QA | 演示脚本 | 全部 | `docs/demo.md` | 5 分钟答辩演示路径固定 | 未开始 |  |  |
+| T058 | QA | 演示脚本 | 全部 | `docs/demo.md` | 5 分钟答辩演示路径固定 | 已完成 | Codex | `docs/demo.md`：5 分钟答辩脚本，八步各有「点哪里、说什么、屏幕出现什么」，数字全部取自实际样例；含后端不可用的兜底方案与九个追问的答法（附口径出处）。 |
 
 ---
 
@@ -1029,6 +1031,76 @@ GET  /api/evaluation/report
 - 页面改动后先跑 `node scripts/check_frontend_pages.mjs`，它现在覆盖四个页面。
 - 口径类改动（判据、门槛、ROI、优先级、选步规则、计分规则）**必须先人工裁决**；
   改完要重跑 `python3 scripts/build_evaluation_report.py` 并看六项指标与判定。
+- 收工三步：`python3 -m unittest discover -s tests` →
+  `node scripts/check_frontend_pages.mjs` → `python3 scripts/check_push_state.py`。
+
+
+---
+
+## MODEL-015 · Codex · 2026-11-05
+
+### 参与范围
+- 任务 ID：T049、T053、T058
+- 模块：合规声明、后端部署配置、答辩演示脚本
+
+### 实际完成
+- **T049 免责与边界声明**：页脚新增「免责与边界」段——不承诺补贴获批、
+  不承接申报代理或涉申报中介服务、不替代企业自身的判断与主管部门认定、
+  引用前请回查原文；方法页第八节是完整版。两处口径一致，由前端内容守卫守住。
+- **T053 CORS 与环境变量**：
+  - 后端不再把整个仓库根目录挂出去，改为**白名单公开**：`/`、`/index.html`、
+    `/app.js`、`/styles.css`、`/precomputed/`、`/data/`、`/official/`；
+    源码、脚本、测试、`.git`、`docs/` 一律 404（工程结构与数据加工逻辑不该公开）；
+  - CORS **默认不同源不开放**（前后端同源部署不需要），分开部署时用
+    `ADVISOR_CORS_ORIGINS` 指定来源，只允许 GET/POST 与 Accept/Content-Type；
+  - 环境变量 `ADVISOR_HOST` / `ADVISOR_PORT` / `ADVISOR_CORS_ORIGINS` 写进
+    `api/main.py` 与 `docs/deployment.md`；应用改成 `create_app()` 工厂，便于测试。
+  - 新增 `docs/deployment.md`：两段式架构、环境变量表、CORS 注意事项、
+    静态白名单表、Render `render.yaml` 与 Dockerfile 配方、健康检查、公开站安全注意。
+- **T058 演示脚本**：新增 `docs/demo.md`——5 分钟路径分八步（定位、问题、输入、诊断、
+  路径与排序、不建议做、评测、边界），每步写清点哪里、说什么、屏幕出现什么；
+  所有数字取自实际样例（51.95 规范级、AP1 判据、6 项指标、真实层 0 家）；
+  含后端不可用/断网的兜底方案与九个追问的答法（每条附口径出处）。
+- 新增 `tests/test_docs.py`（10 个用例）：演示脚本八步齐全、数字与样例一致、
+  诚实边界在场、兜底方案存在、部署文档写了环境变量与公开站警告、页脚免责段齐全；
+  `tests/test_api.py` 补静态白名单与 CORS 开闭的用例。
+
+### 验证方式
+- `python3 -m unittest discover -s tests -v` → 105 个用例全部通过
+- 静态白名单实测：`/`、`/index.html`、`/app.js`、`/styles.css`、`/precomputed/*`、
+  `/data/*`、`/official/*` 均 200；`/src/advisor/web/api.py`、`/scripts/*`、
+  `/.git/config`、`/README.md`、`/docs/*` 均 404
+- CORS 实测：默认无 `access-control-allow-origin`；配置 `create_app(cors=[...])` 后
+  指定来源有头、其他来源无头
+- `node scripts/check_frontend_pages.mjs`、`node --check app.js`、`git diff --check` → 通过
+
+### 更新的任务状态
+- T049：未开始 → 已完成
+- T053：未开始 → 已完成
+- T058：未开始 → 已完成
+- 当前状态快照：补 2 行已完成能力
+
+### 变更记录
+- 修改：`src/advisor/web/api.py`（工厂函数、CORS、静态白名单）、`api/main.py`（环境变量）、
+  `index.html`（页脚免责段）、`styles.css`、`docs/backend_api.md`、`docs/model_handoff.md`
+- 新增：`docs/deployment.md`、`docs/demo.md`、`tests/test_docs.py`
+- **未改动** 判据层、推理层逻辑、评测口径与任何数据文件
+
+### 遗留问题
+- **T052 后端部署仍未做**：需要部署账号与密钥。`docs/deployment.md` 已备好
+  Render `render.yaml` 与 Dockerfile 配方，部署那一步要主控授权。
+- **重要提醒（写给做 T038 的人）**：本站是**公开**的，GitHub Pages 上的 `data/`
+  目录所有人可见。真实企业画像不要提交进本仓库、也不要用公开的后端实例；
+  真实层演示请用本地环境或私有部署。
+- T035 专利库检索入口还差小类数量（CNIPA 无公开 API）。
+- T008/T038 真实企业、T043 排序口径、T045 ROI 偏差三项仍待外部输入或人工裁决。
+
+### 给下一个模型的交接提示
+- 剩下能自己做的只有 **T050 来源与出处规范**（把知识库 schema 落地并接进校验脚本）
+  与 **T057 前端可访问性**（键盘可达、对比度、移动端），两轮内可完成。
+- 其余四项都要外部输入：真实企业数据（T008/T038/T045）、排序口径裁决（T043）、
+  部署账号（T052）、专利人工检索（T035）。
+- 新增文档都要在 `tests/test_docs.py` 里有守门用例，删内容会 CI 报红。
 - 收工三步：`python3 -m unittest discover -s tests` →
   `node scripts/check_frontend_pages.mjs` → `python3 scripts/check_push_state.py`。
 

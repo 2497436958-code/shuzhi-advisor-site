@@ -171,6 +171,28 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(data["layers"]["real"]["count"], 0)
         self.assertEqual(len(data["systems"]), 8)
 
+    def test_static_allowlist(self):
+        """只公开站点要用的路径，源码与 .git 不许暴露。"""
+        for path in ("/", "/index.html", "/app.js", "/styles.css",
+                     "/precomputed/criteria.json", "/data/knowledge/policy.json"):
+            self.assertEqual(self.client.get(path).status_code, 200, path)
+        for path in ("/src/advisor/web/api.py", "/scripts/verify_criteria.py",
+                     "/.git/config", "/README.md", "/docs/model_handoff.md"):
+            self.assertEqual(self.client.get(path).status_code, 404, path)
+
+    def test_cors_is_closed_by_default(self):
+        response = self.client.get("/api/health", headers={"Origin": "https://example.com"})
+        self.assertNotIn("access-control-allow-origin", {k.lower() for k in response.headers})
+
+    def test_cors_opens_when_configured(self):
+        from advisor.web.api import create_app
+
+        client = TestClient(create_app(cors=["https://example.com"]))
+        response = client.get("/api/health", headers={"Origin": "https://example.com"})
+        self.assertEqual(response.headers.get("access-control-allow-origin"), "https://example.com")
+        other = client.get("/api/health", headers={"Origin": "https://evil.example"})
+        self.assertNotIn("access-control-allow-origin", {k.lower() for k in other.headers})
+
     def test_knowledge_stats(self):
         response = self.client.get("/api/knowledge/stats")
         self.assertEqual(response.status_code, 200)
