@@ -23,6 +23,10 @@ const read = (p) => readFileSync(join(ROOT, p), "utf8");
 
 class TextNode {
   constructor(text) { this.nodeType = 3; this._text = String(text); }
+  /* 真 input 的 value 永远是字符串：赋值时强制转换 */
+  get value() { return this._value; }
+  set value(next) { this._value = next === null || next === undefined ? "" : String(next); }
+
   get textContent() { return this._text; }
   set textContent(v) { this._text = String(v); }
 }
@@ -50,7 +54,7 @@ class El {
       get(target, prop) { return target[prop]; },
     });
     this.className = "";
-    this.value = "";
+    this._value = "";
     this.checked = false;
     this.hidden = false;
     this.disabled = false;
@@ -61,6 +65,10 @@ class El {
     this.parentNode = null;
     this._ownText = "";
   }
+  /* 真 input 的 value 永远是字符串：赋值时强制转换 */
+  get value() { return this._value; }
+  set value(next) { this._value = next === null || next === undefined ? "" : String(next); }
+
   get textContent() {
     if (!this.children.length) return this._ownText;
     return this.children.map((child) => child.textContent).join("");
@@ -206,6 +214,10 @@ const document = {
     const trimmed = selector.trim();
     if (trimmed.startsWith("#") && !/[ >]/.test(trimmed)) {
       const id = trimmed.slice(1);
+      // 先在树里找：有些元素是前端运行时创建的（如 #fixture-select），
+      // 不在 index.html 里，但确实存在
+      const inTree = root.querySelector(trimmed);
+      if (inTree) return inTree;
       const node = registry.get(id);
       if (node) return node;
       missingIds.add(id);
@@ -228,6 +240,8 @@ const fixture = JSON.parse(read("scripts/fixtures/knowledge_api.json"));
 const criteria = JSON.parse(read("precomputed/criteria.json"));
 const fixtures = JSON.parse(read("precomputed/fixtures.json"));
 const evaluation = JSON.parse(read("data/evaluation/report.json"));
+const evaluateResult = JSON.parse(read("scripts/fixtures/evaluate_result.json"));
+const ap1Fixture = JSON.parse(read("precomputed/ap1_只买设备不联网.json"));
 const calls = [];
 
 function respond(body) {
@@ -243,6 +257,8 @@ const fetchStub = async (url) => {
   if (path.endsWith("api/fixtures")) return respond(fixtures);
   if (path.endsWith("api/scenario_evidence")) return respond({ available: true, judgments: {} });
   if (path.endsWith("api/knowledge/stats")) return respond(fixture.stats);
+  if (path.endsWith("api/evaluate")) return respond(evaluateResult);
+  if (path.includes("api/fixtures/") && path.endsWith(".json")) return respond(ap1Fixture);
   if (path.endsWith("api/evaluation/report")) return respond(evaluation);
   if (path.endsWith("data/evaluation/report.json")) return respond(evaluation);
   for (const key of ["policy", "cases", "papers", "patents"]) {
@@ -402,6 +418,47 @@ check(
   "评测报告没有如实显示 T043 的结论状态",
 );
 
+/* ---- 四段式结果页：真的提交一次评测，看渲染有没有断 ---- */
+
+const demoButton = registry.get("btn-demo");
+check(Boolean(demoButton), "找不到示例企业按钮");
+demoButton.dispatch("click");
+
+try {
+  await waitFor(
+    () => {
+      const summary = registry.get("result-summary");
+      return summary && !summary.hidden && summary.children.length > 0;
+    },
+    "结果摘要渲染"
+  );
+} catch (err) {
+  console.error("失败时的表单状态：", registry.get("form-status").textContent);
+  console.error("失败前的请求：", calls.slice(-6).join(" | "));
+  throw err;
+}
+
+const summaryCells = registry.get("result-summary").querySelectorAll(".result-summary-cell");
+check(summaryCells.length === 5, `结果摘要应有 5 个格子，实际 ${summaryCells.length}`);
+
+const diagnosisCards = registry.get("out-diagnosis").querySelectorAll(".card");
+check(diagnosisCards.length > 0, "诊断段没有渲染出卡片");
+
+const pathSteps = registry.get("out-pathway").querySelectorAll(".step");
+check(pathSteps.length > 0, "路径段没有渲染出步骤");
+
+const rankingRows = registry.get("out-ranking").querySelectorAll("tbody tr");
+check(rankingRows.length > 0, "排序段没有渲染出表格行");
+const rankingHeaders = registry.get("out-ranking").querySelectorAll("thead th");
+const headerTexts = rankingHeaders.map((cell) => cell.textContent);
+check(
+  headerTexts.includes("等级跃迁分") && headerTexts.includes("优先级 P"),
+  "排序表缺少等级跃迁分或优先级列：" + headerTexts.join("/"),
+);
+
+const policyFold = registry.get("out-policy").querySelector(".policy-fold");
+check(Boolean(policyFold), "政策注记没有折叠起来");
+
 /* ---- 方法页：静态内容守卫（口径、公式与合规声明不能被悄悄删掉） ---- */
 
 const indexHtml = read("index.html");
@@ -455,5 +512,6 @@ console.log("前端页面冒烟测试通过");
 console.log(`  统计卡片 ${statCards.length} 个，库块 ${libBlocks.length} 个`);
 console.log(`  渲染条目 ${knowledgeBody.querySelectorAll(".kb-item").length} 条`);
 console.log(`  评测报告：指标表 ${metricRows.length} 行、对照 ${controlRows.length} 组、消融 ${ablationRows.length} 组`);
+console.log(`  四段式结果：摘要 ${summaryCells.length} 格、诊断 ${diagnosisCards.length} 卡片、路径 ${pathSteps.length} 步、排序 ${rankingRows.length} 行`);
 console.log(`  方法页：内容守卫 23 条口径与合规声明齐全`);
 console.log(`  fetch 调用 ${calls.length} 次，缺失 id ${missingIds.size} 个`);

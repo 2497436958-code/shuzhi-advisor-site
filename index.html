@@ -87,6 +87,8 @@
       <div class="fixture-controls" id="fixture-picker-host"></div>
     </div>
 
+    <p class="form-progress" id="form-progress" role="status"></p>
+
     <form id="profile-form" novalidate>
       <fieldset class="block">
         <legend>企业与经营基线</legend>
@@ -130,6 +132,7 @@
 
       <fieldset class="block">
         <legend>应用场景 1—4 级（官方等级判定表，逐字转写）</legend>
+        <p class="hint" id="scenario-progress"></p>
         <div id="scenario-groups" class="groups"></div>
       </fieldset>
 
@@ -146,6 +149,8 @@
       <h2 id="output-title">四段式结果</h2>
       <p class="panel-sub">顺序固定：诊断 → 路径 → 排序（含「不建议做」）→ 政策注记。每条结论可展开看依据。</p>
     </div>
+
+    <div class="result-summary" id="result-summary" hidden></div>
 
     <section class="out-section" aria-labelledby="out-diag-title">
       <h3 id="out-diag-title"><span class="out-num">一</span>诊断</h3>

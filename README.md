@@ -78,9 +78,13 @@ uvicorn advisor.web.api:app --app-dir src --reload --port 8000
 关键词 + 分类下拉，每条都带原文链接。后端在线时支持检索，离线模式可浏览不检索。
 
 ```bash
-python3 scripts/build_knowledge_fixture.py   # 重新生成前端冒烟测试用的接口样例
+python3 scripts/build_frontend_fixtures.py   # 重新生成前端冒烟测试用的接口样例
 node scripts/check_frontend_pages.mjs        # 前端渲染冒烟测试（零依赖，无需浏览器）
 ```
+
+冒烟测试用最小 DOM 桩把 app.js 的启动流程真跑一遍，覆盖知识库页、评测报告页、
+方法页内容守卫，以及**四段式结果页**（真的提交一次评测，看摘要、诊断卡片、路径步骤、
+排序表格有没有断）。
 
 站点的「方法与口径」区块回答"结论是怎么来的"：判据出处与权重链乘、算分规则、
 四级门槛与约束性场景要求、AP1—AP4 判据、路径与 ROI/优先级公式、知识库与评测口径、

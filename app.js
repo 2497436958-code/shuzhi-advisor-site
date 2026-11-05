@@ -115,6 +115,7 @@
 
     renderForm();
     renderFixturePicker();
+    updateFormProgress();
     bindActions();
     loadKnowledge();
     loadEvaluation();
@@ -173,6 +174,15 @@
     }
   }
 
+  /* 官方计分换算（与 advisor.scoring.engine 一致，只用于把分值摆在填表现场） */
+  function optionScore(indicator, index) {
+    const options = indicator.options;
+    if (indicator.option_type === "单选") {
+      return Math.round((index * 100) / (options.length - 1));
+    }
+    return Math.round(((index + 1) * 100) / (options.length - 1));
+  }
+
   function renderIndicator(indicator) {
     const wrap = el("div", { class: "item", "data-indicator": indicator.id });
     wrap.appendChild(el("div", { class: "item-head" }, [
@@ -192,10 +202,14 @@
         "data-indicator": indicator.id,
         id: `indicator-${indicator.id}`,
       });
+      select.addEventListener("change", () => updateFormProgress());
       select.appendChild(el("option", { value: "", text: "— 请选择 —" }));
-      for (const option of indicator.options) {
-        select.appendChild(el("option", { value: option, text: option }));
-      }
+      indicator.options.forEach((option, index) => {
+        select.appendChild(el("option", {
+          value: option,
+          text: `${option}（${optionScore(indicator, index)} 分）`,
+        }));
+      });
       body.appendChild(select);
     } else {
       const list = el("div", { class: "opts" });
@@ -207,16 +221,64 @@
           "data-indicator": indicator.id,
           id: `indicator-${indicator.id}-${indicator.options.indexOf(option)}`,
         });
-        input.addEventListener("change", () => onMultiChange(input));
+        input.addEventListener("change", () => {
+          onMultiChange(input);
+          updateFormProgress();
+        });
         list.appendChild(el("label", { class: "opt", for: `indicator-${indicator.id}-${indicator.options.indexOf(option)}` }, [
           input,
           el("span", { text: option }),
         ]));
       }
       body.appendChild(list);
+      const denominator = indicator.options.length - 1;
+      body.appendChild(el("p", {
+        class: "item-meta score-hint",
+        text: `计分：选中 N 项 = N × 100 ÷ ${denominator} 分；选「无」得 0 分。` +
+          (indicator.official_rule_gap ? "（本项官方评分规则未覆盖，按等距线性兜底）" : ""),
+      }));
     }
     wrap.appendChild(body);
     return wrap;
+  }
+
+  /* 填写进度：让人知道还差多少，不用等到提交才被拦下 */
+  function updateFormProgress() {
+    const host = $("#form-progress");
+    if (!host || !state.criteria) return;
+    const indicators = state.criteria.indicators;
+    const answeredIndicators = indicators.filter((indicator) => {
+      if (indicator.option_type === "单选") {
+        const select = document.querySelector(`select[data-role="single"][data-indicator="${indicator.id}"]`);
+        return Boolean(select && select.value);
+      }
+      return Boolean(
+        document.querySelector(`input[data-role="multi"][data-indicator="${indicator.id}"]:checked`)
+      );
+    }).length;
+    const answeredScenarios = state.criteria.scenarios.filter((scenario) =>
+      Boolean(document.querySelector(`input[data-role="scenario"][data-scenario="${scenario.id}"]:checked`))
+    ).length;
+    host.textContent =
+      `已填 ${answeredIndicators}/15 个采集项 · ${answeredScenarios}/16 个场景等级` +
+      (answeredIndicators === 15 && answeredScenarios === 16
+        ? "，可以评测了。"
+        : "，全部填完才能定级。");
+    host.dataset.complete = answeredIndicators === 15 && answeredScenarios === 16 ? "yes" : "no";
+
+    const constraintHost = $("#scenario-progress");
+    if (constraintHost) {
+      const constraint = state.criteria.scenarios.filter((scenario) => scenario.constraint);
+      const atTwo = constraint.filter((scenario) => {
+        const checked = document.querySelector(
+          `input[data-role="scenario"][data-scenario="${scenario.id}"][value="2"]:checked`
+        );
+        return Boolean(checked);
+      }).length;
+      constraintHost.textContent =
+        `约束性场景共 ${constraint.length} 个，其中达到 2 级的 ${atTwo} 个` +
+        "（二级门槛要求不少于 3 个约束性场景达到 2 级；官方标 * 的那 10 个场景是引导深度改造的重点）。";
+    }
   }
 
   function onMultiChange(input) {
@@ -272,6 +334,7 @@
       });
       input.addEventListener("change", () => {
         updateScenarioHint(scenario.id, level);
+        updateFormProgress();
       });
       radios.appendChild(el("label", { class: "level-radio", for: `scenario-${scenario.id}-${level}` }, [
         input,
@@ -349,6 +412,7 @@
       if (input) input.checked = true;
       updateScenarioHint(scenario.id, level);
     }
+    updateFormProgress();
   }
 
   function collectProfile() {
@@ -467,6 +531,55 @@
 
   /* ------------------------------------------------------------ 结果渲染 */
 
+  /* 结果摘要：把"什么等级、先处理什么、第一步做什么、要花多少"放在最上面 */
+  function renderResultSummary(result) {
+    const host = $("#result-summary");
+    if (!host) return;
+    host.textContent = "";
+    const evaluation = result.evaluation || {};
+    const diagnosis = result.diagnosis || [];
+    const pathway = result.pathway || [];
+    const ranking = result.ranking || [];
+    const first = diagnosis[0];
+    const firstStep = pathway[0];
+    const top = ranking[0];
+    const total = pathway.reduce(
+      (acc, step) => [
+        acc[0] + ((step.cost_range && step.cost_range[0]) || 0),
+        acc[1] + ((step.cost_range && step.cost_range[1]) || 0),
+      ],
+      [0, 0]
+    );
+    const cells = [
+      ["水平等级", evaluation.level_name || "无等级"],
+      ["评测得分", num(evaluation.total_score, 1) + " / 100"],
+      ["最先要处理", first ? first.bottleneck : "未发现结构性瓶颈"],
+      ["第一步", firstStep ? firstStep.action : "本次没有必须先做的动作"],
+      [
+        pathway.length ? "路径投入合计" : "投入合计",
+        pathway.length ? num(total[0], 1) + " — " + num(total[1], 1) + " 万元/年" : "—",
+      ],
+    ];
+    const grid = el("div", { class: "result-summary-grid" });
+    for (const cell of cells) {
+      grid.appendChild(el("div", { class: "result-summary-cell" }, [
+        el("span", { class: "result-summary-label", text: cell[0] }),
+        el("span", { class: "result-summary-value", text: cell[1] }),
+      ]));
+    }
+    host.appendChild(grid);
+    if (top) {
+      host.appendChild(el("p", {
+        class: "result-summary-note",
+        text: "投入产出排序第一：" + (top.name || top.action_id) +
+          "（ROI 下界 " + num(top.roi_low, 3) +
+          "，目标场景 " + (top.target_scenario || "—") + "）；" +
+          "排序取 ROI 下界，与路径段的依赖顺序是两套口径。",
+      }));
+    }
+    host.hidden = false;
+  }
+
   function renderResult(result, options) {
     state.result = result;
     $("#output-panel").hidden = false;
@@ -514,6 +627,7 @@
       host.insertBefore(notice, host.firstChild.nextSibling);
     }
 
+    renderResultSummary(result);
     renderDiagnosis(result);
     renderPathway(result);
     renderRanking(result);
@@ -525,6 +639,13 @@
     const host = $("#out-diagnosis");
     host.textContent = "";
     const entries = result.diagnosis || [];
+    if (entries.length) {
+      host.appendChild(el("p", {
+        class: "out-lead",
+        text: "共 " + entries.length + " 条瓶颈，先处理「" + entries[0].bottleneck + "」；" +
+          "每条都标了命中采集项、命中场景与官方原文引文，点开「看依据」可逐条复核。",
+      }));
+    }
     if (!entries.length) {
       host.appendChild(el("div", { class: "placeholder" }, [
         el("b", { text: "未发现结构性瓶颈" }),
@@ -641,6 +762,20 @@
       ]));
       return;
     }
+    if (steps.length) {
+      const total = steps.reduce(
+        (acc, step) => [
+          acc[0] + ((step.cost_range && step.cost_range[0]) || 0),
+          acc[1] + ((step.cost_range && step.cost_range[1]) || 0),
+        ],
+        [0, 0]
+      );
+      host.appendChild(el("p", {
+        class: "out-lead",
+        text: steps.length + " 步，按前置依赖排序（先底座后场景），投入区间合计 " +
+          num(total[0], 1) + " — " + num(total[1], 1) + " 万元/年（估算区间，含运维与内部工时折价）。",
+      }));
+    }
     const list = el("div", { class: "steps" });
     for (const step of steps) {
       const box = el("article", { class: "step" });
@@ -704,6 +839,8 @@
         el("th", { text: "投入（万元/年）" }),
         el("th", { text: "预期年化收益（万元）" }),
         el("th", { text: "ROI 区间" }),
+        el("th", { text: "等级跃迁分" }),
+        el("th", { text: "优先级 P" }),
         el("th", { text: "受阻" }),
         el("th", { text: "依据" }),
       ]));
@@ -718,6 +855,8 @@
         tr.appendChild(el("td", { class: "num", text: `${num(row.cost_range[0], 1)} — ${num(row.cost_range[1], 1)}` }));
         tr.appendChild(el("td", { class: "num", text: `${num(row.benefit_range[0], 1)} — ${num(row.benefit_range[1], 1)}` }));
         tr.appendChild(el("td", { class: "num", text: `${num(row.roi_low, 3)} — ${num(row.roi_high, 3)}` }));
+        tr.appendChild(el("td", { class: "num", text: num(row.level_gain, 2) + " 分" }));
+        tr.appendChild(el("td", { class: "num", text: num(row.priority, 3) }));
         tr.appendChild(el("td", { text: row.blocked_by && row.blocked_by.length ? row.blocked_by.join("、") : "—" }));
         const last = el("td");
         last.appendChild(evidenceDetails(row.evidence_refs));
@@ -730,7 +869,8 @@
 
       host.appendChild(el("p", { class: "hint" , text:
         `路径段按前置依赖排序（先底座后场景），排序段按 ROI 下界排序，两者口径不同。` +
-        `逐项扰动 40% 时整体排序翻转率 ${assumptions.flip_rate ?? "—"}。` }));
+        `等级跃迁分是该改造项相关采集项当前可回收的分数；优先级 P =（等级跃迁分 + 关联成效改善）÷ 投入成本，` +
+        `两个分子项单位不同，只用于同一依赖层内排序。` }));
     } else {
       host.appendChild(el("div", { class: "placeholder" }, [
         el("b", { text: "没有可量化的投入产出排序" }),
@@ -768,6 +908,13 @@
     const status = result.policy_notes_status || {};
     const notes = result.policy_notes || [];
     if (notes.length) {
+      const details = el("details", { class: "policy-fold" });
+      details.appendChild(el("summary", {
+        text: `展开 ${notes.length} 条相关政策（判据基准、验收口径、资金通道与地方口径）`,
+      }));
+      const inner = el("div", { class: "policy-fold-body" });
+      details.appendChild(inner);
+      host.appendChild(details);
       for (const note of notes) {
         const card = el("div", { class: "card" });
         card.appendChild(el("div", { class: "card-head" }, [
@@ -796,7 +943,7 @@
           }
           card.appendChild(quotes);
         }
-        host.appendChild(card);
+        inner.appendChild(card);
       }
     } else {
       host.appendChild(el("div", { class: "placeholder" }, [

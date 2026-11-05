@@ -17,6 +17,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from advisor.reasoning.pipeline import build_result
+from advisor.scoring.engine import load_criteria
 from advisor.web.api import (
     get_knowledge_cases,
     get_knowledge_papers,
@@ -26,6 +28,7 @@ from advisor.web.api import (
 )
 
 OUTPUT = ROOT / "scripts" / "fixtures" / "knowledge_api.json"
+RESULT_OUTPUT = ROOT / "scripts" / "fixtures" / "evaluate_result.json"
 
 
 def main() -> int:
@@ -41,6 +44,21 @@ def main() -> int:
     print(f"写出 {OUTPUT.relative_to(ROOT)}")
     for key in ("policy", "cases", "papers", "patents"):
         print(f"  {key}: total={payload[key]['total']} items={len(payload[key]['items'])}")
+
+    # 一次完整评测的结果（拿 AP1 样例的四段式结果当渲染样例）
+    profile = json.loads(
+        (ROOT / "precomputed" / "ap1_只买设备不联网.json").read_text(encoding="utf-8")
+    )["profile"]
+    criteria = load_criteria(ROOT / "precomputed" / "criteria.json")
+    result = build_result(profile, criteria)
+    RESULT_OUTPUT.write_text(
+        json.dumps(result, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+    )
+    print(f"写出 {RESULT_OUTPUT.relative_to(ROOT)}")
+    print(
+        f"  诊断 {len(result['diagnosis'])} 条、路径 {len(result['pathway'])} 步、"
+        f"排序 {len(result['ranking'])} 行、政策注记 {len(result['policy_notes'])} 条"
+    )
     return 0
 
 
