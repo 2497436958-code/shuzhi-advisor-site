@@ -393,16 +393,22 @@
   async function runEvaluation() {
     const status = $("#form-status");
     const button = $("#btn-evaluate");
-    const missing = [];
+    const missingIndicators = [];
     for (const indicator of state.criteria.indicators) {
       const answered = indicator.option_type === "单选"
         ? Boolean(document.querySelector(`select[data-role="single"][data-indicator="${indicator.id}"]`).value)
         : Boolean(document.querySelector(`input[data-role="multi"][data-indicator="${indicator.id}"]:checked`));
-      if (!answered) missing.push(indicator.id);
+      if (!answered) missingIndicators.push(indicator.id);
     }
-    if (missing.length) {
+    const missingScenarios = state.criteria.scenarios
+      .filter((scenario) => !document.querySelector(`input[data-role="scenario"][data-scenario="${scenario.id}"]:checked`))
+      .map((scenario) => scenario.id);
+    if (missingIndicators.length || missingScenarios.length) {
+      const parts = [];
+      if (missingIndicators.length) parts.push(`采集项 ${missingIndicators.join("、")}`);
+      if (missingScenarios.length) parts.push(`场景 ${missingScenarios.join("、")}`);
       status.className = "form-status error";
-      status.textContent = `还有 ${missing.length} 个采集项未作答（${missing.join("、")}）。官方要求 15 项全部作答才能定级。`;
+      status.textContent = `还有 ${missingIndicators.length + missingScenarios.length} 个必填项未作答（${parts.join("；")}）。官方要求 15 个采集项与 16 个场景等级全部作答才能定级。`;
       return;
     }
     if (state.mode !== "online") {
