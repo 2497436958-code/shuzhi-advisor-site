@@ -203,7 +203,7 @@ GET  /api/evaluation/report
 | T019 | 后端 | 实现 `/api/evaluate` | T006—T012 | API | 自定义企业实时出四段式结果 | 已完成 | Codex | 已接入判据层 + 推理层：诊断、路径、排序、反模式、政策注记全部实时生成，返回体与已发布预计算结果同构。 |
 | T020 | 后端 | 实现 `/api/scenario_evidence` | T005 | API | 官方原文引文可返回 | 已完成 | Codex | 返回预计算场景判定证据和可用性标记。 |
 | T021 | 后端 | 实现知识库接口 | T013 | API | 政策/案例/论文/专利可查询 | 已完成 | Codex | 已实现 `/api/knowledge/policy|cases|papers|patents`（关键词 + 精确过滤 + 分页 + 分面计数）与 `/api/knowledge/stats`。 |
-| T022 | 后端 | 实现评测报告接口 | P4 | API | 报告 JSON 可访问 | 未开始 |  |  |
+| T022 | 后端 | 实现评测报告接口 | P4 | API | 报告 JSON 可访问 | 已完成 | Codex | 已实现 `GET /api/evaluation/report`，返回报告 JSON（含八组指标与判定），页面与接口同源。 |
 | T023 | 后端 | 保留离线回退 | T016—T022 | `precomputed/` | 后端挂掉仍可演示 | 已完成 | Codex | `precomputed/` 未改动，前端 `/api/health` 失败时仍回退到预计算模式，离线与实时共用同一套渲染代码。 |
 | T024 | 推理层 | 诊断规则 | T004—T007 | `diagnosis.py` | 输出瓶颈、命中项、命中场景 | 已完成 | Codex | 四类瓶颈规则全部实现（反模式型、场景断层、等级缺口、基础缺口），与预计算结果逐条一致。 |
 | T025 | 推理层 | 归因路径匹配 | 案例库 | `pathway.py` | 症状 → 根因 → 改造项可匹配 | 已完成 | Codex | 路径表从预计算结果反解入库（`data/pathways.json`），案例按目标场景就近匹配，引用可逐条回查。 |
@@ -232,10 +232,10 @@ GET  /api/evaluation/report
 | T048 | 评测 | 评测报告 JSON | T047 | API | 页面和接口一致 | 已完成 | Codex | 报告 JSON、接口 `GET /api/evaluation/report` 与前端页面三者一致，页面直接读同一份 JSON。 |
 | T049 | 合规 | 免责与边界声明 | 无 | 页脚/方法页 | 不承诺补贴、不代申报、不替代决策 | 未开始 |  |  |
 | T050 | 合规 | 来源与出处规范 | 全部 | 数据 schema | 每条引用有来源、日期、用途 | 进行中 | Codex | 入库条目均有来源、日期与链接；统一 schema 文件待落地。 |
-| T051 | 部署 | 静态站部署 | T000 | GitHub Pages | 页面可访问 | 未开始 |  |  |
+| T051 | 部署 | 静态站部署 | T000 | GitHub Pages | 页面可访问 | 已完成 | Codex | 静态站已部署：GitHub Pages 从 `main` 分支构建，CI 与部署均 success，线上可访问。 |
 | T052 | 部署 | 后端部署 | T016—T023 | Render/Fly/Railway | `/api/health` 可访问 | 未开始 |  |  |
 | T053 | 部署 | CORS 与环境变量 | T052 | 配置文档 | 前后端联调无跨域问题 | 未开始 |  |  |
-| T054 | QA | 判据层测试 | T006—T008 | 测试 | 打分与门槛可重复验证 | 未开始 |  |  |
+| T054 | QA | 判据层测试 | T006—T008 | 测试 | 打分与门槛可重复验证 | 已完成 | Codex | `tests/test_scoring.py` 8 个用例：判据结构、三/五选项单选、多选三态、官方口径缺口披露、6 个预计算样本复算。 |
 | T055 | QA | 推理层测试 | T024—T030 | 测试 | 输出结构、证据链、反模式可测 | 已完成 | Codex | `tests/test_reasoning.py`、`test_ranking.py`、`test_evidence.py`：判据层复算、诊断一致、ROI 一致、证据链强制。 |
 | T056 | QA | API 测试 | T016—T023 | 测试 | 接口输入输出和错误处理可测 | 已完成 | Codex | `tests/test_api.py` 覆盖 health/criteria/fixtures/evaluate/knowledge stats/四个检索端点与 404、422 分支。 |
 | T057 | QA | 前端可访问性 | T009—T015 | UI 检查 | 键盘、aria、对比度、移动端可用 | 进行中 | Codex | 知识库页面的检索框、筛选下拉与计数都带 aria 标注；全站可访问性审计未做。 |
