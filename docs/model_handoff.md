@@ -167,7 +167,7 @@ GET  /api/evaluation/report
 |---|---|---|---|---|---|---|---|---|
 | T000 | 工程化 | 确认源码仓库、分支、运行方式 | 无 | 可本地启动的仓库 | `git clone` 后可运行，前端可打开 | 已完成 | Codex | 已克隆 `work/shuzhi-advisor-site`；本地 8081 可打开静态站。 |
 | T001 | 工程化 | 建立 Git 分支与提交规范 | T000 | 分支规范说明 | 不允许直接改主干，提交有说明 | 已完成 | Codex | 已创建 `fix/scene-level-hint`；本次只提交该任务相关修改。 |
-| T002 | 工程化 | 建立后端依赖与环境说明 | T000 | `requirements.txt`、README | 新模型可按 README 启动 | 已完成 | Codex | 已补充 Python/Node 环境说明；当前判据层只用标准库。 |
+| T002 | 工程化 | 建立后端依赖与环境说明 | T000 | `requirements.txt`、README | 新模型可按 README 启动 | 已完成 | Codex | 已补充 FastAPI/Uvicorn 依赖、httpx 开发依赖、后端启动说明。 |
 | T003 | 工程化 | 建立 CI | T000 | GitHub Actions | push 后自动跑测试 | 已完成 | Codex | CI 在 Python 3.10/3.11/3.12 跑判据校验、测试和前端语法检查。 |
 | T004 | 判据层 | 固化 15 个采集项 | 无 | `criteria.json` 或 DB | 数量、权重、选项、题型一致 | 已完成 | Codex | `precomputed/criteria.json` 结构校验通过，15 项权重合计 1.0。 |
 | T005 | 判据层 | 固化 16 个应用场景 | T004 | 场景定义文件 | 16 个场景、约束性标记、四级描述完整 | 已完成 | Codex | 16 个场景、约束性标记、四级描述均已通过校验。 |
@@ -181,11 +181,11 @@ GET  /api/evaluation/report
 | T013 | 前端 | 知识库页面 | P2 | `/knowledge` | 四类知识源数量、分类、样例可见 | 未开始 |  |  |
 | T014 | 前端 | 评测报告页面 | P4 | `/evaluation` | 报告数字和样本分层可访问 | 未开始 |  |  |
 | T015 | 前端 | 方法页 | P3/P4 | `/method` | 讲清公式、口径、局限、合规边界 | 未开始 |  |  |
-| T016 | 后端 | 实现 `/api/health` | T000 | API | 前端可判断在线/离线 | 未开始 |  |  |
-| T017 | 后端 | 实现 `/api/criteria` | T004/T005 | API | 前端可渲染完整表单 | 未开始 |  |  |
-| T018 | 后端 | 实现 `/api/fixtures` | T004 | API | 样例企业列表可用 | 未开始 |  |  |
-| T019 | 后端 | 实现 `/api/evaluate` | T006—T012 | API | 自定义企业实时出四段式结果 | 未开始 |  |  |
-| T020 | 后端 | 实现 `/api/scenario_evidence` | T005 | API | 官方原文引文可返回 | 未开始 |  |  |
+| T016 | 后端 | 实现 `/api/health` | T000 | API | 前端可判断在线/离线 | 已完成 | Codex | 返回在线状态与判据层规模；前端可切换到实时模式。 |
+| T017 | 后端 | 实现 `/api/criteria` | T004/T005 | API | 前端可渲染完整表单 | 已完成 | Codex | 返回 15 采集项、16 场景和四级门槛。 |
+| T018 | 后端 | 实现 `/api/fixtures` | T004 | API | 样例企业列表可用 | 已完成 | Codex | 已实现列表和单样例接口。 |
+| T019 | 后端 | 实现 `/api/evaluate` | T006—T012 | API | 自定义企业实时出四段式结果 | 进行中 | Codex | 已接入确定性打分器；诊断/路径/排序/反模式仍待接入，`reasoning_status=pending`。 |
+| T020 | 后端 | 实现 `/api/scenario_evidence` | T005 | API | 官方原文引文可返回 | 已完成 | Codex | 返回预计算场景判定证据和可用性标记。 |
 | T021 | 后端 | 实现知识库接口 | T013 | API | 政策/案例/论文/专利可查询 | 未开始 |  |  |
 | T022 | 后端 | 实现评测报告接口 | P4 | API | 报告 JSON 可访问 | 未开始 |  |  |
 | T023 | 后端 | 保留离线回退 | T016—T022 | `precomputed/` | 后端挂掉仍可演示 | 未开始 |  |  |
@@ -455,6 +455,60 @@ GET  /api/evaluation/report
 - 下一步建议做 T016—T020：搭建最小后端接口，并把 `/api/evaluate` 接到 `advisor.scoring.engine`。
 - 后端新增依赖时必须同步更新 `requirements.txt`、README 和 CI。
 - 不要让模型参与算分。
+
+---
+
+## MODEL-006 · Codex · 2026-11-05
+
+### 参与范围
+- 任务 ID：T016、T017、T018、T019、T020
+- 模块：最小后端 API、确定性打分器接入、联调验证
+
+### 实际完成
+- 新增 FastAPI 后端：`src/advisor/web/api.py`。
+- 新增开发入口：`api/main.py`。
+- 实现端点：
+  - `/api/health`
+  - `/api/criteria`
+  - `/api/fixtures`
+  - `/api/fixtures/{fixture_id}`
+  - `/api/evaluate`
+  - `/api/scenario_evidence`
+- `/api/evaluate` 已接入 `advisor.scoring.engine`。
+- 新增 `docs/backend_api.md`。
+- 更新 `requirements.txt` 和 `requirements-dev.txt`。
+- 更新 CI，使用 `requirements-dev.txt` 安装测试依赖。
+- 更新 README，补充后端启动说明。
+
+### 验证方式
+- `python3 -m unittest discover -s tests -v`：17 个测试全部通过。
+- `python3 scripts/verify_criteria.py`：6 个预计算样本全部 PASS。
+- `node --check app.js`：通过。
+- 启动 `uvicorn` 后用 `curl` 冒烟测试：
+  - `/api/health` 返回 `mode=online`；
+  - `/api/criteria` 返回 15 个采集项、16 个场景；
+  - `/api/fixtures/ap1_只买设备不联网.json` 返回画像；
+  - `/api/evaluate` 返回 `51.95 / 规范级 / realtime`。
+- 浏览器打开后端地址，确认顶部从“预计算结果”切换为“实时计算（后端在线）”。
+
+### 更新的任务状态
+- T002：说明更新
+- T016：未开始 → 已完成
+- T017：未开始 → 已完成
+- T018：未开始 → 已完成
+- T019：未开始 → 进行中
+- T020：未开始 → 已完成
+
+### 遗留问题
+- T019 只完成判据层实时计算；诊断、归因路径、ROI 排序、反模式识别还没有接入。
+- 后端当前挂载整个仓库根目录用于本地联调，生产部署前需要改为专用静态目录。
+- CI 尚未推送远端，尚未在 GitHub Actions 实际运行。
+
+### 给下一个模型的交接提示
+- 从 `fix/scene-level-hint` 分支继续。
+- 下一步优先做 T024—T030：诊断、归因路径、ROI、反模式和证据链，然后接入 `/api/evaluate`。
+- 不要把 `reasoning_status` 改成 `ready`。
+- 后端新增依赖时同步更新 `requirements.txt`、`requirements-dev.txt`、README 和 CI。
 
 ---
 

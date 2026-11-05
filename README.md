@@ -43,3 +43,26 @@ git diff --check
 ```
 
 CI 会在 Python 3.10 / 3.11 / 3.12 下运行判据层校验和单元测试，并检查前端语法。
+
+## 后端本地启动
+
+```bash
+python3 -m pip install -r requirements-dev.txt
+python3 api/main.py
+```
+
+后端默认监听 `127.0.0.1:8000`，同时用于本地静态前端和 API 联调。
+
+也可以直接使用：
+
+```bash
+uvicorn advisor.web.api:app --app-dir src --reload --port 8000
+```
+
+当前后端状态：
+
+- `/api/evaluate` 已接入确定性打分器；
+- 诊断、归因路径、ROI 排序、反模式识别仍在后续任务中推进；
+- 返回体中 `meta.reasoning_status = "pending"` 明确标注四段式推理尚未完成。
+
+接口说明见 `docs/backend_api.md`。
