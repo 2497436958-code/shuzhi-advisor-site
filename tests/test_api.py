@@ -63,7 +63,21 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(data["evaluation"]["total_score"], 51.95)
         self.assertEqual(data["evaluation"]["level_name"], "规范级")
         self.assertEqual(data["meta"]["mode"], "realtime")
-        self.assertEqual(data["meta"]["reasoning_status"], "pending")
+        # 推理层已上线：四段式都要有内容
+        self.assertTrue(data["diagnosis"])
+        self.assertTrue(data["pathway"])
+        self.assertTrue(data["ranking"])
+        self.assertTrue(data["do_not"])
+        self.assertTrue(data["policy_notes"])
+        self.assertEqual(data["do_not"][0]["pattern_id"], "AP1")
+
+    def test_knowledge_stats(self):
+        response = self.client.get("/api/knowledge/stats")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertGreaterEqual(data["status"]["policy"], 30)
+        self.assertGreaterEqual(data["status"]["cases"], 86)
+        self.assertIn("sources", data)
 
     def test_evaluate_missing_answers(self):
         response = self.client.post("/api/evaluate", json={"answers": {}, "scenario_levels": {}})

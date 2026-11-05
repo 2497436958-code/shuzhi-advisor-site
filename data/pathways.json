@@ -1,0 +1,1213 @@
+{
+  "schema_version": "1.0",
+  "status": "从预计算结果反解的口径，待人工审校",
+  "source": {
+    "method": "从 precomputed 预计算样例的 pathway / ranking 机械反解",
+    "samples": [
+      "ap0_无等级.json",
+      "ap1_只买设备不联网.json",
+      "ap2_只上系统不跑流程.json",
+      "ap3_只做数据采集不做分析.json",
+      "ap4_只追补贴不建能力.json",
+      "baseline_二级规范级.json"
+    ],
+    "sample_count": 6,
+    "revenue_reference_wan": 6000,
+    "note": "6 个样例的 profile.revenue_wan 均为 6000，cost_basis 提到的「按营收规模折算」在样例内不可观测；本表 cost_range 为 6000 万元营收基准值。"
+  },
+  "benefit_bases": {
+    "12": 90.0,
+    "13": 72.0,
+    "14": 6000,
+    "15": 3600
+  },
+  "scale_factor": 1.0,
+  "rounding": {
+    "benefit_range_decimals": 1,
+    "roi_decimals": 4,
+    "note": "roi 用未取整的收益值计算；benefit_range 为未取整收益取整后的展示值。"
+  },
+  "formula": {
+    "benefit_range": "Σ(benefit_bases[采集项] × elasticity[采集项].low / .high)",
+    "roi_low": "benefit_low ÷ cost_range[1]",
+    "roi_high": "benefit_high ÷ cost_range[0]"
+  },
+  "paths": {
+    "PATH-001": {
+      "id": "PATH-001",
+      "target_scenario": "S01",
+      "action_id": "P-PDES",
+      "action_name": "产品设计与 BOM 数字化",
+      "cost_range": [
+        25.0,
+        70.0
+      ],
+      "depends_on_paths": [],
+      "elasticity": {
+        "13": {
+          "metric": "月均产品合格率",
+          "low": 0.005,
+          "high": 0.02,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.003,
+          "high": 0.01,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        11.2,
+        37.4
+      ],
+      "roi": {
+        "low": 0.1594,
+        "high": 1.4976
+      },
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap4_只追补贴不建能力.json"
+      ],
+      "step_count": 1,
+      "steps": [
+        {
+          "action_id": "P-PDES",
+          "action_name": "产品设计与 BOM 数字化",
+          "target_scenario": "S01",
+          "cost_range": [
+            25.0,
+            70.0
+          ],
+          "depends_on_paths": [],
+          "elasticity": {
+            "13": {
+              "metric": "月均产品合格率",
+              "low": 0.005,
+              "high": 0.02,
+              "supported": true
+            },
+            "15": {
+              "metric": "每百元营业收入中的成本",
+              "low": 0.003,
+              "high": 0.01,
+              "supported": true
+            }
+          },
+          "benefit_range": [
+            11.2,
+            37.4
+          ],
+          "roi": {
+            "low": 0.1594,
+            "high": 1.4976
+          },
+          "observed_in": [
+            "ap0_无等级.json",
+            "ap4_只追补贴不建能力.json"
+          ]
+        }
+      ]
+    },
+    "PATH-003": {
+      "id": "PATH-003",
+      "target_scenario": "S03",
+      "action_id": "P-MKT",
+      "action_name": "营销订单与生产协同",
+      "cost_range": [
+        25.0,
+        70.0
+      ],
+      "depends_on_paths": [
+        "PATH-006"
+      ],
+      "elasticity": {
+        "14": {
+          "metric": "人均营业收入",
+          "low": 0.005,
+          "high": 0.02,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.005,
+          "high": 0.015,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        48.0,
+        174.0
+      ],
+      "roi": {
+        "low": 0.6857,
+        "high": 6.96
+      },
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap4_只追补贴不建能力.json"
+      ],
+      "step_count": 1,
+      "steps": [
+        {
+          "action_id": "P-MKT",
+          "action_name": "营销订单与生产协同",
+          "target_scenario": "S03",
+          "cost_range": [
+            25.0,
+            70.0
+          ],
+          "depends_on_paths": [
+            "PATH-006"
+          ],
+          "elasticity": {
+            "14": {
+              "metric": "人均营业收入",
+              "low": 0.005,
+              "high": 0.02,
+              "supported": true
+            },
+            "15": {
+              "metric": "每百元营业收入中的成本",
+              "low": 0.005,
+              "high": 0.015,
+              "supported": true
+            }
+          },
+          "benefit_range": [
+            48.0,
+            174.0
+          ],
+          "roi": {
+            "low": 0.6857,
+            "high": 6.96
+          },
+          "observed_in": [
+            "ap0_无等级.json",
+            "ap4_只追补贴不建能力.json"
+          ]
+        }
+      ]
+    },
+    "PATH-006": {
+      "id": "PATH-006",
+      "target_scenario": "S06",
+      "action_id": "P-MES",
+      "action_name": "生产管控流程贯通（工单与追溯）",
+      "cost_range": [
+        60.0,
+        180.0
+      ],
+      "depends_on_paths": [
+        "PATH-008"
+      ],
+      "elasticity": {
+        "13": {
+          "metric": "月均产品合格率",
+          "low": 0.01,
+          "high": 0.03,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.01,
+          "high": 0.025,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        36.7,
+        92.2
+      ],
+      "roi": {
+        "low": 0.204,
+        "high": 1.536
+      },
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap2_只上系统不跑流程.json",
+        "ap3_只做数据采集不做分析.json",
+        "ap4_只追补贴不建能力.json"
+      ],
+      "step_count": 1,
+      "steps": [
+        {
+          "action_id": "P-MES",
+          "action_name": "生产管控流程贯通（工单与追溯）",
+          "target_scenario": "S06",
+          "cost_range": [
+            60.0,
+            180.0
+          ],
+          "depends_on_paths": [
+            "PATH-008"
+          ],
+          "elasticity": {
+            "13": {
+              "metric": "月均产品合格率",
+              "low": 0.01,
+              "high": 0.03,
+              "supported": true
+            },
+            "15": {
+              "metric": "每百元营业收入中的成本",
+              "low": 0.01,
+              "high": 0.025,
+              "supported": true
+            }
+          },
+          "benefit_range": [
+            36.7,
+            92.2
+          ],
+          "roi": {
+            "low": 0.204,
+            "high": 1.536
+          },
+          "observed_in": [
+            "ap0_无等级.json",
+            "ap2_只上系统不跑流程.json",
+            "ap3_只做数据采集不做分析.json",
+            "ap4_只追补贴不建能力.json"
+          ]
+        }
+      ]
+    },
+    "PATH-007": {
+      "id": "PATH-007",
+      "target_scenario": "S07",
+      "action_id": "P-QC",
+      "action_name": "质量数据闭环与在线管控上线",
+      "cost_range": [
+        40.0,
+        120.0
+      ],
+      "depends_on_paths": [
+        "PATH-008"
+      ],
+      "elasticity": {
+        "13": {
+          "metric": "月均产品合格率",
+          "low": 0.015,
+          "high": 0.04,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.005,
+          "high": 0.015,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        19.1,
+        56.9
+      ],
+      "roi": {
+        "low": 0.159,
+        "high": 1.422
+      },
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap2_只上系统不跑流程.json",
+        "ap3_只做数据采集不做分析.json",
+        "ap4_只追补贴不建能力.json"
+      ],
+      "step_count": 2,
+      "steps": [
+        {
+          "action_id": "P-PLAN",
+          "action_name": "规划、制度与数字化人才底座",
+          "target_scenario": "S07",
+          "cost_range": [
+            10.0,
+            30.0
+          ],
+          "depends_on_paths": [],
+          "elasticity": {
+            "15": {
+              "metric": "每百元营业收入中的成本",
+              "low": 0.001,
+              "high": 0.003,
+              "supported": false
+            }
+          },
+          "benefit_range": [
+            3.6,
+            10.8
+          ],
+          "roi": {
+            "low": 0.12,
+            "high": 1.08
+          },
+          "observed_in": [
+            "ap0_无等级.json",
+            "ap4_只追补贴不建能力.json"
+          ]
+        },
+        {
+          "action_id": "P-QC",
+          "action_name": "质量数据闭环与在线管控上线",
+          "target_scenario": "S07",
+          "cost_range": [
+            40.0,
+            120.0
+          ],
+          "depends_on_paths": [
+            "PATH-008"
+          ],
+          "elasticity": {
+            "13": {
+              "metric": "月均产品合格率",
+              "low": 0.015,
+              "high": 0.04,
+              "supported": true
+            },
+            "15": {
+              "metric": "每百元营业收入中的成本",
+              "low": 0.005,
+              "high": 0.015,
+              "supported": true
+            }
+          },
+          "benefit_range": [
+            19.1,
+            56.9
+          ],
+          "roi": {
+            "low": 0.159,
+            "high": 1.422
+          },
+          "observed_in": [
+            "ap2_只上系统不跑流程.json",
+            "ap3_只做数据采集不做分析.json"
+          ]
+        }
+      ],
+      "multi_step": true
+    },
+    "PATH-008": {
+      "id": "PATH-008",
+      "target_scenario": "S08",
+      "action_id": "P-NET",
+      "action_name": "设备入网与数据采集打通",
+      "cost_range": [
+        30.0,
+        90.0
+      ],
+      "depends_on_paths": [],
+      "elasticity": {
+        "12": {
+          "metric": "每百元营业收入中综合能源消费量",
+          "low": 0.01,
+          "high": 0.025,
+          "supported": true
+        },
+        "13": {
+          "metric": "月均产品合格率",
+          "low": 0.01,
+          "high": 0.03,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        1.6,
+        4.4
+      ],
+      "roi": {
+        "low": 0.018,
+        "high": 0.147
+      },
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap1_只买设备不联网.json",
+        "ap2_只上系统不跑流程.json",
+        "ap3_只做数据采集不做分析.json",
+        "ap4_只追补贴不建能力.json",
+        "baseline_二级规范级.json"
+      ],
+      "step_count": 1,
+      "steps": [
+        {
+          "action_id": "P-NET",
+          "action_name": "设备入网与数据采集打通",
+          "target_scenario": "S08",
+          "cost_range": [
+            30.0,
+            90.0
+          ],
+          "depends_on_paths": [],
+          "elasticity": {
+            "12": {
+              "metric": "每百元营业收入中综合能源消费量",
+              "low": 0.01,
+              "high": 0.025,
+              "supported": true
+            },
+            "13": {
+              "metric": "月均产品合格率",
+              "low": 0.01,
+              "high": 0.03,
+              "supported": true
+            }
+          },
+          "benefit_range": [
+            1.6,
+            4.4
+          ],
+          "roi": {
+            "low": 0.018,
+            "high": 0.147
+          },
+          "observed_in": [
+            "ap0_无等级.json",
+            "ap1_只买设备不联网.json",
+            "ap2_只上系统不跑流程.json",
+            "ap3_只做数据采集不做分析.json",
+            "ap4_只追补贴不建能力.json",
+            "baseline_二级规范级.json"
+          ]
+        }
+      ]
+    },
+    "PATH-009": {
+      "id": "PATH-009",
+      "target_scenario": "S09",
+      "action_id": "P-SEC",
+      "action_name": "网络与数据安全合规整改",
+      "cost_range": [
+        15.0,
+        45.0
+      ],
+      "depends_on_paths": [],
+      "elasticity": {},
+      "benefit_range": [
+        0,
+        0
+      ],
+      "roi": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap1_只买设备不联网.json",
+        "ap2_只上系统不跑流程.json",
+        "ap3_只做数据采集不做分析.json",
+        "ap4_只追补贴不建能力.json",
+        "baseline_二级规范级.json"
+      ],
+      "step_count": 1,
+      "steps": [
+        {
+          "action_id": "P-SEC",
+          "action_name": "网络与数据安全合规整改",
+          "target_scenario": "S09",
+          "cost_range": [
+            15.0,
+            45.0
+          ],
+          "depends_on_paths": [],
+          "elasticity": {},
+          "benefit_range": [
+            0,
+            0
+          ],
+          "roi": {
+            "low": 0.0,
+            "high": 0.0
+          },
+          "observed_in": [
+            "ap0_无等级.json",
+            "ap1_只买设备不联网.json",
+            "ap2_只上系统不跑流程.json",
+            "ap3_只做数据采集不做分析.json",
+            "ap4_只追补贴不建能力.json",
+            "baseline_二级规范级.json"
+          ]
+        }
+      ]
+    },
+    "PATH-010": {
+      "id": "PATH-010",
+      "target_scenario": "S10",
+      "action_id": "P-ENERGY",
+      "action_name": "能耗在线监测与用能优化",
+      "cost_range": [
+        20.0,
+        60.0
+      ],
+      "depends_on_paths": [
+        "PATH-008"
+      ],
+      "elasticity": {
+        "12": {
+          "metric": "每百元营业收入中综合能源消费量",
+          "low": 0.02,
+          "high": 0.05,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.002,
+          "high": 0.008,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        9.0,
+        33.3
+      ],
+      "roi": {
+        "low": 0.15,
+        "high": 1.665
+      },
+      "observed_in": [
+        "ap1_只买设备不联网.json",
+        "ap2_只上系统不跑流程.json",
+        "ap3_只做数据采集不做分析.json",
+        "baseline_二级规范级.json"
+      ],
+      "step_count": 2,
+      "steps": [
+        {
+          "action_id": "P-ENERGY",
+          "action_name": "能耗在线监测与用能优化",
+          "target_scenario": "S10",
+          "cost_range": [
+            20.0,
+            60.0
+          ],
+          "depends_on_paths": [
+            "PATH-008"
+          ],
+          "elasticity": {
+            "12": {
+              "metric": "每百元营业收入中综合能源消费量",
+              "low": 0.02,
+              "high": 0.05,
+              "supported": true
+            },
+            "15": {
+              "metric": "每百元营业收入中的成本",
+              "low": 0.002,
+              "high": 0.008,
+              "supported": true
+            }
+          },
+          "benefit_range": [
+            9.0,
+            33.3
+          ],
+          "roi": {
+            "low": 0.15,
+            "high": 1.665
+          },
+          "observed_in": [
+            "ap1_只买设备不联网.json",
+            "ap3_只做数据采集不做分析.json",
+            "baseline_二级规范级.json"
+          ]
+        },
+        {
+          "action_id": "P-PLAN",
+          "action_name": "规划、制度与数字化人才底座",
+          "target_scenario": "S10",
+          "cost_range": [
+            10.0,
+            30.0
+          ],
+          "depends_on_paths": [],
+          "elasticity": {
+            "15": {
+              "metric": "每百元营业收入中的成本",
+              "low": 0.001,
+              "high": 0.003,
+              "supported": false
+            }
+          },
+          "benefit_range": [
+            3.6,
+            10.8
+          ],
+          "roi": {
+            "low": 0.12,
+            "high": 1.08
+          },
+          "observed_in": [
+            "ap2_只上系统不跑流程.json"
+          ]
+        }
+      ],
+      "multi_step": true
+    },
+    "PATH-011": {
+      "id": "PATH-011",
+      "target_scenario": "S11",
+      "action_id": "P-PLAN",
+      "action_name": "规划、制度与数字化人才底座",
+      "cost_range": [
+        10.0,
+        30.0
+      ],
+      "depends_on_paths": [],
+      "elasticity": {
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.001,
+          "high": 0.003,
+          "supported": false
+        }
+      },
+      "benefit_range": [
+        3.6,
+        10.8
+      ],
+      "roi": {
+        "low": 0.12,
+        "high": 1.08
+      },
+      "observed_in": [
+        "ap1_只买设备不联网.json",
+        "baseline_二级规范级.json"
+      ],
+      "step_count": 1,
+      "steps": [
+        {
+          "action_id": "P-PLAN",
+          "action_name": "规划、制度与数字化人才底座",
+          "target_scenario": "S11",
+          "cost_range": [
+            10.0,
+            30.0
+          ],
+          "depends_on_paths": [],
+          "elasticity": {
+            "15": {
+              "metric": "每百元营业收入中的成本",
+              "low": 0.001,
+              "high": 0.003,
+              "supported": false
+            }
+          },
+          "benefit_range": [
+            3.6,
+            10.8
+          ],
+          "roi": {
+            "low": 0.12,
+            "high": 1.08
+          },
+          "observed_in": [
+            "ap1_只买设备不联网.json",
+            "baseline_二级规范级.json"
+          ]
+        }
+      ]
+    },
+    "PATH-014": {
+      "id": "PATH-014",
+      "target_scenario": "S16",
+      "action_id": "P-ANA",
+      "action_name": "经营数据分析与决策支持体系",
+      "cost_range": [
+        30.0,
+        90.0
+      ],
+      "depends_on_paths": [
+        "PATH-006",
+        "PATH-007"
+      ],
+      "elasticity": {
+        "14": {
+          "metric": "人均营业收入",
+          "low": 0.005,
+          "high": 0.02,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.005,
+          "high": 0.02,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        48.0,
+        192.0
+      ],
+      "roi": {
+        "low": 0.5333,
+        "high": 6.4
+      },
+      "observed_in": [
+        "ap3_只做数据采集不做分析.json"
+      ],
+      "step_count": 1,
+      "steps": [
+        {
+          "action_id": "P-ANA",
+          "action_name": "经营数据分析与决策支持体系",
+          "target_scenario": "S16",
+          "cost_range": [
+            30.0,
+            90.0
+          ],
+          "depends_on_paths": [
+            "PATH-006",
+            "PATH-007"
+          ],
+          "elasticity": {
+            "14": {
+              "metric": "人均营业收入",
+              "low": 0.005,
+              "high": 0.02,
+              "supported": true
+            },
+            "15": {
+              "metric": "每百元营业收入中的成本",
+              "low": 0.005,
+              "high": 0.02,
+              "supported": true
+            }
+          },
+          "benefit_range": [
+            48.0,
+            192.0
+          ],
+          "roi": {
+            "low": 0.5333,
+            "high": 6.4
+          },
+          "observed_in": [
+            "ap3_只做数据采集不做分析.json"
+          ]
+        }
+      ]
+    }
+  },
+  "actions": {
+    "P-ANA": {
+      "action_id": "P-ANA",
+      "action_name": "经营数据分析与决策支持体系",
+      "cost_range": [
+        30.0,
+        90.0
+      ],
+      "depends_on_paths": [
+        "PATH-006",
+        "PATH-007"
+      ],
+      "elasticity": {
+        "14": {
+          "metric": "人均营业收入",
+          "low": 0.005,
+          "high": 0.02,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.005,
+          "high": 0.02,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        48.0,
+        192.0
+      ],
+      "roi": {
+        "low": 0.5333,
+        "high": 6.4
+      },
+      "target_scenarios": [
+        "S16"
+      ],
+      "scenario_specific": true,
+      "path_ids": [
+        "PATH-014"
+      ],
+      "observed_in": [
+        "ap3_只做数据采集不做分析.json"
+      ]
+    },
+    "P-ENERGY": {
+      "action_id": "P-ENERGY",
+      "action_name": "能耗在线监测与用能优化",
+      "cost_range": [
+        20.0,
+        60.0
+      ],
+      "depends_on_paths": [
+        "PATH-008"
+      ],
+      "elasticity": {
+        "12": {
+          "metric": "每百元营业收入中综合能源消费量",
+          "low": 0.02,
+          "high": 0.05,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.002,
+          "high": 0.008,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        9.0,
+        33.3
+      ],
+      "roi": {
+        "low": 0.15,
+        "high": 1.665
+      },
+      "target_scenarios": [
+        "S10"
+      ],
+      "scenario_specific": true,
+      "path_ids": [
+        "PATH-010"
+      ],
+      "observed_in": [
+        "ap1_只买设备不联网.json",
+        "ap3_只做数据采集不做分析.json",
+        "baseline_二级规范级.json"
+      ]
+    },
+    "P-MES": {
+      "action_id": "P-MES",
+      "action_name": "生产管控流程贯通（工单与追溯）",
+      "cost_range": [
+        60.0,
+        180.0
+      ],
+      "depends_on_paths": [
+        "PATH-008"
+      ],
+      "elasticity": {
+        "13": {
+          "metric": "月均产品合格率",
+          "low": 0.01,
+          "high": 0.03,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.01,
+          "high": 0.025,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        36.7,
+        92.2
+      ],
+      "roi": {
+        "low": 0.204,
+        "high": 1.536
+      },
+      "target_scenarios": [
+        "S06"
+      ],
+      "scenario_specific": true,
+      "path_ids": [
+        "PATH-006"
+      ],
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap2_只上系统不跑流程.json",
+        "ap3_只做数据采集不做分析.json",
+        "ap4_只追补贴不建能力.json"
+      ]
+    },
+    "P-MKT": {
+      "action_id": "P-MKT",
+      "action_name": "营销订单与生产协同",
+      "cost_range": [
+        25.0,
+        70.0
+      ],
+      "depends_on_paths": [
+        "PATH-006"
+      ],
+      "elasticity": {
+        "14": {
+          "metric": "人均营业收入",
+          "low": 0.005,
+          "high": 0.02,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.005,
+          "high": 0.015,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        48.0,
+        174.0
+      ],
+      "roi": {
+        "low": 0.6857,
+        "high": 6.96
+      },
+      "target_scenarios": [
+        "S03"
+      ],
+      "scenario_specific": true,
+      "path_ids": [
+        "PATH-003"
+      ],
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap4_只追补贴不建能力.json"
+      ]
+    },
+    "P-NET": {
+      "action_id": "P-NET",
+      "action_name": "设备入网与数据采集打通",
+      "cost_range": [
+        30.0,
+        90.0
+      ],
+      "depends_on_paths": [],
+      "elasticity": {
+        "12": {
+          "metric": "每百元营业收入中综合能源消费量",
+          "low": 0.01,
+          "high": 0.025,
+          "supported": true
+        },
+        "13": {
+          "metric": "月均产品合格率",
+          "low": 0.01,
+          "high": 0.03,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        1.6,
+        4.4
+      ],
+      "roi": {
+        "low": 0.018,
+        "high": 0.147
+      },
+      "target_scenarios": [
+        "S08"
+      ],
+      "scenario_specific": true,
+      "path_ids": [
+        "PATH-008"
+      ],
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap1_只买设备不联网.json",
+        "ap2_只上系统不跑流程.json",
+        "ap3_只做数据采集不做分析.json",
+        "ap4_只追补贴不建能力.json",
+        "baseline_二级规范级.json"
+      ]
+    },
+    "P-PDES": {
+      "action_id": "P-PDES",
+      "action_name": "产品设计与 BOM 数字化",
+      "cost_range": [
+        25.0,
+        70.0
+      ],
+      "depends_on_paths": [],
+      "elasticity": {
+        "13": {
+          "metric": "月均产品合格率",
+          "low": 0.005,
+          "high": 0.02,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.003,
+          "high": 0.01,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        11.2,
+        37.4
+      ],
+      "roi": {
+        "low": 0.1594,
+        "high": 1.4976
+      },
+      "target_scenarios": [
+        "S01"
+      ],
+      "scenario_specific": true,
+      "path_ids": [
+        "PATH-001"
+      ],
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap4_只追补贴不建能力.json"
+      ]
+    },
+    "P-PLAN": {
+      "action_id": "P-PLAN",
+      "action_name": "规划、制度与数字化人才底座",
+      "cost_range": [
+        10.0,
+        30.0
+      ],
+      "depends_on_paths": [],
+      "elasticity": {
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.001,
+          "high": 0.003,
+          "supported": false
+        }
+      },
+      "benefit_range": [
+        3.6,
+        10.8
+      ],
+      "roi": {
+        "low": 0.12,
+        "high": 1.08
+      },
+      "target_scenarios": [
+        "S07",
+        "S10",
+        "S11"
+      ],
+      "scenario_specific": false,
+      "path_ids": [
+        "PATH-007",
+        "PATH-010",
+        "PATH-011"
+      ],
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap1_只买设备不联网.json",
+        "ap2_只上系统不跑流程.json",
+        "ap4_只追补贴不建能力.json",
+        "baseline_二级规范级.json"
+      ]
+    },
+    "P-QC": {
+      "action_id": "P-QC",
+      "action_name": "质量数据闭环与在线管控上线",
+      "cost_range": [
+        40.0,
+        120.0
+      ],
+      "depends_on_paths": [
+        "PATH-008"
+      ],
+      "elasticity": {
+        "13": {
+          "metric": "月均产品合格率",
+          "low": 0.015,
+          "high": 0.04,
+          "supported": true
+        },
+        "15": {
+          "metric": "每百元营业收入中的成本",
+          "low": 0.005,
+          "high": 0.015,
+          "supported": true
+        }
+      },
+      "benefit_range": [
+        19.1,
+        56.9
+      ],
+      "roi": {
+        "low": 0.159,
+        "high": 1.422
+      },
+      "target_scenarios": [
+        "S07"
+      ],
+      "scenario_specific": true,
+      "path_ids": [
+        "PATH-007"
+      ],
+      "observed_in": [
+        "ap2_只上系统不跑流程.json",
+        "ap3_只做数据采集不做分析.json"
+      ]
+    },
+    "P-SEC": {
+      "action_id": "P-SEC",
+      "action_name": "网络与数据安全合规整改",
+      "cost_range": [
+        15.0,
+        45.0
+      ],
+      "depends_on_paths": [],
+      "elasticity": {},
+      "benefit_range": [
+        0,
+        0
+      ],
+      "roi": {
+        "low": 0.0,
+        "high": 0.0
+      },
+      "target_scenarios": [
+        "S09"
+      ],
+      "scenario_specific": true,
+      "path_ids": [
+        "PATH-009"
+      ],
+      "observed_in": [
+        "ap0_无等级.json",
+        "ap1_只买设备不联网.json",
+        "ap2_只上系统不跑流程.json",
+        "ap3_只做数据采集不做分析.json",
+        "ap4_只追补贴不建能力.json",
+        "baseline_二级规范级.json"
+      ]
+    }
+  },
+  "conflicts": [
+    {
+      "kind": "same_path_id_multiple_parameter_sets",
+      "path_id": "PATH-007",
+      "target_scenario": "S07",
+      "step_count": 2,
+      "action_ids": [
+        "P-PLAN",
+        "P-QC"
+      ],
+      "detail": "PATH-007 在不同样例下解析出 2 组不同参数，说明 path_ref 是一条路径的编号、不是参数表主键；参数主键是改造项（action_id），详见同文件 actions 表。"
+    },
+    {
+      "kind": "same_path_id_multiple_parameter_sets",
+      "path_id": "PATH-010",
+      "target_scenario": "S10",
+      "step_count": 2,
+      "action_ids": [
+        "P-ENERGY",
+        "P-PLAN"
+      ],
+      "detail": "PATH-010 在不同样例下解析出 2 组不同参数，说明 path_ref 是一条路径的编号、不是参数表主键；参数主键是改造项（action_id），详见同文件 actions 表。"
+    }
+  ],
+  "consistency": {
+    "samples": 6,
+    "path_ids": 9,
+    "path_ids_single_parameter_set": 7,
+    "path_ids_multi_parameter_set": 2,
+    "actions": 9,
+    "ranking_rows_checked": 31,
+    "benefit_bases_consistent": true,
+    "scale_factor_consistent": true,
+    "note": "同一 action_id 在 6 个样例间参数完全一致；同一 path_id 下存在多组参数的情况见 conflicts。"
+  }
+}

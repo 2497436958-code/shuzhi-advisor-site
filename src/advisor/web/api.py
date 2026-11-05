@@ -1,7 +1,11 @@
-"""最小 FastAPI 后端。
+"""FastAPI 后端。
 
-当前只把确定性判据层暴露为 API；诊断、归因路径、ROI 排序和反模式识别
-仍按任务拆分推进，不把未完成的推理层伪装成实时计算结果。
+暴露判据层 + 推理层：现场填写的画像可以实时拿到四段式结果
+（诊断 → 路径 → 排序与不建议做 → 政策注记）。
+
+后端不可用时前端自动回退到 ``precomputed/`` 的预计算结果（见 ``app.js``）。
+
+算分、定级、ROI 全部由确定性代码完成，模型不参与计算。
 """
 
 from __future__ import annotations
@@ -14,6 +18,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
+from advisor.reasoning.knowledge import load_knowledge
+from advisor.reasoning.pipeline import build_result
 from advisor.scoring.engine import evaluate_profile, load_criteria
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -49,10 +55,11 @@ def _read_json(path: Path) -> Any:
 criteria = load_criteria(CRITERIA_PATH)
 fixtures_payload = _read_json(FIXTURES_PATH)
 scenario_evidence = _read_json(SCENARIO_EVIDENCE_PATH)
+knowledge = load_knowledge()
 
 app = FastAPI(
     title="数改指导智能体",
-    version="0.1.0",
+    version="0.2.0",
     description="面向中小企业数字化改造的确定性评测与决策支持接口。",
 )
 
@@ -65,6 +72,8 @@ def health() -> dict[str, Any]:
         "criteria_loaded": True,
         "indicators": len(criteria["indicators"]),
         "scenarios": len(criteria["scenarios"]),
+        "reasoning": "ready",
+        "knowledge": knowledge.status(),
     }
 
 
@@ -99,28 +108,9 @@ def evaluate(request: EvaluationProfile) -> dict[str, Any]:
         raise HTTPException(status_code=422, detail="缺少 16 个场景等级")
 
     try:
-        evaluation = evaluate_profile(profile, criteria)
+        return build_result(profile, criteria, knowledge)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
-
-    return {
-        "profile": profile,
-        "evaluation": evaluation,
-        "level_judgement": [],
-        "diagnosis": [],
-        "pathway": [],
-        "ranking": [],
-        "do_not": [],
-        "policy_notes": [],
-        "policy_notes_status": "minimal_api",
-        "roi_assumptions": {},
-        "meta": {
-            "mode": "realtime",
-            "document": criteria.get("source", {}).get("document", ""),
-            "engine": "advisor.scoring.engine",
-            "reasoning_status": "pending",
-        },
-    }
 
 
 @app.get("/api/scenario_evidence")
@@ -128,6 +118,51 @@ def get_scenario_evidence() -> dict[str, Any]:
     return {
         "available": bool(scenario_evidence),
         "judgments": scenario_evidence,
+    }
+
+
+@app.get("/api/knowledge/stats")
+def get_knowledge_stats() -> dict[str, Any]:
+    """四类知识库的数量与口径。"""
+    status = knowledge.status()
+    return {
+        "status": status,
+        "sources": {
+            "policy": {
+                "count": len(knowledge.policy),
+                "file": "data/knowledge/policy.json",
+                "fields": "文号、发布方、发布日期、链接、关键条款、用途",
+            },
+            "cases": {
+                "count": len(knowledge.cases),
+                "synthetic": status["cases_synthetic"],
+                "file": "data/knowledge/cases.json",
+                "fields": "行业、症状、改造动作、目标场景、原文出处",
+            },
+            "papers": {
+                "count": status["papers"],
+                "entries": status["paper_entries"],
+                "file": "data/knowledge/papers.json",
+                "fields": "文献条目与检索入口分开计数",
+            },
+            "patents": {
+                "count": status["patent_categories"],
+                "file": "data/knowledge/patents.json",
+                "fields": "官方大类口径与应用场景映射",
+            },
+            "elasticity": {
+                "count": status["elasticity_items"],
+                "file": "data/knowledge/elasticity.json",
+                "fields": "成效采集项 12—15 的弹性区间与是否被公开案例支撑",
+            },
+            "paths": {
+                "count": status["paths"],
+                "variants": status["path_variants"],
+                "file": "data/pathways.json / data/pathway_content.json",
+                "fields": "改造项投入区间、成效弹性、前置依赖",
+            },
+        },
+        "note": "知识库条目均为公开来源，逐条带原文出处；数字仅用于排序，不作为结论数。",
     }
 
 

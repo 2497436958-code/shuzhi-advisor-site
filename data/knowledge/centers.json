@@ -1,0 +1,1385 @@
+[
+  {
+    "id": "CENTER-001",
+    "name": "北京诚益通控制技术集团股份有限公司",
+    "industries": [
+      "食品",
+      "医药",
+      "石化化工"
+    ],
+    "province": "北京",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 1
+    }
+  },
+  {
+    "id": "CENTER-002",
+    "name": "北京机械工业自动化研究所有限公司",
+    "industries": [
+      "汽车",
+      "机械",
+      "食品"
+    ],
+    "province": "北京",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 2
+    }
+  },
+  {
+    "id": "CENTER-003",
+    "name": "国家工业信息安全发展研究中心",
+    "industries": [
+      "汽车"
+    ],
+    "province": "北京",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 3
+    }
+  },
+  {
+    "id": "CENTER-004",
+    "name": "和利时科技集团有限公司",
+    "industries": [
+      "电子信息制造",
+      "汽车",
+      "石化化工"
+    ],
+    "province": "北京",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 4
+    }
+  },
+  {
+    "id": "CENTER-005",
+    "name": "中国工业互联网研究院",
+    "industries": [
+      "石化化工"
+    ],
+    "province": "北京",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 5
+    }
+  },
+  {
+    "id": "CENTER-006",
+    "name": "中国信息通信研究院",
+    "industries": [
+      "船舶"
+    ],
+    "province": "北京",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 6
+    }
+  },
+  {
+    "id": "CENTER-007",
+    "name": "中航国际金网（北京）科技有限公司",
+    "industries": [
+      "航空"
+    ],
+    "province": "北京",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 7
+    }
+  },
+  {
+    "id": "CENTER-008",
+    "name": "中汽智造科技（天津）有限公司",
+    "industries": [
+      "汽车"
+    ],
+    "province": "天津",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 8
+    }
+  },
+  {
+    "id": "CENTER-009",
+    "name": "邯郸云计算中心有限公司",
+    "industries": [
+      "食品",
+      "机械"
+    ],
+    "province": "河北",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 9
+    }
+  },
+  {
+    "id": "CENTER-010",
+    "name": "河钢数字技术股份有限公司",
+    "industries": [
+      "钢铁"
+    ],
+    "province": "河北",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 10
+    }
+  },
+  {
+    "id": "CENTER-011",
+    "name": "中车唐山机车车辆有限公司",
+    "industries": [
+      "机械"
+    ],
+    "province": "河北",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 11
+    }
+  },
+  {
+    "id": "CENTER-012",
+    "name": "太原福莱瑞达物流设备科技有限公司",
+    "industries": [
+      "机械",
+      "石化化工",
+      "食品"
+    ],
+    "province": "山西",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 12
+    }
+  },
+  {
+    "id": "CENTER-013",
+    "name": "内蒙古数构工业互联网科技有限公司",
+    "industries": [
+      "机械",
+      "钢铁",
+      "汽车"
+    ],
+    "province": "内蒙古",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 13
+    }
+  },
+  {
+    "id": "CENTER-014",
+    "name": "联通（辽宁）产业互联网有限公司",
+    "industries": [
+      "石化化工"
+    ],
+    "province": "辽宁",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 14
+    }
+  },
+  {
+    "id": "CENTER-015",
+    "name": "中国移动通信集团辽宁有限公司",
+    "industries": [
+      "航空",
+      "电力装备",
+      "钢铁"
+    ],
+    "province": "辽宁",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 15
+    }
+  },
+  {
+    "id": "CENTER-016",
+    "name": "中车长春轨道客车股份有限公司",
+    "industries": [
+      "机械",
+      "电力装备"
+    ],
+    "province": "吉林",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 16
+    }
+  },
+  {
+    "id": "CENTER-017",
+    "name": "哈尔滨能创数字科技有限公司",
+    "industries": [
+      "电力装备"
+    ],
+    "province": "黑龙江",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 17
+    }
+  },
+  {
+    "id": "CENTER-018",
+    "name": "上海宝信软件股份有限公司",
+    "industries": [
+      "钢铁"
+    ],
+    "province": "上海",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 18
+    }
+  },
+  {
+    "id": "CENTER-019",
+    "name": "上海电气集团数字科技有限公司",
+    "industries": [
+      "机械"
+    ],
+    "province": "上海",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 19
+    }
+  },
+  {
+    "id": "CENTER-020",
+    "name": "工业和信息化部电子第五研究所华东分所（中国赛宝（华东）实验室）",
+    "industries": [
+      "电子信息制造",
+      "机械",
+      "汽车"
+    ],
+    "province": "江苏",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 20
+    }
+  },
+  {
+    "id": "CENTER-021",
+    "name": "江苏金恒信息科技股份有限公司",
+    "industries": [
+      "钢铁"
+    ],
+    "province": "江苏",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 21
+    }
+  },
+  {
+    "id": "CENTER-022",
+    "name": "无锡物联网创新促进中心",
+    "industries": [
+      "电子信息制造"
+    ],
+    "province": "江苏",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 22
+    }
+  },
+  {
+    "id": "CENTER-023",
+    "name": "中电鸿信信息科技有限公司",
+    "industries": [
+      "机械",
+      "汽车",
+      "轻工"
+    ],
+    "province": "江苏",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 23
+    }
+  },
+  {
+    "id": "CENTER-024",
+    "name": "联通（浙江）产业互联网有限公司",
+    "industries": [
+      "纺织"
+    ],
+    "province": "浙江",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 24
+    }
+  },
+  {
+    "id": "CENTER-025",
+    "name": "浙江省图灵互联网研究院",
+    "industries": [
+      "纺织",
+      "汽车",
+      "医药"
+    ],
+    "province": "浙江",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 25
+    }
+  },
+  {
+    "id": "CENTER-026",
+    "name": "中国机械总院集团宁波智能机床研究院有限公司",
+    "industries": [
+      "机械",
+      "汽车",
+      "轻工"
+    ],
+    "province": "浙江",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 26
+    }
+  },
+  {
+    "id": "CENTER-027",
+    "name": "安徽海行云物联科技有限公司",
+    "industries": [
+      "汽车"
+    ],
+    "province": "安徽",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 27
+    }
+  },
+  {
+    "id": "CENTER-028",
+    "name": "安徽海螺信息技术工程有限责任公司",
+    "industries": [
+      "建材"
+    ],
+    "province": "安徽",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 28
+    }
+  },
+  {
+    "id": "CENTER-029",
+    "name": "合肥金星智控科技股份有限公司",
+    "industries": [
+      "钢铁",
+      "建材",
+      "有色"
+    ],
+    "province": "安徽",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 29
+    }
+  },
+  {
+    "id": "CENTER-030",
+    "name": "联宝（合肥）电子科技有限公司",
+    "industries": [
+      "电子信息制造",
+      "汽车"
+    ],
+    "province": "安徽",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 30
+    }
+  },
+  {
+    "id": "CENTER-031",
+    "name": "中机第一设计研究院有限公司",
+    "industries": [
+      "机械",
+      "建材",
+      "轻工"
+    ],
+    "province": "安徽",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 31
+    }
+  },
+  {
+    "id": "CENTER-032",
+    "name": "联通（福建）产业互联网有限公司",
+    "industries": [
+      "纺织",
+      "轻工",
+      "食品"
+    ],
+    "province": "福建",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 32
+    }
+  },
+  {
+    "id": "CENTER-033",
+    "name": "厦门金龙联合汽车工业有限公司",
+    "industries": [
+      "汽车"
+    ],
+    "province": "福建",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 33
+    }
+  },
+  {
+    "id": "CENTER-034",
+    "name": "景德镇市兆谷云计算信息技术有限责任公司",
+    "industries": [
+      "石化化工",
+      "航空",
+      "轻工"
+    ],
+    "province": "江西",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 34
+    }
+  },
+  {
+    "id": "CENTER-035",
+    "name": "浪潮云洲工业互联网有限公司",
+    "industries": [
+      "电子信息制造",
+      "机械"
+    ],
+    "province": "山东",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 35
+    }
+  },
+  {
+    "id": "CENTER-036",
+    "name": "赛轮集团股份有限公司",
+    "industries": [
+      "汽车",
+      "石化化工"
+    ],
+    "province": "山东",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 36
+    }
+  },
+  {
+    "id": "CENTER-037",
+    "name": "山东渤聚通云计算有限公司",
+    "industries": [
+      "石化化工",
+      "机械"
+    ],
+    "province": "山东",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 37
+    }
+  },
+  {
+    "id": "CENTER-038",
+    "name": "山东临工工程机械有限公司",
+    "industries": [
+      "机械"
+    ],
+    "province": "山东",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 38
+    }
+  },
+  {
+    "id": "CENTER-039",
+    "name": "山东胜软科技股份有限公司",
+    "industries": [
+      "石化化工",
+      "机械"
+    ],
+    "province": "山东",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 39
+    }
+  },
+  {
+    "id": "CENTER-040",
+    "name": "国机工业互联网研究院（河南）有限公司",
+    "industries": [
+      "机械"
+    ],
+    "province": "河南",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 40
+    }
+  },
+  {
+    "id": "CENTER-041",
+    "name": "河南嘉晨智能控制股份有限公司",
+    "industries": [
+      "电子信息制造",
+      "机械",
+      "汽车"
+    ],
+    "province": "河南",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 41
+    }
+  },
+  {
+    "id": "CENTER-042",
+    "name": "驼人控股集团有限公司",
+    "industries": [
+      "医药"
+    ],
+    "province": "河南",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 42
+    }
+  },
+  {
+    "id": "CENTER-043",
+    "name": "中色科技股份有限公司",
+    "industries": [
+      "有色"
+    ],
+    "province": "河南",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 43
+    }
+  },
+  {
+    "id": "CENTER-044",
+    "name": "格创东智科技有限公司",
+    "industries": [
+      "电子信息制造"
+    ],
+    "province": "湖北",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 44
+    }
+  },
+  {
+    "id": "CENTER-045",
+    "name": "湖北三宁化工股份有限公司",
+    "industries": [
+      "石化化工"
+    ],
+    "province": "湖北",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 45
+    }
+  },
+  {
+    "id": "CENTER-046",
+    "name": "湖北中科产业技术研究院有限公司",
+    "industries": [
+      "船舶",
+      "汽车"
+    ],
+    "province": "湖北",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 46
+    }
+  },
+  {
+    "id": "CENTER-047",
+    "name": "长沙树根互联技术有限公司",
+    "industries": [
+      "机械",
+      "电子信息制造",
+      "汽车"
+    ],
+    "province": "湖南",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 47
+    }
+  },
+  {
+    "id": "CENTER-048",
+    "name": "湖南白银股份有限公司",
+    "industries": [
+      "有色"
+    ],
+    "province": "湖南",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 48
+    }
+  },
+  {
+    "id": "CENTER-049",
+    "name": "中电工业互联网有限公司",
+    "industries": [
+      "电子信息制造"
+    ],
+    "province": "湖南",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 49
+    }
+  },
+  {
+    "id": "CENTER-050",
+    "name": "中科云谷科技有限公司",
+    "industries": [
+      "机械"
+    ],
+    "province": "湖南",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 50
+    }
+  },
+  {
+    "id": "CENTER-051",
+    "name": "工业和信息化部电子第五研究所",
+    "industries": [
+      "电子信息制造",
+      "机械",
+      "食品"
+    ],
+    "province": "广东",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 51
+    }
+  },
+  {
+    "id": "CENTER-052",
+    "name": "信通院（广东）科技创新有限公司",
+    "industries": [
+      "电子信息制造",
+      "机械",
+      "轻工"
+    ],
+    "province": "广东",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 52
+    }
+  },
+  {
+    "id": "CENTER-053",
+    "name": "国器智眸（重庆）科技有限公司",
+    "industries": [
+      "汽车"
+    ],
+    "province": "重庆",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 53
+    }
+  },
+  {
+    "id": "CENTER-054",
+    "name": "成都产业投资集团有限公司",
+    "industries": [
+      "电子信息制造",
+      "钢铁"
+    ],
+    "province": "四川",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 54
+    }
+  },
+  {
+    "id": "CENTER-055",
+    "name": "东方电气集团东方汽轮机有限公司",
+    "industries": [
+      "电力装备"
+    ],
+    "province": "四川",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 55
+    }
+  },
+  {
+    "id": "CENTER-056",
+    "name": "四川长虹电子控股集团有限公司",
+    "industries": [
+      "电子信息制造"
+    ],
+    "province": "四川",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 56
+    }
+  },
+  {
+    "id": "CENTER-057",
+    "name": "四川九洲投资控股集团有限公司",
+    "industries": [
+      "电子信息制造",
+      "航空",
+      "电力装备"
+    ],
+    "province": "四川",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 57
+    }
+  },
+  {
+    "id": "CENTER-058",
+    "name": "贵州磷化（集团）有限责任公司",
+    "industries": [
+      "石化化工"
+    ],
+    "province": "贵州",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 58
+    }
+  },
+  {
+    "id": "CENTER-059",
+    "name": "云南云天化信息科技有限公司",
+    "industries": [
+      "石化化工"
+    ],
+    "province": "云南",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 59
+    }
+  },
+  {
+    "id": "CENTER-060",
+    "name": "金川集团信息与自动化工程有限公司",
+    "industries": [
+      "有色",
+      "石化化工",
+      "钢铁"
+    ],
+    "province": "甘肃",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 60
+    }
+  },
+  {
+    "id": "CENTER-061",
+    "name": "兰州兰石集团有限公司",
+    "industries": [
+      "机械"
+    ],
+    "province": "甘肃",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 61
+    }
+  },
+  {
+    "id": "CENTER-062",
+    "name": "特变电工股份有限公司",
+    "industries": [
+      "电力装备"
+    ],
+    "province": "新疆",
+    "batch": "首批",
+    "source": {
+      "doc": "工信厅规函〔2025〕367号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/20259/015815f7764842a598e4a323e8f0d3aa.pdf",
+      "seq_in_list": 62
+    }
+  },
+  {
+    "id": "CENTER-063",
+    "name": "黑龙江省工业信息化发展中心（黑龙江省冶金研究所、黑龙江省电子技术研究所）",
+    "industries": [
+      "航空",
+      "食品",
+      "医药"
+    ],
+    "province": "黑龙江",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 1
+    }
+  },
+  {
+    "id": "CENTER-064",
+    "name": "徐工汉云技术股份有限公司",
+    "industries": [
+      "机械"
+    ],
+    "province": "江苏",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 2
+    }
+  },
+  {
+    "id": "CENTER-065",
+    "name": "江苏中天互联科技有限公司",
+    "industries": [
+      "电力装备",
+      "电子信息制造",
+      "船舶"
+    ],
+    "province": "江苏",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 3
+    }
+  },
+  {
+    "id": "CENTER-066",
+    "name": "浙江移动数智科技有限公司",
+    "industries": [
+      "电子信息制造",
+      "轻工",
+      "汽车"
+    ],
+    "province": "浙江",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 4
+    }
+  },
+  {
+    "id": "CENTER-067",
+    "name": "宁波工业互联网研究院有限公司",
+    "industries": [
+      "石化化工"
+    ],
+    "province": "浙江",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 5
+    }
+  },
+  {
+    "id": "CENTER-068",
+    "name": "杭州炽橙数字科技有限公司",
+    "industries": [
+      "机械",
+      "船舶"
+    ],
+    "province": "浙江",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 6
+    }
+  },
+  {
+    "id": "CENTER-069",
+    "name": "安徽容知日新科技股份有限公司",
+    "industries": [
+      "电力装备",
+      "石化化工",
+      "钢铁"
+    ],
+    "province": "安徽",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 7
+    }
+  },
+  {
+    "id": "CENTER-070",
+    "name": "中建材玻璃新材料研究院集团有限公司",
+    "industries": [
+      "建材",
+      "机械",
+      "电子信息制造"
+    ],
+    "province": "安徽",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 8
+    }
+  },
+  {
+    "id": "CENTER-071",
+    "name": "中国移动通信集团福建有限公司",
+    "industries": [
+      "纺织",
+      "电子信息制造",
+      "机械"
+    ],
+    "province": "福建",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 9
+    }
+  },
+  {
+    "id": "CENTER-072",
+    "name": "江西铜锐信息技术有限公司",
+    "industries": [
+      "有色"
+    ],
+    "province": "江西",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 10
+    }
+  },
+  {
+    "id": "CENTER-073",
+    "name": "卡奥斯物联科技股份有限公司",
+    "industries": [
+      "轻工",
+      "电子信息制造"
+    ],
+    "province": "山东",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 11
+    }
+  },
+  {
+    "id": "CENTER-074",
+    "name": "中国移动通信集团山东有限公司",
+    "industries": [
+      "石化化工",
+      "机械"
+    ],
+    "province": "山东",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 12
+    }
+  },
+  {
+    "id": "CENTER-075",
+    "name": "超聚变数字技术股份有限公司",
+    "industries": [
+      "电子信息制造",
+      "汽车",
+      "机械"
+    ],
+    "province": "河南",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 13
+    }
+  },
+  {
+    "id": "CENTER-076",
+    "name": "机械工业第六设计研究院有限公司",
+    "industries": [
+      "机械",
+      "电力装备",
+      "电子信息制造"
+    ],
+    "province": "河南",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 14
+    }
+  },
+  {
+    "id": "CENTER-077",
+    "name": "东风设备制造有限公司",
+    "industries": [
+      "汽车",
+      "机械"
+    ],
+    "province": "湖北",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 15
+    }
+  },
+  {
+    "id": "CENTER-078",
+    "name": "武汉亚为电子科技有限公司",
+    "industries": [
+      "机械",
+      "轻工",
+      "汽车"
+    ],
+    "province": "湖北",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 16
+    }
+  },
+  {
+    "id": "CENTER-079",
+    "name": "湖南华菱云创数智科技有限公司",
+    "industries": [
+      "钢铁"
+    ],
+    "province": "湖南",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 17
+    }
+  },
+  {
+    "id": "CENTER-080",
+    "name": "广州明珞股份有限公司",
+    "industries": [
+      "汽车",
+      "机械"
+    ],
+    "province": "广东",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 18
+    }
+  },
+  {
+    "id": "CENTER-081",
+    "name": "广西七识数字科技有限公司",
+    "industries": [
+      "机械"
+    ],
+    "province": "广西",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 19
+    }
+  },
+  {
+    "id": "CENTER-082",
+    "name": "重庆忽米网络科技有限公司",
+    "industries": [
+      "汽车"
+    ],
+    "province": "重庆",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 20
+    }
+  },
+  {
+    "id": "CENTER-083",
+    "name": "重庆数智融合创新科技有限公司",
+    "industries": [
+      "汽车",
+      "医药"
+    ],
+    "province": "重庆",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 21
+    }
+  },
+  {
+    "id": "CENTER-084",
+    "name": "四川金象赛瑞化工股份有限公司",
+    "industries": [
+      "石化化工",
+      "机械",
+      "食品"
+    ],
+    "province": "四川",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 22
+    }
+  },
+  {
+    "id": "CENTER-085",
+    "name": "美林数据技术股份有限公司",
+    "industries": [
+      "机械",
+      "有色",
+      "电力装备"
+    ],
+    "province": "陕西",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 23
+    }
+  },
+  {
+    "id": "CENTER-086",
+    "name": "宁夏宁东科技创业投资有限公司",
+    "industries": [
+      "石化化工"
+    ],
+    "province": "宁夏",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 24
+    }
+  },
+  {
+    "id": "CENTER-087",
+    "name": "共享智能铸造产业创新中心有限公司",
+    "industries": [
+      "钢铁",
+      "机械"
+    ],
+    "province": "宁夏",
+    "batch": "第二批",
+    "source": {
+      "doc": "工信厅规函〔2026〕471号",
+      "page_url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html",
+      "file_url": "https://www.miit.gov.cn/cms_files/filemanager/1226211233/attach/202610/804e4eceb9c14d7f9e8d28adc5493aa4.pdf",
+      "seq_in_list": 25
+    }
+  }
+]

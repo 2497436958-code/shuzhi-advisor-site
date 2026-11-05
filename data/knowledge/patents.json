@@ -1,0 +1,239 @@
+{
+  "meta": {
+    "purpose": "专利库在本项目里只做一件事：判断某类改造在本地有没有成熟供给，避免给企业推荐做不出来的方案。不做专利质量评价。",
+    "search_entry": "https://pss-system.cponline.cnipa.gov.cn/",
+    "statistical_window": "近 5 年（2021-01-01 至检索日）",
+    "counting_rule": "按 IPC 主分类 + 关键词检索，分别统计中国申请人的专利申请量（发明 + 实用新型）与授权量；同一申请号按最早公开日去重，一件计一次",
+    "collected_at": null,
+    "collection_status": "未执行自动取数",
+    "collection_note": "国家知识产权局专利检索与分析系统需登录且无公开 API，本项目未取得批量统计授权，因此只登记检索式与口径，不填任何未经检索的数字。数字待人工检索后回填。",
+    "attempted_sources": [
+      {
+        "name": "Google Patents 公开索引（xhr/query）",
+        "tried_at": "2026-11-05",
+        "queries": [
+          "q=(G05B19/418 OR G06Q10/06)&country=CN&after=publication:20210101 → 124892",
+          "q=IPC:G05B19/418&country=CN（未加日期限定）→ 57740",
+          "q=MES 制造执行系统&country=CN&after=publication:20210101 → 5"
+        ],
+        "observation": "三条查询条件互不相同（日期范围 / IPC 写法 / 关键词），数字本不可比；且未加日期限定的第二条（57740）反而小于限定近 5 年的第一条（124892），说明 IPC 与日期过滤均未真正生效。抽样前 5 条的分类与查询意图不符（查 MES 返回“工件收集点单元”），status=GRANT 过滤后总数几乎不变。",
+        "conclusion": "该索引不按 IPC 严格过滤、计数被截断，不能作为本项目“5 类申请量/授权量”的口径来源。已放弃，不采用其数字。"
+      }
+    ],
+    "manual_protocol": [
+      "1. 登录国家知识产权局专利检索及分析系统（pss-system.cponline.cnipa.gov.cn），检索范围选“中国专利”。",
+      "2. 对每个类别按 ipc 字段逐条检索，时间限定公开日 2021-01-01 至检索日。",
+      "3. 记录“专利申请量（发明 + 实用新型）”与“授权量”两个数，并截图保存检索式与结果页。",
+      "4. 同一申请号按最早公开日去重；同日多公开的按申请号计一次。",
+      "5. 回填 applications_cn / grants_cn 后，把 collection_status 改为“已人工检索”，并填写 collected_at（检索日）与 collected_by（检索人）。",
+      "6. 回填后重跑 tools/check_knowledge.py：校验器要求“有数字”必须同时满足“已人工检索 + 检索日 + 检索人”。"
+    ],
+    "official_aggregate_source": {
+      "name": "国家知识产权局《2024 年知识产权统计年报》",
+      "tables": [
+        "5-3 申请按 IPC 大类",
+        "5-4 授权按 IPC 大类"
+      ],
+      "urls": [
+        "https://www.cnipa.gov.cn/tjxx/jianbao/year2024/e/e3.html",
+        "https://www.cnipa.gov.cn/tjxx/jianbao/year2024/e/e4.html"
+      ],
+      "granularity": "IPC 大类（如 G05），不是本项目 5 类所用的小类/小组（G05B19/418 等）",
+      "collected_at": "2026-11-05",
+      "note": "官方公开表没有小类分项，故本字段只作量级参照；5 类的申请量/授权量仍需 CNIPA 账号检索（applications_cn/grants_cn 保持 null）。"
+    }
+  },
+  "categories": [
+    {
+      "id": "PATENT-CAT-01",
+      "category": "工业软件（MES/ERP/APS）",
+      "keywords": [
+        "制造执行系统",
+        "生产计划排程",
+        "企业资源计划",
+        "车间管理"
+      ],
+      "ipc": [
+        "G05B19/418",
+        "G06Q10/06",
+        "G06Q10/08"
+      ],
+      "maps_to_scenarios": [
+        "S05",
+        "S06"
+      ],
+      "applications_cn": null,
+      "grants_cn": null,
+      "status": "待人工检索",
+      "official_aggregate": {
+        "ipc_class": "G05",
+        "ipc_class_desc": "控制；调节（含 G05B 工业控制）",
+        "year": 2024,
+        "applications_cn": 31569,
+        "grants_cn": 18741,
+        "breakdown": {
+          "invention_applications_cn": 25162,
+          "utility_applications_cn": 6407,
+          "invention_grants_cn": 14457,
+          "utility_grants_cn": 4284
+        },
+        "granularity_caveat": "大类口径，非本项目 5 类的小类口径，只能作量级参照"
+      }
+    },
+    {
+      "id": "PATENT-CAT-02",
+      "category": "自动化产线与工业机器人",
+      "keywords": [
+        "自动化生产线",
+        "工业机器人",
+        "柔性加工",
+        "焊接机器人"
+      ],
+      "ipc": [
+        "B23K",
+        "B25J",
+        "B65G"
+      ],
+      "maps_to_scenarios": [
+        "S06",
+        "S08"
+      ],
+      "applications_cn": null,
+      "grants_cn": null,
+      "status": "待人工检索",
+      "official_aggregate": {
+        "ipc_class": "B25",
+        "ipc_class_desc": "手动工具；机械手（含 B25J 机器人）",
+        "year": 2024,
+        "applications_cn": 71412,
+        "grants_cn": 46179,
+        "breakdown": {
+          "invention_applications_cn": 12275,
+          "utility_applications_cn": 59137,
+          "invention_grants_cn": 9188,
+          "utility_grants_cn": 36991
+        },
+        "granularity_caveat": "大类口径，非本项目 5 类的小类口径，只能作量级参照"
+      }
+    },
+    {
+      "id": "PATENT-CAT-03",
+      "category": "机器视觉与在线检测",
+      "keywords": [
+        "机器视觉",
+        "缺陷检测",
+        "外观检测",
+        "尺寸测量"
+      ],
+      "ipc": [
+        "G01N21/88",
+        "G06T7/00",
+        "B07C5/34"
+      ],
+      "maps_to_scenarios": [
+        "S07"
+      ],
+      "applications_cn": null,
+      "grants_cn": null,
+      "status": "待人工检索",
+      "official_aggregate": {
+        "ipc_class": "G01",
+        "ipc_class_desc": "测量；测试（含 G01N 检测）",
+        "year": 2024,
+        "applications_cn": 369164,
+        "grants_cn": 227643,
+        "breakdown": {
+          "invention_applications_cn": 150755,
+          "utility_applications_cn": 218409,
+          "invention_grants_cn": 92627,
+          "utility_grants_cn": 135016
+        },
+        "granularity_caveat": "大类口径，非本项目 5 类的小类口径，只能作量级参照"
+      }
+    },
+    {
+      "id": "PATENT-CAT-04",
+      "category": "AGV 与智能仓储",
+      "keywords": [
+        "自动导引车",
+        "立体仓库",
+        "仓储机器人",
+        "智能分拣"
+      ],
+      "ipc": [
+        "B65G1/04",
+        "B66F9/06",
+        "G05D1/02"
+      ],
+      "maps_to_scenarios": [
+        "S12"
+      ],
+      "applications_cn": null,
+      "grants_cn": null,
+      "status": "待人工检索",
+      "official_aggregate": {
+        "ipc_class": "B65",
+        "ipc_class_desc": "输送；包装；贮存（含 B65G 搬运）",
+        "year": 2024,
+        "applications_cn": 249632,
+        "grants_cn": 178524,
+        "breakdown": {
+          "invention_applications_cn": 29778,
+          "utility_applications_cn": 219854,
+          "invention_grants_cn": 24234,
+          "utility_grants_cn": 154290
+        },
+        "granularity_caveat": "大类口径，非本项目 5 类的小类口径，只能作量级参照"
+      }
+    },
+    {
+      "id": "PATENT-CAT-05",
+      "category": "工业互联网平台与数据采集",
+      "keywords": [
+        "工业互联网",
+        "边缘计算网关",
+        "设备数据采集",
+        "标识解析"
+      ],
+      "ipc": [
+        "H04L67/12",
+        "G05B19/05",
+        "H04W4/38"
+      ],
+      "maps_to_scenarios": [
+        "S08",
+        "S16"
+      ],
+      "applications_cn": null,
+      "grants_cn": null,
+      "status": "待人工检索",
+      "official_aggregate": {
+        "ipc_class": "H04",
+        "ipc_class_desc": "电通信技术（含 H04L 数据传输）",
+        "year": 2024,
+        "applications_cn": 139778,
+        "grants_cn": 82197,
+        "breakdown": {
+          "invention_applications_cn": 101994,
+          "utility_applications_cn": 37784,
+          "invention_grants_cn": 60036,
+          "utility_grants_cn": 22161
+        },
+        "granularity_caveat": "大类口径，非本项目 5 类的小类口径，只能作量级参照"
+      }
+    }
+  ],
+  "supply_side_cross_reference": {
+    "source_docs": [
+      "工信厅规函〔2025〕367号（首批名单）",
+      "工信厅规函〔2026〕471号（第二批名单）"
+    ],
+    "source_urls": [
+      "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+      "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html"
+    ],
+    "count_note": "两批名单均以附件形式发布，正文不含名单；主体数量需下载附件逐条清点。项目选题文件记载为 62 家 + 25 家 = 87 家（2026-11-04 核验），本库未逐条核对，故不写入计数。",
+    "cross_rule": "某类改造要被判为“本行业可行”，需同时满足：(1) 该类别在专利库有持续申请；(2) 对应细分行业在数促中心名单中有可对接主体。两者缺一，只在报告里提示“供给不确定”，不给出改造建议。",
+    "status": "名单附件未逐条核对"
+  }
+}

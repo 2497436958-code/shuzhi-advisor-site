@@ -578,7 +578,9 @@
         el("span", { class: "ev-title", text: `${scenario.name} · ${judgment.level} 级` }),
         el("span", {
           class: "tag " + (judgment.source === "rule_baseline" ? "tag-warn" : "tag-accent"),
-          text: judgment.source === "rule_baseline" ? "规则基线" : "模型判定",
+          text: judgment.source === "rule_baseline"
+            ? "规则基线"
+            : judgment.source === "submitted" ? "用户自评" : "模型判定",
         }),
         judgment.citation_ok ? el("span", { class: "tag tag-good", text: "引文已校验" }) : null,
       ]));

@@ -21,8 +21,9 @@ http://127.0.0.1:8000/
 | GET | `/api/criteria` | 返回 15 个采集项与 16 个应用场景的官方原文数据 |
 | GET | `/api/fixtures` | 返回示例企业列表 |
 | GET | `/api/fixtures/{fixture_id}` | 返回单个示例企业的画像和预计算结果 |
-| POST | `/api/evaluate` | 接收企业画像，调用确定性打分器并返回评测结果 |
+| POST | `/api/evaluate` | 接收企业画像，返回评测 + 四段式结论（诊断 / 路径 / 排序 / 不建议做 / 政策注记） |
 | GET | `/api/scenario_evidence` | 返回场景等级判定证据可用性 |
+| GET | `/api/knowledge/stats` | 返回政策 / 案例 / 论文 / 专利四库的数量与字段口径 |
 
 ## `/api/evaluate`
 
@@ -46,33 +47,39 @@ http://127.0.0.1:8000/
 
 ### 返回结构
 
-当前最小版返回：
+与站点已发布的预计算结果（`precomputed/*.json` 的 `result`）同构，前端同一套渲染代码
+同时支持实时结果与离线预计算结果：
 
 ```json
 {
   "profile": {},
   "evaluation": {},
   "level_judgement": [],
+  "item_results": [],
+  "scenario_results": [],
   "diagnosis": [],
   "pathway": [],
   "ranking": [],
   "do_not": [],
+  "scenario_evidence": {},
   "policy_notes": [],
+  "policy_notes_status": {},
   "roi_assumptions": {},
   "meta": {
     "mode": "realtime",
-    "engine": "advisor.scoring.engine",
-    "reasoning_status": "pending"
+    "engine": "advisor.scoring.engine / advisor.reasoning",
+    "knowledge": {}
   }
 }
 ```
 
-`reasoning_status = "pending"` 表示诊断、路径、排序和反模式尚未接入实时后端。  
-不能把该状态删除或改成 `ready`，否则会让前端把未完成推理当成完整结果。
+`diagnosis`、`pathway`、`ranking`、`do_not` 的每个条目都带 `evidence_refs`
+（官方原文引文 + 出处链接）。推理层的口径见 `docs/reasoning_layer.md`。
 
 ## 已知边界
 
-- `/api/evaluate` 目前只保证判据层可实时复算；
-- 四段式建议中的诊断、路径、ROI 排序和“不建议做”还未实时生成；
+- ROI 的成效弹性沿用站点演示口径，**未被公开案例支撑**，只用于排序，不作为结论数；
+- 投入与收益按营业收入等比折算，折算律待真实企业校准；
+- 场景等级由用户自评，系统只做规则判定，不替企业判断等级；
 - 生产部署前应避免直接挂载整个仓库根目录；
 - 后端部署需要同时部署前端，或配置 CORS。

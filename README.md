@@ -61,8 +61,23 @@ uvicorn advisor.web.api:app --app-dir src --reload --port 8000
 
 当前后端状态：
 
-- `/api/evaluate` 已接入确定性打分器；
-- 诊断、归因路径、ROI 排序、反模式识别仍在后续任务中推进；
-- 返回体中 `meta.reasoning_status = "pending"` 明确标注四段式推理尚未完成。
+- `/api/evaluate` 已接入判据层与推理层：现场填写即可拿到四段式结果
+  （诊断 → 路径 → 排序与不建议做 → 政策注记）；
+- 反模式 AP1—AP4、诊断规则、选步与依赖顺序、ROI 区间与优先级全部由确定性代码算出，
+  每条结论都带官方原文引文与出处链接；
+- 四类知识库（政策 30 份 / 案例 259 条 / 论文 11 篇 + 3 条检索入口 / 专利 5 个大类口径）
+  已入库，`GET /api/knowledge/stats` 可查数量与口径。
 
-接口说明见 `docs/backend_api.md`。
+接口说明见 `docs/backend_api.md`，推理层口径见 `docs/reasoning_layer.md`，
+知识库搬运记录见 `docs/knowledge_port.md`，路径参数反解记录见
+`docs/pathway_params_provenance.md`。
+
+## 推理层复算与一致性
+
+```bash
+python3 -m unittest discover -s tests -v   # 含判据层 100% 复算与诊断一致性测试
+```
+
+测试会校验：6 个样例的判据层结果与已发布预计算结果逐字段一致、
+反模式命中一致、诊断条目一致、共同改造项的 ROI 数值完全一致、
+以及每条结论都带非空证据链。
