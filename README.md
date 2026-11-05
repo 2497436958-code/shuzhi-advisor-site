@@ -15,3 +15,14 @@ python3 -m http.server -d static_site 8080
 
 结果由冻结的判据层与计算层算出（见 `src/advisor/criteria/`、`src/advisor/scoring/`），
 前端不做任何评分。
+
+
+## 判据层复算
+
+```bash
+python3 scripts/verify_criteria.py
+python3 -m unittest discover -s tests -v
+python3 scripts/recompute_profile.py path/to/profile.json
+```
+
+详细说明见 `docs/criteria_recompute.md`。
