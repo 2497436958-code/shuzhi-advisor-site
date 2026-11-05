@@ -18,6 +18,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
+from advisor.knowledge.search import (
+    search_cases,
+    search_papers,
+    search_patents,
+    search_policy,
+)
 from advisor.reasoning.knowledge import load_knowledge
 from advisor.reasoning.pipeline import build_result
 from advisor.scoring.engine import evaluate_profile, load_criteria
@@ -121,6 +127,52 @@ def get_scenario_evidence() -> dict[str, Any]:
     }
 
 
+@app.get("/api/knowledge/policy")
+def get_knowledge_policy(
+    q: str = "", role: str = "", limit: int = 50, offset: int = 0
+) -> dict[str, Any]:
+    """政策库检索：按关键词与用途（role）过滤。"""
+    return search_policy(knowledge.policy, q=q, role=role, limit=limit, offset=offset)
+
+
+@app.get("/api/knowledge/cases")
+def get_knowledge_cases(
+    q: str = "",
+    industry: str = "",
+    source_type: str = "",
+    scenario: str = "",
+    limit: int = 50,
+    offset: int = 0,
+) -> dict[str, Any]:
+    """案例库检索：按关键词、行业、来源类型与目标场景过滤。"""
+    return search_cases(
+        knowledge.cases,
+        q=q,
+        industry=industry,
+        source_type=source_type,
+        scenario=scenario,
+        limit=limit,
+        offset=offset,
+    )
+
+
+@app.get("/api/knowledge/papers")
+def get_knowledge_papers(
+    q: str = "", kind: str = "", limit: int = 50, offset: int = 0
+) -> dict[str, Any]:
+    """论文库检索：按关键词与类型（方法／成效证据／检索入口）过滤。"""
+    return search_papers(knowledge.papers, q=q, kind=kind, limit=limit, offset=offset)
+
+
+@app.get("/api/knowledge/patents")
+def get_knowledge_patents(q: str = "", limit: int = 50, offset: int = 0) -> dict[str, Any]:
+    """专利库检索：按关键词过滤官方大类口径，附带检索入口与计数规则。"""
+    result = search_patents(knowledge.patents, q=q, limit=limit, offset=offset)
+    result["meta"] = knowledge.patents.get("meta", {})
+    result["supply_side"] = knowledge.patents.get("supply_side_cross_reference", {})
+    return result
+
+
 @app.get("/api/knowledge/stats")
 def get_knowledge_stats() -> dict[str, Any]:
     """四类知识库的数量与口径。"""
@@ -161,6 +213,12 @@ def get_knowledge_stats() -> dict[str, Any]:
                 "file": "data/pathways.json / data/pathway_content.json",
                 "fields": "改造项投入区间、成效弹性、前置依赖",
             },
+        },
+        "filters": {
+            "policy_roles": sorted({policy.get("role", "") for policy in knowledge.policy if policy.get("role")}),
+            "case_industries": sorted({case.get("industry", "") for case in knowledge.cases if case.get("industry")}),
+            "case_source_types": sorted({case.get("source_type", "") for case in knowledge.cases if case.get("source_type")}),
+            "paper_types": sorted({paper.get("type", "") for paper in knowledge.papers if paper.get("type")}),
         },
         "note": "知识库条目均为公开来源，逐条带原文出处；数字仅用于排序，不作为结论数。",
     }

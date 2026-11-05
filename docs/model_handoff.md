@@ -66,6 +66,8 @@
 | 知识库统计接口 | 已有 | `GET /api/knowledge/stats` |
 | 改造项参数表 | 已有 | `data/pathways.json`、`data/pathway_content.json`（从预计算结果反解，待人工审校） |
 | 推送纪律 | 已有 | 手册第 0 节第 8 条 + 第 7 节第 7 条：每完成一项任务即提交并推送，`scripts/check_push_state.py` 自查 |
+| 知识库页面 | 已有 | 站点底部「知识库」区块：四库统计 + 分类口径 + 检索 + 原文链接 |
+| 知识库检索接口 | 已有 | `/api/knowledge/policy\|cases\|papers\|patents`，检索逻辑见 `src/advisor/knowledge/search.py` |
 
 ### 已知问题 / 待补齐
 
@@ -76,7 +78,7 @@
 | 场景等级校验偏宽 | 表单只强制校验 15 个采集项，16 个场景等级不是必填 | 已解决：T010 |
 | 场景等级提示 bug | 场景已有等级，但仍显示“尚未选择等级” | 已解决：T009 |
 | 排序公式不完整 | 当前主要用 ROI 下界，未显式加入“等级跃迁分” | 已解决：T028，排序行输出 `level_gain` 与 `priority` |
-| 知识库未展示 | 政策、案例、论文、专利缺少数量、口径、检索入口 | 部分解决：四库已入库并有 `/api/knowledge/stats`，前端知识库页面未做（T036） |
+| 知识库未展示 | 政策、案例、论文、专利缺少数量、口径、检索入口 | 已解决：四库已入库，有统计接口与「知识库」页面（数量、口径、检索入口、原文链接） |
 | 评测报告缺失 | 没有诊断准确率、检出率、误报率、消融结果 | 未解决：T037—T048 |
 | 真实企业复算缺失 | 选题硬验收要求 1 家企业手填复算一致 | 未解决：T008、T038 |
 | 优先级公式未显式落地 | 选题要求 `(等级跃迁分 + 成效改善) ÷ 投入成本` | 已解决：T028，`P = (等级跃迁分 + 关联成效改善) ÷ 投入成本` |
@@ -186,7 +188,7 @@ GET  /api/evaluation/report
 | T010 | 前端 | 场景等级改为必填 | T009 | 表单校验 | 16 个场景未填时禁止提交 | 已完成 | Codex | AP0 缺场景被拦截；AP1 填齐后通过校验。 |
 | T011 | 前端 | 企业画像表单完善 | T010 | 表单 UI | 基线、采集项、场景清晰可填 | 未开始 |  |  |
 | T012 | 前端 | 四段式结果页优化 | T006/T008 | 结果页 | 诊断、路径、排序、政策注记阅读体验清晰 | 未开始 |  |  |
-| T013 | 前端 | 知识库页面 | P2 | `/knowledge` | 四类知识源数量、分类、样例可见 | 未开始 |  |  |
+| T013 | 前端 | 知识库页面 | P2 | `/knowledge` | 四类知识源数量、分类、样例可见 | 已完成 | Codex | 知识库页面已上线：四库统计 + 分类口径 + 关键词与分类下拉检索 + 原文链接；离线模式可浏览不检索。 |
 | T014 | 前端 | 评测报告页面 | P4 | `/evaluation` | 报告数字和样本分层可访问 | 未开始 |  |  |
 | T015 | 前端 | 方法页 | P3/P4 | `/method` | 讲清公式、口径、局限、合规边界 | 未开始 |  |  |
 | T016 | 后端 | 实现 `/api/health` | T000 | API | 前端可判断在线/离线 | 已完成 | Codex | 返回在线状态与判据层规模；前端可切换到实时模式。 |
@@ -194,7 +196,7 @@ GET  /api/evaluation/report
 | T018 | 后端 | 实现 `/api/fixtures` | T004 | API | 样例企业列表可用 | 已完成 | Codex | 已实现列表和单样例接口。 |
 | T019 | 后端 | 实现 `/api/evaluate` | T006—T012 | API | 自定义企业实时出四段式结果 | 已完成 | Codex | 已接入判据层 + 推理层：诊断、路径、排序、反模式、政策注记全部实时生成，返回体与已发布预计算结果同构。 |
 | T020 | 后端 | 实现 `/api/scenario_evidence` | T005 | API | 官方原文引文可返回 | 已完成 | Codex | 返回预计算场景判定证据和可用性标记。 |
-| T021 | 后端 | 实现知识库接口 | T013 | API | 政策/案例/论文/专利可查询 | 进行中 | Codex | 已实现 `GET /api/knowledge/stats`（四库数量与口径）；按文号/行业/场景的检索接口待做。 |
+| T021 | 后端 | 实现知识库接口 | T013 | API | 政策/案例/论文/专利可查询 | 已完成 | Codex | 已实现 `/api/knowledge/policy|cases|papers|patents`（关键词 + 精确过滤 + 分页 + 分面计数）与 `/api/knowledge/stats`。 |
 | T022 | 后端 | 实现评测报告接口 | P4 | API | 报告 JSON 可访问 | 未开始 |  |  |
 | T023 | 后端 | 保留离线回退 | T016—T022 | `precomputed/` | 后端挂掉仍可演示 | 已完成 | Codex | `precomputed/` 未改动，前端 `/api/health` 失败时仍回退到预计算模式，离线与实时共用同一套渲染代码。 |
 | T024 | 推理层 | 诊断规则 | T004—T007 | `diagnosis.py` | 输出瓶颈、命中项、命中场景 | 已完成 | Codex | 四类瓶颈规则全部实现（反模式型、场景断层、等级缺口、基础缺口），与预计算结果逐条一致。 |
@@ -209,7 +211,7 @@ GET  /api/evaluation/report
 | T033 | 知识库 | 191 家参评案例集说明 | T032 | 文档/数据 | 数量、来源、用途清楚 | 已完成 | Codex | `docs/knowledge_case_sets.md` 说明 191 家参评 → 66 家入选口径与 87 家数促中心登记。 |
 | T034 | 知识库 | 论文库检索入口 | 无 | `papers/` | 有分类口径和样例数据 | 已完成 | Codex | 论文库 11 篇文献 + 3 条检索入口入库，文献与检索入口分开计数。 |
 | T035 | 知识库 | 专利库检索入口 | 无 | `patents/` | 有分类口径和样例数据 | 进行中 | Codex | 专利库 5 个官方大类口径与场景映射已入库；逐件检索入口与小类数量待补（CNIPA 无公开 API）。 |
-| T036 | 知识库 | 四库统计页 | T031—T035 | `/knowledge/stats` | 数量、来源、用途可视化 | 进行中 | Codex | 已实现 `GET /api/knowledge/stats`；前端 `/knowledge` 页面未做。 |
+| T036 | 知识库 | 四库统计页 | T031—T035 | `/knowledge/stats` | 数量、来源、用途可视化 | 已完成 | Codex | 统计接口与前端页面均已上线，CI 用前端冒烟测试（`node scripts/check_knowledge_page.mjs`）守着渲染路径。 |
 | T037 | 评测 | 60 家合成样本 | T004—T030 | `profiles/` | AP1—AP4 各 10 家，正常对照 20 家 | 未开始 |  |  |
 | T038 | 评测 | 1 家真实企业 | T008 | `profiles/` | 真实层单列报告 | 未开始 |  |  |
 | T039 | 评测 | 4 组对照 | T037 | 评测结果 | 纯 RAG / 纯规则 / RAG+计算器 / 完整闭环 | 未开始 |  |  |
@@ -229,8 +231,8 @@ GET  /api/evaluation/report
 | T053 | 部署 | CORS 与环境变量 | T052 | 配置文档 | 前后端联调无跨域问题 | 未开始 |  |  |
 | T054 | QA | 判据层测试 | T006—T008 | 测试 | 打分与门槛可重复验证 | 未开始 |  |  |
 | T055 | QA | 推理层测试 | T024—T030 | 测试 | 输出结构、证据链、反模式可测 | 已完成 | Codex | `tests/test_reasoning.py`、`test_ranking.py`、`test_evidence.py`：判据层复算、诊断一致、ROI 一致、证据链强制。 |
-| T056 | QA | API 测试 | T016—T023 | 测试 | 接口输入输出和错误处理可测 | 已完成 | Codex | `tests/test_api.py` 覆盖 health/criteria/fixtures/evaluate/knowledge stats 与 404、422 分支。 |
-| T057 | QA | 前端可访问性 | T009—T015 | UI 检查 | 键盘、aria、对比度、移动端可用 | 未开始 |  |  |
+| T056 | QA | API 测试 | T016—T023 | 测试 | 接口输入输出和错误处理可测 | 已完成 | Codex | `tests/test_api.py` 覆盖 health/criteria/fixtures/evaluate/knowledge stats/四个检索端点与 404、422 分支。 |
+| T057 | QA | 前端可访问性 | T009—T015 | UI 检查 | 键盘、aria、对比度、移动端可用 | 进行中 | Codex | 知识库页面的检索框、筛选下拉与计数都带 aria 标注；全站可访问性审计未做。 |
 | T058 | QA | 演示脚本 | 全部 | `docs/demo.md` | 5 分钟答辩演示路径固定 | 未开始 |  |  |
 
 ---
@@ -634,6 +636,67 @@ GET  /api/evaluation/report
 - 不要在没跑通 `python3 -m unittest discover -s tests` 与
   `python3 scripts/compare_precomputed.py` 的情况下推送。
 - 下一步建议做 T036 前端知识库页面（数据与统计接口已就绪）或 T037 合成样本生成器。
+
+
+---
+
+## MODEL-009 · Codex · 2026-11-05
+
+### 参与范围
+- 任务 ID：T013、T021、T036、T056（补充）、T057（部分）
+- 模块：知识库检索接口、知识库前端页面、前端冒烟测试
+
+### 实际完成
+- 新增 `src/advisor/knowledge/search.py`：政策 / 案例 / 论文 / 专利四库统一的检索层
+  （关键词子串匹配 + 精确过滤 + 分页 + 分面计数），返回体统一为
+  `{total, returned, offset, limit, items, facets}`；`items` 保持原顺序，不裁字段。
+- 新增四个检索端点与扩充后的 `/api/knowledge/stats`（含前端筛选下拉用的维度清单）。
+- 新增前端「知识库」区块：顶栏与首屏各一个入口，区块内含四库统计卡片、每库的分类口径说明、
+  关键词检索、分类下拉筛选、命中计数与逐条原文链接；专利库额外显示官方检索入口与计数规则。
+  离线模式降级为"可浏览不检索"，并明示"离线仅浏览"。
+- 新增零依赖的前端冒烟测试 `scripts/check_knowledge_page.mjs`：用最小 DOM 桩 + fetch 桩
+  在 Node 里跑完 app.js 启动流程，检查 app.js 请求的元素 id 都存在于 index.html、
+  四个库块与条目真的渲染出来、检索与筛选确实发出正确请求并回填结果。
+- CI 增加两步：`node scripts/check_knowledge_page.mjs` 与已有的推理层一致性、知识库校验。
+
+### 验证方式
+- `python3 -m unittest discover -s tests -v` → 77 个用例全部通过
+- `node scripts/check_knowledge_page.mjs` → 统计卡片 4 个、库块 4 个、渲染条目 10 条、缺失 id 0 个
+- `python3 scripts/build_knowledge_fixture.py` → 重新生成前端样例（policy 2 / cases 88 / papers 2 / patents 5）
+- `node --check app.js`、`git diff --check` → 通过
+- 接口联调（TestClient）：`/api/knowledge/policy?q=验收` → total=2；
+  `/api/knowledge/cases?q=联网` → total=88；`?industry=电子电器` → 44；
+  `?source_type=优秀场景` → 30；`?scenario=S07` → 98；`/api/knowledge/papers?kind=方法` → 2；
+  `/api/knowledge/patents?q=G05B19/418` → 1
+
+### 更新的任务状态
+- T013：未开始 → 已完成
+- T021：进行中 → 已完成
+- T036：进行中 → 已完成
+- T056：已完成（补充说明：新增四个检索端点覆盖）
+- T057：未开始 → 进行中
+
+### 变更记录
+- 新增：`src/advisor/knowledge/`（`__init__.py`、`search.py`）、`tests/test_knowledge_search.py`、
+  `scripts/check_knowledge_page.mjs`、`scripts/build_knowledge_fixture.py`、`scripts/fixtures/knowledge_api.json`
+- 修改：`src/advisor/web/api.py`、`app.js`、`index.html`、`styles.css`、`tests/test_api.py`、
+  `README.md`、`docs/backend_api.md`、`.github/workflows/ci.yml`
+- **未改动** 判据层、`precomputed/*.json`、知识库数据文件本身
+
+### 遗留问题
+- 检索只做子串匹配，不做分词/拼音/同义词；关键词"数字化转型"命中 230/259 条，区分度低。
+  当前不排序（保持原序以保证可复现），若要"最相关的排前面"需要另立排序口径，请人工决定。
+- 专利 5 个类别的 `applications_cn`/`grants_cn` 仍为 null（CNIPA 无公开 API），
+  页面只显示官方 IPC 大类口径，并明确标注"待人工检索"，不冒充小类数量。
+- 论文库 3 条"检索入口"不是文献，页面与统计都分开计数。
+- 知识库页面尚未做实机浏览器验证（执行环境回环 HTTP 被拦截），用 DOM 桩冒烟测试替代。
+
+### 给下一个模型的交接提示
+- 下一步建议做 **T037 合成样本生成器**（AP1—AP4 各 10 家 + 正常对照 20 家），
+  为 T041—T048 的评测指标与对照消融准备样本；生成器必须标注 `synthetic`。
+- 知识库检索口径见 `docs/backend_api.md`；若要改排序或加相关性，必须在手册里登记口径变更。
+- 收工三步：`python3 -m unittest discover -s tests` → `node scripts/check_knowledge_page.mjs` →
+  `python3 scripts/check_push_state.py`（未推送提交数必须为 0）。
 
 ---
 

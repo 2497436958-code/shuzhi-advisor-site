@@ -46,3 +46,6 @@ jobs:
 
       - name: Check frontend syntax
         run: node --check app.js
+
+      - name: Check knowledge page rendering
+        run: node scripts/check_knowledge_page.mjs

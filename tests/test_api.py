@@ -171,6 +171,85 @@ class ApiTests(unittest.TestCase):
         self.assertGreaterEqual(data["status"]["cases"], 86)
         self.assertIn("sources", data)
 
+    def test_knowledge_policy_search(self):
+        response = self.client.get("/api/knowledge/policy", params={"q": "验收"})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertGreater(data["total"], 0)
+        self.assertEqual(data["returned"], len(data["items"]))
+        self.assertIn("role", data["facets"])
+        for item in data["items"]:
+            self.assertTrue(item["doc_no"])
+            self.assertTrue(item["url"])
+
+    def test_knowledge_policy_filter_by_role(self):
+        response = self.client.get("/api/knowledge/policy", params={"role": "判据底座"})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["total"], 1)
+        self.assertEqual(data["items"][0]["role"], "判据底座")
+
+    def test_knowledge_cases_search_and_filter(self):
+        response = self.client.get(
+            "/api/knowledge/cases", params={"q": "联网", "industry": "电子电器", "limit": 5}
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertGreater(data["total"], 0)
+        self.assertLessEqual(len(data["items"]), 5)
+        for item in data["items"]:
+            self.assertEqual(item["industry"], "电子电器")
+            self.assertTrue((item.get("evidence") or {}).get("url"), item["id"])
+
+    def test_knowledge_cases_filter_by_scenario(self):
+        response = self.client.get("/api/knowledge/cases", params={"scenario": "S07"})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertGreater(data["total"], 0)
+        for item in data["items"]:
+            scenarios = [
+                action.get("target_scenario") for action in item.get("actions") or []
+            ]
+            self.assertIn("S07", scenarios)
+
+    def test_knowledge_papers_filter_by_kind(self):
+        response = self.client.get("/api/knowledge/papers", params={"kind": "检索入口"})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertGreater(data["total"], 0)
+        for item in data["items"]:
+            self.assertEqual(item["type"], "检索入口")
+
+    def test_knowledge_patents_exposes_search_entry(self):
+        response = self.client.get("/api/knowledge/patents")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data["meta"]["search_entry"])
+        self.assertIn("counting_rule", data["meta"])
+        self.assertEqual(data["total"], 5)
+        for item in data["items"]:
+            self.assertTrue(item["category"])
+            self.assertTrue(item["maps_to_scenarios"])
+
+    def test_knowledge_limit_is_capped(self):
+        response = self.client.get("/api/knowledge/cases", params={"limit": 9999})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["limit"], 200)
+
+    def test_knowledge_empty_result(self):
+        response = self.client.get("/api/knowledge/policy", params={"q": "这个词一定搜不到xyzzy"})
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["total"], 0)
+        self.assertEqual(data["items"], [])
+
+    def test_knowledge_stats_exposes_filter_options(self):
+        response = self.client.get("/api/knowledge/stats")
+        self.assertEqual(response.status_code, 200)
+        filters = response.json()["filters"]
+        for key in ("policy_roles", "case_industries", "case_source_types", "paper_types"):
+            self.assertTrue(filters[key], key)
+
     def test_evaluate_missing_answers(self):
         response = self.client.post("/api/evaluate", json={"answers": {}, "scenario_levels": {}})
         self.assertEqual(response.status_code, 422)

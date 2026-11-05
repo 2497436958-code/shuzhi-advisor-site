@@ -116,6 +116,7 @@
     renderForm();
     renderFixturePicker();
     bindActions();
+    loadKnowledge();
   }
 
   /* ------------------------------------------------------------ 表单渲染 */
@@ -831,6 +832,367 @@
     add("生成时间", meta.generated_at);
     add("计算方式", meta.mode === "precomputed" ? "预计算（构建时生成）" : "实时计算");
     host.appendChild(dl);
+  }
+
+  /* ------------------------------------------------------------ 知识库 */
+
+  const KB_LIBRARIES = {
+    policy: {
+      title: "政策库",
+      desc: "定判据、门槛、验收口径与资金通道。每条带文号、发布方、发布日期与原文链接。",
+      filters: [{ key: "role", label: "用途" }],
+      render: renderKbPolicyItem,
+    },
+    cases: {
+      title: "案例库",
+      desc: "提供症状 → 根因 → 改造项的证据。条目均为公开案例，逐条可回查原文。",
+      filters: [
+        { key: "source_type", label: "来源类型" },
+        { key: "industry", label: "行业" },
+      ],
+      render: renderKbCaseItem,
+    },
+    papers: {
+      title: "论文库",
+      desc: "提供成效弹性区间与评价方法。文献与检索入口分开计数，单一结论不写成定论。",
+      filters: [{ key: "kind", facet: "type", label: "类型" }],
+      render: renderKbPaperItem,
+    },
+    patents: {
+      title: "专利库",
+      desc: "判断某类改造在本地有没有成熟供给。只用官方大类口径，不做专利质量评价。",
+      filters: [],
+      render: renderKbPatentItem,
+    },
+  };
+
+  const kbState = {
+    stats: null,
+    libraries: {},
+  };
+
+  function kbInitial() {
+    const libraries = {};
+    for (const [key, meta] of Object.entries(KB_LIBRARIES)) {
+      libraries[key] = { q: "", filters: {}, items: [], total: 0, facets: {} };
+    }
+    return libraries;
+  }
+
+  function kbOptions(facets, key, facet) {
+    const counts = (facets && facets[facet || key]) || {};
+    return Object.entries(counts).map(([name, count]) => ({ name, count }));
+  }
+
+  function renderKbPolicyItem(item) {
+    return el("li", { class: "kb-item" }, [
+      el("div", { class: "kb-item-head" }, [
+        el("a", {
+          class: "kb-item-title",
+          href: item.url || "#",
+          target: "_blank",
+          rel: "noopener",
+          text: item.title || item.doc_no,
+        }),
+        el("span", { class: "tag", text: item.doc_no || "" }),
+      ]),
+      el("p", { class: "kb-item-meta", text: `${item.issuer || "发布方未登记"} · ${item.publish_date || "日期未登记"}` }),
+      item.used_where ? el("p", { class: "kb-item-meta", text: "用在：" + item.used_where }) : null,
+    ]);
+  }
+
+  function renderKbCaseItem(item) {
+    const evidence = item.evidence || {};
+    const scenarios = [];
+    for (const action of item.actions || []) {
+      if (action.target_scenario && !scenarios.includes(action.target_scenario)) {
+        scenarios.push(action.target_scenario);
+      }
+    }
+    return el("li", { class: "kb-item" }, [
+      el("div", { class: "kb-item-head" }, [
+        el("a", {
+          class: "kb-item-title",
+          href: evidence.url || "#",
+          target: "_blank",
+          rel: "noopener",
+          text: item.title || item.id,
+        }),
+        el("span", { class: "tag", text: item.source_type || "案例" }),
+        item.industry ? el("span", { class: "tag tag-accent", text: item.industry }) : null,
+      ]),
+      item.symptom ? el("p", { class: "kb-item-quote", text: item.symptom }) : null,
+      el("p", { class: "kb-item-meta", text: `${item.id} · 目标场景 ${scenarios.join("、") || "未登记"} · ${item.collection || ""}` }),
+    ]);
+  }
+
+  function renderKbPaperItem(item) {
+    return el("li", { class: "kb-item" }, [
+      el("div", { class: "kb-item-head" }, [
+        el("a", {
+          class: "kb-item-title",
+          href: item.url || "#",
+          target: "_blank",
+          rel: "noopener",
+          text: item.title || item.id,
+        }),
+        el("span", { class: "tag", text: item.type || "论文" }),
+        item.tier ? el("span", { class: "tag tag-accent", text: item.tier }) : null,
+      ]),
+      item.claim ? el("p", { class: "kb-item-quote", text: item.claim }) : null,
+      el("p", { class: "kb-item-meta", text: `${item.id} · ${item.journal || "来源未登记"}${item.year ? " · " + item.year : ""}${item.doi ? " · DOI " + item.doi : ""}` }),
+      item.used_where ? el("p", { class: "kb-item-meta", text: "用在：" + item.used_where }) : null,
+    ]);
+  }
+
+  function renderKbPatentItem(item) {
+    const aggregate = item.official_aggregate || {};
+    const numbers = aggregate.applications_cn
+      ? `${aggregate.ipc_class || ""} ${aggregate.year || ""} 年大类申请 ${aggregate.applications_cn} 件 / 授权 ${aggregate.grants_cn} 件`
+      : "小类数量待人工检索";
+    return el("li", { class: "kb-item" }, [
+      el("div", { class: "kb-item-head" }, [
+        el("span", { class: "kb-item-title", text: item.category || item.id }),
+        el("span", { class: "tag", text: item.status || "口径" }),
+        aggregate.ipc_class ? el("span", { class: "tag tag-accent", text: "IPC " + aggregate.ipc_class }) : null,
+      ]),
+      el("p", { class: "kb-item-meta", text: "关键词：" + ((item.keywords || []).join("、") || "未登记") }),
+      el("p", { class: "kb-item-meta", text: "对应场景：" + ((item.maps_to_scenarios || []).join("、") || "未映射") }),
+      el("p", { class: "kb-item-meta", text: numbers + "（官方大类口径）" }),
+    ]);
+  }
+
+  function renderKbOverview(stats) {
+    const status = stats.status || {};
+    const cards = [
+      { label: "政策", value: status.policy, unit: "份", note: "含文号、发布方、日期与原文链接" },
+      { label: "案例", value: status.cases, unit: "条", note: "公开案例，真实层与合成层分开统计" },
+      { label: "论文", value: status.papers, unit: "篇", note: "另有 " + (status.paper_entries - status.papers) + " 条检索入口，不计入文献" },
+      { label: "专利", value: status.patent_categories, unit: "个大类", note: "官方 IPC 大类口径，非小类数量" },
+    ];
+    return el("div", { class: "kb-overview" }, cards.map((card) =>
+      el("div", { class: "kb-stat" }, [
+        el("span", { class: "kb-stat-label", text: card.label }),
+        el("span", { class: "kb-stat-value" }, [
+          el("strong", { text: card.value === undefined ? "—" : String(card.value) }),
+          el("em", { text: card.unit }),
+        ]),
+        el("span", { class: "kb-stat-note", text: card.note }),
+      ])
+    ));
+  }
+
+  function renderKbControls(key, meta, library) {
+    const online = state.mode === "online";
+    const input = el("input", {
+      type: "search",
+      class: "kb-search",
+      placeholder: online ? "检索标题、文号、原文…" : "离线模式不提供检索",
+      "aria-label": meta.title + "检索",
+      disabled: !online,
+    });
+    const status = el("span", { class: "kb-status", role: "status" });
+
+    const controls = el("div", { class: "kb-controls" }, [input]);
+    for (const filter of meta.filters) {
+      const select = el("select", { class: "kb-select", "aria-label": filter.label, disabled: !online });
+      select.appendChild(el("option", { value: "", text: "全部" + filter.label }));
+      for (const option of kbOptions(library.facets, filter.key, filter.facet)) {
+        select.appendChild(el("option", {
+          value: option.name,
+          text: option.name + "（" + option.count + "）",
+          selected: library.filters[filter.key] === option.name,
+        }));
+      }
+      select.addEventListener("change", () => {
+        library.filters[filter.key] = select.value;
+        refreshKbLibrary(key);
+      });
+      controls.appendChild(select);
+    }
+    controls.appendChild(status);
+    if (!online) {
+      controls.appendChild(el("span", { class: "tag tag-warn", text: "离线仅浏览" }));
+    }
+
+    input.addEventListener("change", () => {
+      library.q = input.value.trim();
+      refreshKbLibrary(key);
+    });
+
+    const block = el("section", { class: "kb-lib" }, [
+      el("div", { class: "kb-lib-head" }, [
+        el("h3", { class: "kb-lib-title", text: meta.title }),
+        el("span", { class: "kb-count", text: "" }),
+      ]),
+      el("p", { class: "kb-lib-desc", text: meta.desc }),
+      controls,
+      el("p", { class: "kb-entry kb-item-meta" }),
+      el("ul", { class: "kb-list" }),
+    ]);
+    return block;
+  }
+
+  function kbStatusText(library) {
+    const shown = library.items.length;
+    if (!library.total) return "没有命中条目";
+    if (shown >= library.total) return "共 " + library.total + " 条";
+    return "命中 " + library.total + " 条，显示前 " + shown + " 条";
+  }
+
+  function paintKbLibrary(key) {
+    const meta = KB_LIBRARIES[key];
+    const library = kbState.libraries[key];
+    const block = document.querySelector('[data-kb="' + key + '"]');
+    if (!block) return;
+    const count = block.querySelector(".kb-count");
+    if (count) count.textContent = kbStatusText(library);
+    const status = block.querySelector(".kb-status");
+    if (status) status.textContent = "";
+    const list = block.querySelector(".kb-list");
+    list.textContent = "";
+    if (!library.items.length) {
+      list.appendChild(el("li", { class: "placeholder", text: "没有命中条目，换个关键词或把筛选放宽。" }));
+      return;
+    }
+    for (const item of library.items) {
+      list.appendChild(meta.render(item));
+    }
+    const entry = block.querySelector(".kb-entry");
+    const searchEntry = library.meta && library.meta.search_entry;
+    if (entry && searchEntry) {
+      entry.textContent = "";
+      entry.appendChild(el("span", { text: "官方检索入口：" }));
+      entry.appendChild(el("a", {
+        href: searchEntry,
+        target: "_blank",
+        rel: "noopener",
+        text: "国家知识产权局专利检索系统 ↗",
+      }));
+      if (library.meta.counting_rule) {
+        entry.appendChild(el("span", { text: "计数规则：" + library.meta.counting_rule }));
+      }
+    }
+  }
+
+  async function refreshKbLibrary(key) {
+    const library = kbState.libraries[key];
+    const meta = KB_LIBRARIES[key];
+    const params = new URLSearchParams();
+    if (library.q) params.set("q", library.q);
+    for (const [name, value] of Object.entries(library.filters)) {
+      if (value) params.set(name, value);
+    }
+    params.set("limit", "20");
+    try {
+      const response = await fetchJSON("api/knowledge/" + key + "?" + params.toString());
+      library.items = response.items || [];
+      library.total = response.total || 0;
+      library.facets = response.facets || {};
+      if (response.meta) library.meta = response.meta;
+    } catch (err) {
+      const status = document.querySelector('[data-kb="' + key + '"] .kb-status');
+      if (status) status.textContent = "检索失败：" + err.message;
+      return;
+    }
+    // 筛选下拉的可选项跟着命中结果走
+    for (const filter of meta.filters) {
+      const select = document.querySelector('[data-kb="' + key + '"] .kb-select[aria-label="' + filter.label + '"]');
+      if (!select) continue;
+      const current = library.filters[filter.key] || "";
+      select.textContent = "";
+      select.appendChild(el("option", { value: "", text: "全部" + filter.label }));
+      const options = kbOptions(library.facets, filter.key, filter.facet);
+      if (current && !options.some((option) => option.name === current)) {
+        options.push({ name: current, count: 0 });
+      }
+      for (const option of options) {
+        select.appendChild(el("option", {
+          value: option.name,
+          text: option.name + "（" + option.count + "）",
+          selected: current === option.name,
+        }));
+      }
+    }
+    paintKbLibrary(key);
+  }
+
+  async function loadKnowledge() {
+    const host = $("#knowledge-body");
+    if (!host) return;
+    kbState.libraries = kbInitial();
+    host.textContent = "";
+    host.appendChild(el("p", { class: "placeholder", text: "正在加载知识库…" }));
+
+    const online = state.mode === "online";
+    let stats = null;
+    try {
+      stats = online
+        ? await fetchJSON("api/knowledge/stats")
+        : await kbOfflineStats();
+    } catch (err) {
+      host.textContent = "";
+      host.appendChild(el("p", { class: "placeholder", text: "知识库加载失败：" + err.message }));
+      return;
+    }
+    kbState.stats = stats;
+    host.textContent = "";
+    host.appendChild(renderKbOverview(stats));
+
+    for (const [key, meta] of Object.entries(KB_LIBRARIES)) {
+      const block = renderKbControls(key, meta, kbState.libraries[key]);
+      block.setAttribute("data-kb", key);
+      host.appendChild(block);
+    }
+
+    if (online) {
+      for (const key of Object.keys(KB_LIBRARIES)) {
+        await refreshKbLibrary(key);
+      }
+    } else {
+      await kbOfflineBrowse();
+    }
+  }
+
+  async function kbOfflineStats() {
+    const [policy, cases, papers, patents] = await Promise.all([
+      fetchJSON("data/knowledge/policy.json"),
+      fetchJSON("data/knowledge/cases.json"),
+      fetchJSON("data/knowledge/papers.json"),
+      fetchJSON("data/knowledge/patents.json"),
+    ]);
+    const literature = papers.filter((paper) => paper.type !== "检索入口");
+    return {
+      status: {
+        policy: policy.length,
+        cases: cases.length,
+        papers: literature.length,
+        paper_entries: papers.length,
+        patent_categories: (patents.categories || []).length,
+      },
+    };
+  }
+
+  async function kbOfflineBrowse() {
+    const files = {
+      policy: "data/knowledge/policy.json",
+      cases: "data/knowledge/cases.json",
+      papers: "data/knowledge/papers.json",
+      patents: "data/knowledge/patents.json",
+    };
+    for (const [key, file] of Object.entries(files)) {
+      const library = kbState.libraries[key];
+      try {
+        const payload = await fetchJSON(file);
+        const items = key === "patents" ? payload.categories || [] : payload;
+        library.items = items.slice(0, 20);
+        library.total = items.length;
+      } catch (err) {
+        library.items = [];
+        library.total = 0;
+      }
+      paintKbLibrary(key);
+    }
   }
 
   /* ------------------------------------------------------------ 交互 */

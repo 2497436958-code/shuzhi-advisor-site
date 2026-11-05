@@ -21,6 +21,7 @@
       </span>
     </div>
     <div class="topbar-right">
+      <a class="navlink" href="#knowledge-panel">知识库</a>
       <span class="chip chip-quiet" title="判据基准文件">工信厅企业〔2024〕56 号</span>
       <span class="chip" id="mode-chip" data-state="checking">正在检测服务…</span>
     </div>
@@ -64,6 +65,7 @@
     <div class="hero-actions">
       <button type="button" class="btn btn-primary" id="btn-demo">用示例企业试一次</button>
       <button type="button" class="btn" id="btn-fill">填自己的情况</button>
+      <a class="btn" href="#knowledge-panel">查知识库</a>
     </div>
     <ul class="hero-facts">
       <li><span>判据零改写</span>选项文字直接来自官方原文，前端不另写一份</li>
@@ -167,6 +169,16 @@
       <summary>本次结果的口径、假设与生成信息</summary>
       <div class="assumptions-body" id="out-assumptions"></div>
     </details>
+  </section>
+
+  <section class="panel" id="knowledge-panel" aria-labelledby="knowledge-title">
+    <div class="panel-head">
+      <h2 id="knowledge-title">知识库</h2>
+      <p class="panel-sub">政策、案例、论文、专利四类来源。每条带原文出处；检索入口与分类口径公开，数字只用于排序，不作为结论数。</p>
+    </div>
+    <div class="kb-body" id="knowledge-body">
+      <p class="placeholder">正在加载知识库…</p>
+    </div>
   </section>
 
 </main>

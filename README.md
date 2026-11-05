@@ -72,6 +72,16 @@ uvicorn advisor.web.api:app --app-dir src --reload --port 8000
 知识库搬运记录见 `docs/knowledge_port.md`，路径参数反解记录见
 `docs/pathway_params_provenance.md`。
 
+## 知识库页面
+
+站点底部的「知识库」区块给出政策 / 案例 / 论文 / 专利四类的数量、分类口径与检索入口：
+关键词 + 分类下拉，每条都带原文链接。后端在线时支持检索，离线模式可浏览不检索。
+
+```bash
+python3 scripts/build_knowledge_fixture.py   # 重新生成前端冒烟测试用的接口样例
+node scripts/check_knowledge_page.mjs        # 前端渲染冒烟测试（零依赖，无需浏览器）
+```
+
 ## 推理层复算与一致性
 
 ```bash

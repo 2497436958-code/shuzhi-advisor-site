@@ -1,0 +1,549 @@
+{
+ "stats": {
+  "status": {
+   "paths": 9,
+   "path_variants": 11,
+   "policy": 30,
+   "cases": 259,
+   "cases_synthetic": 0,
+   "papers": 11,
+   "paper_entries": 14,
+   "patent_categories": 5,
+   "elasticity_items": 4
+  },
+  "sources": {
+   "policy": {
+    "count": 30,
+    "file": "data/knowledge/policy.json",
+    "fields": "文号、发布方、发布日期、链接、关键条款、用途"
+   },
+   "cases": {
+    "count": 259,
+    "synthetic": 0,
+    "file": "data/knowledge/cases.json",
+    "fields": "行业、症状、改造动作、目标场景、原文出处"
+   },
+   "papers": {
+    "count": 11,
+    "entries": 14,
+    "file": "data/knowledge/papers.json",
+    "fields": "文献条目与检索入口分开计数"
+   },
+   "patents": {
+    "count": 5,
+    "file": "data/knowledge/patents.json",
+    "fields": "官方大类口径与应用场景映射"
+   },
+   "elasticity": {
+    "count": 4,
+    "file": "data/knowledge/elasticity.json",
+    "fields": "成效采集项 12—15 的弹性区间与是否被公开案例支撑"
+   },
+   "paths": {
+    "count": 9,
+    "variants": 11,
+    "file": "data/pathways.json / data/pathway_content.json",
+    "fields": "改造项投入区间、成效弹性、前置依赖"
+   }
+  },
+  "filters": {
+   "policy_roles": [
+    "三年行动框架",
+    "供应侧名单",
+    "判据底座",
+    "判据底座（正文）",
+    "口径演进",
+    "合规边界",
+    "地方口径说明",
+    "地方推进路径",
+    "场景口径补充",
+    "政策解读",
+    "标杆案例来源",
+    "标杆遴选机制",
+    "案例库增补来源",
+    "案例库来源口径",
+    "现场评测口径",
+    "要素保障",
+    "认定衔接",
+    "认定衔接（地方）",
+    "试点批次与实施指南指向",
+    "试点批次与样板遴选口径",
+    "资金与验收口径",
+    "资金通道（地域）",
+    "资金通道（地方样例）",
+    "转型路径指引",
+    "适用边界",
+    "验收口径"
+   ],
+   "case_industries": [
+    "医药",
+    "原材料",
+    "建材",
+    "汽车",
+    "消费品",
+    "电子电器",
+    "纺织",
+    "装备制造",
+    "跨行业",
+    "轻工"
+   ],
+   "case_source_types": [
+    "优秀场景",
+    "典型案例",
+    "链式案例集"
+   ],
+   "paper_types": [
+    "成效证据",
+    "方法",
+    "检索入口"
+   ]
+  },
+  "note": "知识库条目均为公开来源，逐条带原文出处；数字仅用于排序，不作为结论数。"
+ },
+ "policy": {
+  "total": 2,
+  "returned": 2,
+  "offset": 0,
+  "limit": 3,
+  "items": [
+   {
+    "id": "POLICY-001",
+    "doc_no": "财建〔2023〕117号",
+    "title": "关于开展中小企业数字化转型城市试点工作的通知",
+    "issuer": "财政部 工业和信息化部",
+    "publish_date": "2023-06-12",
+    "doc_type": "中央政策",
+    "url": "https://www.gov.cn/zhengce/zhengceku/202306/content_6886368.htm",
+    "key_provisions": [
+     "企业完成数字化改造后，由试点城市中小企业主管部门牵头组织开展验收，从企业应用成效、数据贯通程度、投入产出比、企业管理体制配套改革等方面，科学评价改造成效",
+     "安排不低于80%的奖补资金开展中小企业数字化改造工作",
+     "省会城市、计划单列市、兵团奖补资金总额不超过1.5亿元，其他地级市、直辖市所辖区县奖补资金总额不超过1亿元"
+    ],
+    "role": "资金与验收口径",
+    "used_where": "政策注记段：试点城市奖补额度与验收四个维度；ROI 新口径的官方依据",
+    "verified": {
+     "at": "2026-11-05",
+     "method": "原文页面 200 且摘录可检索"
+    }
+   },
+   {
+    "id": "POLICY-019",
+    "doc_no": "工信厅联通装函〔2023〕392号",
+    "title": "五部门关于组织开展智能制造示范工厂揭榜单位验收工作的通知",
+    "issuer": "工业和信息化部 国家发展改革委 财政部 国务院国资委 市场监管总局",
+    "publish_date": "2024-01-10",
+    "doc_type": "中央政策",
+    "url": "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2024/art_f7587322a8954ad493fec3681bc48db7.html",
+    "key_provisions": [
+     "纳入工业和信息化部、国家发展改革委、财政部、国务院国资委、市场监管总局联合公告的智能制造示范工厂揭榜单位名单的企业"
+    ],
+    "role": "验收口径",
+    "used_where": "路径层“验收口径”字段：说明官方验收看什么、由谁组织",
+    "verified": {
+     "at": "2026-11-05",
+     "method": "页面发文字号=工信厅联通装函〔2023〕392号；文号为 2023 年、公开日为 2024-01-10，属“上年成文、次年初公开”，照实记录"
+    }
+   }
+  ],
+  "facets": {
+   "role": {
+    "资金与验收口径": 1,
+    "验收口径": 1
+   }
+  }
+ },
+ "cases": {
+  "total": 88,
+  "returned": 3,
+  "offset": 0,
+  "limit": 3,
+  "items": [
+   {
+    "id": "CASE-004",
+    "source_id": "88a9e08440d2487c8c1f4f2426c6432",
+    "collection": "2024年度中小企业数字化转型典型案例",
+    "source_type": "典型案例",
+    "title": "原材料——江西保太有色金属集团有限公司通过与高校联合建设高精密磷铜球全自动产线，实现生产效率与生产质量提升",
+    "industry": "原材料",
+    "sector": "原材料",
+    "symptom": "为解决磷铜球生产线设备单一、单机生产效率低、品质管控难业务数据繁多、管理者难以高效决策等问题，江西保太有色金属集团有限公司应用工业互联网、物联网、数字孪生技术，有效提高了生产管控效率。",
+    "actions": [
+     {
+      "action": "为解决磷铜球生产线设备单一、单机生产效率低、品质管控难业务数据繁多、管理者难以高效决策等问题，江西保太有色金属集团有限公司应用工业互联网、物联网、数字孪生技术，有效提高了生产管控效率",
+      "target_scenario": "S06",
+      "target_items": [],
+      "estimated": false
+     },
+     {
+      "action": "通过和广东技术师范大学产学研合作推动磷铜球自动化产线建设，引进上引连铸、连续挤压、自动镦球、研磨抛光、自动清洗、自动称重、自动包装、机器人码垛、AGV无人叉车等先进工艺和设备，建成目前国内先进的全自动磷铜球生产线",
+      "target_scenario": "S12",
+      "target_items": [
+       2
+      ],
+      "estimated": false
+     }
+    ],
+    "evidence": {
+     "doc": "优质中小企业梯度培育平台 · 2024年度中小企业数字化转型典型案例",
+     "url": "https://zjtx.miit.gov.cn/zxqySy/tzggView?type=classic&id=88a9e08440d2487c8c1f4f2426c6432",
+     "quoted": "为解决磷铜球生产线设备单一、单机生产效率低、品质管控难业务数据繁多、管理者难以高效决策等问题，江西保太有色金属集团有限公司应用工业互联网、物联网、数字孪生技术，有效提高了生产管控效率。一是通过和广东技术师范大学产学研合作推动磷铜球自动化产线建设，引进上引连铸、连续挤压、自动镦球、研磨抛光、自动清洗、自动称重、自动包装、机器人码垛、AGV无人叉车等先进工艺和设备，建成目前国内先进的全自动磷铜球生产线。二是建设保太MC摩尔云工业互联网平台，…"
+    },
+    "extracted": {
+     "by": "tools/build_cases.py",
+     "at": "2026-11-05",
+     "synthetic": false
+    },
+    "remark": "字段由官方原文切片生成；根因判断在归因路径层给出，不在案例层杜撰",
+    "outcome": {
+     "metric": "项目完成后，生产效率提升了35%、产品质量提升了18%，并带动年销售收入增长12%，减少了对进口磷铜球的依赖，通过智能工厂建设发挥了一定的行业示范作用。"
+    }
+   },
+   {
+    "id": "CASE-006",
+    "source_id": "61a3e626406e4aa4904eb54f7afrr33",
+    "collection": "2024年度中小企业数字化转型典型案例",
+    "source_type": "典型案例",
+    "title": "原材料——重庆再升科技股份有限公司应用工业元宇宙系统实现生产过程有效映射与管控",
+    "industry": "原材料",
+    "sector": "原材料",
+    "symptom": "面对生产过程数据难以及时跟进，设备故障、工艺参数偏差等生产异常无法及时发现等问题，重庆再升科技股份有限公司应用工业元宇宙系统实现对生产过程及相关业务进行有效映射与管控，提高智能化生产水平。",
+    "actions": [
+     {
+      "action": "面对生产过程数据难以及时跟进，设备故障、工艺参数偏差等生产异常无法及时发现等问题，重庆再升科技股份有限公司应用工业元宇宙系统实现对生产过程及相关业务进行有效映射与管控，提高智能化生产水平",
+      "target_scenario": "S01",
+      "target_items": [],
+      "estimated": false
+     },
+     {
+      "action": "利用工业数采传感器、物联网平台以及数据中台技术，实现对生产设备、物料流动和环境参数的实时监控和管理，包括生产设备建模，厂区钣金车间、过滤器车间等厂区区域的虚拟还原与虚拟场景漫游，将现实中的生产设备等接入到虚拟世界，实现布局调整编辑功能，完成…",
+      "target_scenario": "S09",
+      "target_items": [
+       4
+      ],
+      "estimated": false
+     },
+     {
+      "action": "实时处理和分析生产过程中产生的海量数据，包括设备运行状态数据、质量检测数据、能耗数据等，将数据引入到工业元宇宙系统实时展示生产过程状态，通过深入建模和分析，形成虚实搭配的智能算法库，提供全面的数据支持和洞察。",
+      "target_scenario": "S07",
+      "target_items": [
+       12,
+       13
+      ],
+      "estimated": false
+     }
+    ],
+    "evidence": {
+     "doc": "优质中小企业梯度培育平台 · 2024年度中小企业数字化转型典型案例",
+     "url": "https://zjtx.miit.gov.cn/zxqySy/tzggView?type=classic&id=61a3e626406e4aa4904eb54f7afrr33",
+     "quoted": "面对生产过程数据难以及时跟进，设备故障、工艺参数偏差等生产异常无法及时发现等问题，重庆再升科技股份有限公司应用工业元宇宙系统实现对生产过程及相关业务进行有效映射与管控，提高智能化生产水平。一是利用工业数采传感器、物联网平台以及数据中台技术，实现对生产设备、物料流动和环境参数的实时监控和管理，包括生产设备建模，厂区钣金车间、过滤器车间等厂区区域的虚拟还原与虚拟场景漫游，将现实中的生产设备等接入到虚拟世界，实现布局调整编辑功能，完成对厂房设…"
+    },
+    "extracted": {
+     "by": "tools/build_cases.py",
+     "at": "2026-11-05",
+     "synthetic": false
+    },
+    "remark": "字段由官方原文切片生成；根因判断在归因路径层给出，不在案例层杜撰"
+   },
+   {
+    "id": "CASE-009",
+    "source_id": "d2dd51c5bcef43d88c76c9cdd5t67j",
+    "collection": "2024年度中小企业数字化转型典型案例",
+    "source_type": "典型案例",
+    "title": "装备制造——厦门银华机械有限公司应用数字孪生技术推动生产管控环节效率提升",
+    "industry": "装备制造",
+    "sector": "装备制造",
+    "symptom": "面对企业生产数据不互通，设备可视化、生产联动和设备监控等之间无法有效进行数据共享的情况，厦门银华机械有限公司应用数字孪生技术推动生产管控环节效率提升。",
+    "actions": [
+     {
+      "action": "面对企业生产数据不互通，设备可视化、生产联动和设备监控等之间无法有效进行数据共享的情况，厦门银华机械有限公司应用数字孪生技术推动生产管控环节效率提升",
+      "target_scenario": "S06",
+      "target_items": [],
+      "estimated": false
+     },
+     {
+      "action": "采用混合专网方式部署工厂5G专网，满足工业实时控制、就近服务、按需调度、数据安全等需求，打造前端工业互联网5G网络与边缘工业数据中心和工业应用融合场景",
+      "target_scenario": "S04",
+      "target_items": [
+       1,
+       3,
+       7
+      ],
+      "estimated": false
+     },
+     {
+      "action": "形成统一的数字孪生模型。应用仿真软件对生产流程、设备运行等进行模拟，实现数据实时导入数字孪生模型，确保虚拟模型与物理实体同步。",
+      "target_scenario": "S01",
+      "target_items": [],
+      "estimated": false
+     }
+    ],
+    "evidence": {
+     "doc": "优质中小企业梯度培育平台 · 2024年度中小企业数字化转型典型案例",
+     "url": "https://zjtx.miit.gov.cn/zxqySy/tzggView?type=classic&id=d2dd51c5bcef43d88c76c9cdd5t67j",
+     "quoted": "面对企业生产数据不互通，设备可视化、生产联动和设备监控等之间无法有效进行数据共享的情况，厦门银华机械有限公司应用数字孪生技术推动生产管控环节效率提升。一是采用混合专网方式部署工厂5G专网，满足工业实时控制、就近服务、按需调度、数据安全等需求，打造前端工业互联网5G网络与边缘工业数据中心和工业应用融合场景。二是借助传感器、智能网关、5G网络切片、数据挖掘等设备与技术，对产线上的数控车床、磨床等10余类生产设备进行数字化改造，搭建生产运营统…"
+    },
+    "extracted": {
+     "by": "tools/build_cases.py",
+     "at": "2026-11-05",
+     "synthetic": false
+    },
+    "remark": "字段由官方原文切片生成；根因判断在归因路径层给出，不在案例层杜撰",
+    "outcome": {
+     "metric": "经项目试运行评估，生产效率提高8%，设备有效利用率提高16%，生产订单完成率提高6.5%，生产交付准时率提高16%，百分钟生产消耗成本下降12.7%，预期每年可降低生产成本25万以上。"
+    }
+   }
+  ],
+  "facets": {
+   "source_type": {
+    "链式案例集": 58,
+    "典型案例": 28,
+    "优秀场景": 2
+   },
+   "industry": {
+    "原材料": 21,
+    "跨行业": 18,
+    "装备制造": 17,
+    "汽车": 9,
+    "电子电器": 8,
+    "轻工": 6,
+    "纺织": 5,
+    "消费品": 3,
+    "医药": 1
+   }
+  }
+ },
+ "papers": {
+  "total": 2,
+  "returned": 2,
+  "offset": 0,
+  "limit": 3,
+  "items": [
+   {
+    "id": "PAPER-001",
+    "type": "方法",
+    "doi": "10.1016/j.dte.2025.100084",
+    "title": "A digital maturity model for assessing SMEs in the manufacturing sector",
+    "authors": "Njah, Danjou, Armellini",
+    "year": 2026,
+    "journal": "Digital Engineering",
+    "tier": "同行评议期刊",
+    "url": "https://doi.org/10.1016/j.dte.2025.100084",
+    "claim": "中小制造企业的数字化成熟度可以按能力维度分档评估，且分档结果可复用于改造优先级",
+    "used_where": "方法页：说明本项目按官方场景分级判定而非自造成熟度模型的理由",
+    "verified": {
+     "at": "2026-11-05",
+     "via": "Crossref 元数据",
+     "status": "已核对"
+    }
+   },
+   {
+    "id": "PAPER-008",
+    "type": "方法",
+    "doi": "10.5644/pi2026.225.16",
+    "title": "From Digital Maturity Assessment to Digital Transformation Strategy: Evidence from SMEs",
+    "authors": "Merdović, Hundur Hiyari, Softić",
+    "year": 2026,
+    "journal": "Smart Manufacturing on the Horizon",
+    "tier": "会议论文集",
+    "url": "https://doi.org/10.5644/pi2026.225.16",
+    "claim": "成熟度评估到改造战略之间需要一层“路径生成”，评估结果本身不构成行动方案",
+    "used_where": "方法页与创新点：正是本项目“评估→路径”这一步的文献依据",
+    "verified": {
+     "at": "2026-11-05",
+     "via": "Crossref 元数据",
+     "status": "已核对"
+    }
+   }
+  ],
+  "facets": {
+   "type": {
+    "方法": 2
+   },
+   "tier": {
+    "会议论文集": 1,
+    "同行评议期刊": 1
+   }
+  }
+ },
+ "patents": {
+  "total": 5,
+  "returned": 3,
+  "offset": 0,
+  "limit": 3,
+  "items": [
+   {
+    "id": "PATENT-CAT-01",
+    "category": "工业软件（MES/ERP/APS）",
+    "keywords": [
+     "制造执行系统",
+     "生产计划排程",
+     "企业资源计划",
+     "车间管理"
+    ],
+    "ipc": [
+     "G05B19/418",
+     "G06Q10/06",
+     "G06Q10/08"
+    ],
+    "maps_to_scenarios": [
+     "S05",
+     "S06"
+    ],
+    "applications_cn": null,
+    "grants_cn": null,
+    "status": "待人工检索",
+    "official_aggregate": {
+     "ipc_class": "G05",
+     "ipc_class_desc": "控制；调节（含 G05B 工业控制）",
+     "year": 2024,
+     "applications_cn": 31569,
+     "grants_cn": 18741,
+     "breakdown": {
+      "invention_applications_cn": 25162,
+      "utility_applications_cn": 6407,
+      "invention_grants_cn": 14457,
+      "utility_grants_cn": 4284
+     },
+     "granularity_caveat": "大类口径，非本项目 5 类的小类口径，只能作量级参照"
+    }
+   },
+   {
+    "id": "PATENT-CAT-02",
+    "category": "自动化产线与工业机器人",
+    "keywords": [
+     "自动化生产线",
+     "工业机器人",
+     "柔性加工",
+     "焊接机器人"
+    ],
+    "ipc": [
+     "B23K",
+     "B25J",
+     "B65G"
+    ],
+    "maps_to_scenarios": [
+     "S06",
+     "S08"
+    ],
+    "applications_cn": null,
+    "grants_cn": null,
+    "status": "待人工检索",
+    "official_aggregate": {
+     "ipc_class": "B25",
+     "ipc_class_desc": "手动工具；机械手（含 B25J 机器人）",
+     "year": 2024,
+     "applications_cn": 71412,
+     "grants_cn": 46179,
+     "breakdown": {
+      "invention_applications_cn": 12275,
+      "utility_applications_cn": 59137,
+      "invention_grants_cn": 9188,
+      "utility_grants_cn": 36991
+     },
+     "granularity_caveat": "大类口径，非本项目 5 类的小类口径，只能作量级参照"
+    }
+   },
+   {
+    "id": "PATENT-CAT-03",
+    "category": "机器视觉与在线检测",
+    "keywords": [
+     "机器视觉",
+     "缺陷检测",
+     "外观检测",
+     "尺寸测量"
+    ],
+    "ipc": [
+     "G01N21/88",
+     "G06T7/00",
+     "B07C5/34"
+    ],
+    "maps_to_scenarios": [
+     "S07"
+    ],
+    "applications_cn": null,
+    "grants_cn": null,
+    "status": "待人工检索",
+    "official_aggregate": {
+     "ipc_class": "G01",
+     "ipc_class_desc": "测量；测试（含 G01N 检测）",
+     "year": 2024,
+     "applications_cn": 369164,
+     "grants_cn": 227643,
+     "breakdown": {
+      "invention_applications_cn": 150755,
+      "utility_applications_cn": 218409,
+      "invention_grants_cn": 92627,
+      "utility_grants_cn": 135016
+     },
+     "granularity_caveat": "大类口径，非本项目 5 类的小类口径，只能作量级参照"
+    }
+   }
+  ],
+  "facets": {
+   "ipc_class": {
+    "B25": 1,
+    "B65": 1,
+    "G01": 1,
+    "G05": 1,
+    "H04": 1
+   }
+  },
+  "meta": {
+   "purpose": "专利库在本项目里只做一件事：判断某类改造在本地有没有成熟供给，避免给企业推荐做不出来的方案。不做专利质量评价。",
+   "search_entry": "https://pss-system.cponline.cnipa.gov.cn/",
+   "statistical_window": "近 5 年（2021-01-01 至检索日）",
+   "counting_rule": "按 IPC 主分类 + 关键词检索，分别统计中国申请人的专利申请量（发明 + 实用新型）与授权量；同一申请号按最早公开日去重，一件计一次",
+   "collected_at": null,
+   "collection_status": "未执行自动取数",
+   "collection_note": "国家知识产权局专利检索与分析系统需登录且无公开 API，本项目未取得批量统计授权，因此只登记检索式与口径，不填任何未经检索的数字。数字待人工检索后回填。",
+   "attempted_sources": [
+    {
+     "name": "Google Patents 公开索引（xhr/query）",
+     "tried_at": "2026-11-05",
+     "queries": [
+      "q=(G05B19/418 OR G06Q10/06)&country=CN&after=publication:20210101 → 124892",
+      "q=IPC:G05B19/418&country=CN（未加日期限定）→ 57740",
+      "q=MES 制造执行系统&country=CN&after=publication:20210101 → 5"
+     ],
+     "observation": "三条查询条件互不相同（日期范围 / IPC 写法 / 关键词），数字本不可比；且未加日期限定的第二条（57740）反而小于限定近 5 年的第一条（124892），说明 IPC 与日期过滤均未真正生效。抽样前 5 条的分类与查询意图不符（查 MES 返回“工件收集点单元”），status=GRANT 过滤后总数几乎不变。",
+     "conclusion": "该索引不按 IPC 严格过滤、计数被截断，不能作为本项目“5 类申请量/授权量”的口径来源。已放弃，不采用其数字。"
+    }
+   ],
+   "manual_protocol": [
+    "1. 登录国家知识产权局专利检索及分析系统（pss-system.cponline.cnipa.gov.cn），检索范围选“中国专利”。",
+    "2. 对每个类别按 ipc 字段逐条检索，时间限定公开日 2021-01-01 至检索日。",
+    "3. 记录“专利申请量（发明 + 实用新型）”与“授权量”两个数，并截图保存检索式与结果页。",
+    "4. 同一申请号按最早公开日去重；同日多公开的按申请号计一次。",
+    "5. 回填 applications_cn / grants_cn 后，把 collection_status 改为“已人工检索”，并填写 collected_at（检索日）与 collected_by（检索人）。",
+    "6. 回填后重跑 tools/check_knowledge.py：校验器要求“有数字”必须同时满足“已人工检索 + 检索日 + 检索人”。"
+   ],
+   "official_aggregate_source": {
+    "name": "国家知识产权局《2024 年知识产权统计年报》",
+    "tables": [
+     "5-3 申请按 IPC 大类",
+     "5-4 授权按 IPC 大类"
+    ],
+    "urls": [
+     "https://www.cnipa.gov.cn/tjxx/jianbao/year2024/e/e3.html",
+     "https://www.cnipa.gov.cn/tjxx/jianbao/year2024/e/e4.html"
+    ],
+    "granularity": "IPC 大类（如 G05），不是本项目 5 类所用的小类/小组（G05B19/418 等）",
+    "collected_at": "2026-11-05",
+    "note": "官方公开表没有小类分项，故本字段只作量级参照；5 类的申请量/授权量仍需 CNIPA 账号检索（applications_cn/grants_cn 保持 null）。"
+   }
+  },
+  "supply_side": {
+   "source_docs": [
+    "工信厅规函〔2025〕367号（首批名单）",
+    "工信厅规函〔2026〕471号（第二批名单）"
+   ],
+   "source_urls": [
+    "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2025/art_0ab06ebddc914a18bb83f1f24cc8c443.html",
+    "https://www.miit.gov.cn/zwgk/zcwj/wjfb/tz/art/2026/art_8b73e672a24644bebd8d2514a10e1e0f.html"
+   ],
+   "count_note": "两批名单均以附件形式发布，正文不含名单；主体数量需下载附件逐条清点。项目选题文件记载为 62 家 + 25 家 = 87 家（2026-11-04 核验），本库未逐条核对，故不写入计数。",
+   "cross_rule": "某类改造要被判为“本行业可行”，需同时满足：(1) 该类别在专利库有持续申请；(2) 对应细分行业在数促中心名单中有可对接主体。两者缺一，只在报告里提示“供给不确定”，不给出改造建议。",
+   "status": "名单附件未逐条核对"
+  }
+ }
+}
