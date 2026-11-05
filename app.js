@@ -231,6 +231,21 @@
     }
   }
 
+  const scenarioEmptyHint = "尚未选择等级。官方要求：应在完全满足低级场景的所有基本要求之后，方可进阶至更高一级场景的判定。";
+
+  function updateScenarioHint(scenarioId, level) {
+    const scenario = (state.criteria?.scenarios || []).find((item) => item.id === scenarioId);
+    const desc = document.querySelector(`.level-desc[data-scenario="${scenarioId}"]`);
+    if (!scenario || !desc) return;
+    if (level) {
+      desc.className = "level-desc";
+      desc.textContent = `${level} 级：${scenario.levels[String(level)]}`;
+    } else {
+      desc.className = "level-desc none";
+      desc.textContent = scenarioEmptyHint;
+    }
+  }
+
   function renderScenario(scenario) {
     const wrap = el("div", { class: "item", "data-scenario": scenario.id });
     wrap.appendChild(el("div", { class: "item-head" }, [
@@ -242,7 +257,7 @@
       }),
     ]));
 
-    const desc = el("p", { class: "level-desc none", text: "尚未选择等级。官方要求：应在完全满足低级场景的所有基本要求之后，方可进阶至更高一级场景的判定。" });
+    const desc = el("p", { class: "level-desc none", "data-scenario": scenario.id, text: scenarioEmptyHint });
     const radios = el("div", { class: "level-radios" });
     for (const level of [1, 2, 3, 4]) {
       const input = el("input", {
@@ -254,8 +269,7 @@
         "data-scenario": scenario.id,
       });
       input.addEventListener("change", () => {
-        desc.className = "level-desc";
-        desc.textContent = `${level} 级：${scenario.levels[String(level)]}`;
+        updateScenarioHint(scenario.id, level);
       });
       radios.appendChild(el("label", { class: "level-radio", for: `scenario-${scenario.id}-${level}` }, [
         input,
@@ -323,11 +337,15 @@
       }
     }
     for (const scenario of state.criteria.scenarios) {
+      document.querySelectorAll(
+        `input[data-role="scenario"][data-scenario="${scenario.id}"]`
+      ).forEach((radio) => { radio.checked = false; });
       const level = profile.scenario_levels[scenario.id] || 0;
       const input = document.querySelector(
         `input[data-role="scenario"][data-scenario="${scenario.id}"][value="${level}"]`
       );
       if (input) input.checked = true;
+      updateScenarioHint(scenario.id, level);
     }
   }
 
