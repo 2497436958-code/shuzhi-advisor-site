@@ -621,11 +621,16 @@ GET  /api/evaluation/report
 ### 遗留问题
 - 该仓无分支保护、无推送前钩子，本轮 `main` 是快进直推；长期建议改走 PR，
   或给仓库加 `.githooks/pre-push`（引擎仓已有同类做法可参考）。
-- CI 首次在 GitHub Actions 上实跑，需确认新增两步（推理层一致性、知识库校验）在 CI 环境同样通过。
+- **推送被拒的典型原因**：`refusing to allow an OAuth App to create or update workflow
+  .github/workflows/ci.yml without 'workflow' scope` —— 这是本地 GitHub token 缺 `workflow`
+  权限，不是仓库或代码问题。本地 token 权限在本次已补齐（`repo` + `workflow`）。
+  换机器或 token 过期后再遇到，执行 `gh auth refresh -h github.com -s workflow` 重新授权即可。
 
 ### 给下一个模型的交接提示
 - 每完成一项任务：先跑验证，再 `git add -A && git commit`，最后 `git push`，
   收工前跑 `python3 scripts/check_push_state.py` 确认无未推送提交。
+- 推送若因 workflow scope 被拒，先 `gh auth refresh -h github.com -s workflow`，
+  别去删 CI 文件绕过——那是倒退。
 - 不要在没跑通 `python3 -m unittest discover -s tests` 与
   `python3 scripts/compare_precomputed.py` 的情况下推送。
 - 下一步建议做 T036 前端知识库页面（数据与统计接口已就绪）或 T037 合成样本生成器。
