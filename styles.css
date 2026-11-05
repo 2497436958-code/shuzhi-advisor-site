@@ -356,7 +356,12 @@ details.evidence[open] > summary::before { content: "▾"; }
 .step-accept b { font-size: 11px; color: var(--muted); display: block; font-weight: 600; letter-spacing: .05em; }
 
 /* 排序表 */
-.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+.table-wrap {
+  overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius);
+  /* grid/flex 项默认 min-width:auto，表格的 min-width 会把容器撑破、让整页横向溢出 */
+  min-width: 0; max-width: 100%;
+}
+.kb-body > *, .out-body > *, .summary-body > *, .steps > *, .group-body > * { min-width: 0; }
 table { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 680px; }
 caption { text-align: left; font-size: 12px; color: var(--muted); padding: 8px 12px; }
 th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }

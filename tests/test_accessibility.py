@@ -53,6 +53,15 @@ class MarkupTests(unittest.TestCase):
     def test_live_regions(self):
         self.assertIn('role="status"', self.html)
 
+    def test_tables_do_not_break_page_width(self):
+        """表格 min-width 680px 放在 grid 里会撑破页面（真实浏览器量到横向溢出 342px）。
+
+        这里守住修复：表格容器与 grid 子项都要能收缩。
+        """
+        self.assertIn("min-width: 0", self.css)
+        self.assertIn(".table-wrap", self.css)
+        self.assertIn("max-width: 100%", self.css)
+
     def test_mobile_breakpoint_covers_new_blocks(self):
         self.assertIn("@media (max-width: 720px)", self.css)
         self.assertIn(".navlink", self.css)
