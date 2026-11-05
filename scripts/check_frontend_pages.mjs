@@ -402,6 +402,45 @@ check(
   "评测报告没有如实显示 T043 的结论状态",
 );
 
+/* ---- 方法页：静态内容守卫（口径、公式与合规声明不能被悄悄删掉） ---- */
+
+const indexHtml = read("index.html");
+const methodStart = indexHtml.indexOf('id="method-panel"');
+check(methodStart >= 0, "index.html 里没有方法页区块");
+if (methodStart >= 0) {
+  const methodHtml = indexHtml.slice(methodStart, indexHtml.indexOf("</main>", methodStart));
+  const required = [
+    ["官方判据出处", "工信厅企业〔2024〕56 号"],
+    ["权重链乘口径", "一级指标权重 × 二级指标权重 × 采集项权重"],
+    ["多选计分公式", "选中数 × 100 ÷ (总选项数 − 1)"],
+    ["官方口径缺口披露", "官方评分逻辑未覆盖，按等距线性兜底并显式披露"],
+    ["约束性场景数", "10 个是官方标注的约束性场景"],
+    ["AP1 判据", "采集项 2 设备数字化率 ≥(40%,60%]"],
+    ["AP2 判据", "采集项 5 覆盖绝大部分业务环节或全覆盖"],
+    ["AP3 判据", "采集项 4 自动采集覆盖环节数 ≥6"],
+    ["AP4 判据", "采集项 11 数字化投入占营业额 ≥(20%,40%]"],
+    ["ROI 公式", "ROI = 预期可量化成效收益 ÷ 投入成本"],
+    ["优先级公式", "P = (等级跃迁分 + 关联成效改善) ÷ 投入成本"],
+    ["排序取下界", "排序取<strong>下界</strong>"],
+    ["补贴不入分子", "补贴不进分子"],
+    ["ROI 同系数折算", "分子分母必须同系数"],
+    ["弹性未公开案例支撑", "未被公开案例支撑</strong>，只用于排序"],
+    ["真实层合成层不混写", "真实层与合成层不混写"],
+    ["不承诺补贴获批", "不承诺补贴获批"],
+    ["不承接申报代理", "不承接申报代理"],
+    ["不把论文结论当定论", "不把论文的单一结论写成定论"],
+    ["不把合成样本写成真实企业", "不把合成样本写成真实企业"],
+    ["真实层家数如实写", "真实层目前 <strong>0 家</strong>"],
+    ["路径表覆盖范围", "路径表目前只覆盖 9 个场景"],
+    ["可复算入口", "scripts/compare_precomputed.py"],
+  ];
+  for (const [label, snippet] of required) {
+    check(methodHtml.includes(snippet), `方法页缺少「${label}」：${snippet}`);
+  }
+  const sectionCount = (methodHtml.match(/class="kb-lib"/g) || []).length;
+  check(sectionCount === 9, `方法页应有 9 个小节，实际 ${sectionCount}`);
+}
+
 if (missingIds.size) {
   failures.push("app.js 请求了 index.html 里不存在的 id：" + [...missingIds].join("、"));
 }
@@ -416,4 +455,5 @@ console.log("前端页面冒烟测试通过");
 console.log(`  统计卡片 ${statCards.length} 个，库块 ${libBlocks.length} 个`);
 console.log(`  渲染条目 ${knowledgeBody.querySelectorAll(".kb-item").length} 条`);
 console.log(`  评测报告：指标表 ${metricRows.length} 行、对照 ${controlRows.length} 组、消融 ${ablationRows.length} 组`);
+console.log(`  方法页：内容守卫 23 条口径与合规声明齐全`);
 console.log(`  fetch 调用 ${calls.length} 次，缺失 id ${missingIds.size} 个`);

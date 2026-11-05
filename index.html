@@ -23,6 +23,7 @@
     <div class="topbar-right">
       <a class="navlink" href="#knowledge-panel">知识库</a>
       <a class="navlink" href="#evaluation-panel">评测报告</a>
+      <a class="navlink" href="#method-panel">方法与口径</a>
       <span class="chip chip-quiet" title="判据基准文件">工信厅企业〔2024〕56 号</span>
       <span class="chip" id="mode-chip" data-state="checking">正在检测服务…</span>
     </div>
@@ -190,6 +191,130 @@
     <div class="kb-body" id="evaluation-body">
       <p class="placeholder">正在加载评测报告…</p>
     </div>
+  </section>
+
+  <section class="panel" id="method-panel" aria-labelledby="method-title">
+    <div class="panel-head">
+      <h2 id="method-title">方法与口径</h2>
+      <p class="panel-sub">这一页回答"结论是怎么来的"：判据出处、算分规则、门槛、ROI 公式、评测口径，以及边界与合规声明。实时数字见上方「知识库」与「评测报告」。</p>
+    </div>
+
+    <section class="kb-lib">
+      <div class="kb-lib-head"><h3 class="kb-lib-title">一、判据从哪来</h3></div>
+      <ul class="kb-list">
+        <li class="kb-item">唯一依据是<strong>工信厅企业〔2024〕56 号《中小企业数字化水平评测指标（2024 年版）》</strong>附件（一）数字化基础、管理及成效评测表、附件（二）数字化经营应用场景等级判定表。官方 PDF 原文随站点发布（<code>official/中小企业数字化水平评测指标（2024年版）.pdf</code>），站点上的选项文字与等级描述全部逐字转写，前端不再另写一份。</li>
+        <li class="kb-item">15 个采集项分属三个一级指标：数字化基础 50%、数字化管理 30%、数字化成效 20%。每个采集项的权重是<strong>三级权重连乘</strong>：一级指标权重 × 二级指标权重 × 采集项权重，三者相乘后 15 项合计为 1.0（由 <code>scripts/verify_criteria.py</code> 校验）。</li>
+        <li class="kb-item">16 个应用场景各分四级，其中 <strong>10 个是官方标注的约束性场景</strong>（带 * 的那批），它是引导企业深度改造的重点场景。</li>
+      </ul>
+    </section>
+
+    <section class="kb-lib">
+      <div class="kb-lib-head"><h3 class="kb-lib-title">二、怎么算分</h3></div>
+      <div class="table-wrap">
+        <table>
+          <caption>选项到分值的映射，全部按官方选项顺序等距线性</caption>
+          <thead><tr><th>题型</th><th>规则</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>3 选项单选</td><td class="num">0 / 50 / 100</td><td>采集项 12—15（成效项）</td></tr>
+            <tr><td>5 选项单选</td><td class="num">0 / 25 / 50 / 75 / 100</td><td>采集项 2、3、5、11</td></tr>
+            <tr><td>6 选项单选</td><td class="num">0 / 20 / 40 / 60 / 80 / 100</td><td>仅采集项 8（规划实施）：<strong>官方评分逻辑未覆盖，按等距线性兜底并显式披露</strong></td></tr>
+            <tr><td>多选选「无」</td><td class="num">0</td><td>视为该能力尚不具备</td></tr>
+            <tr><td>多选非「无」</td><td class="num">选中数 × 100 ÷ (总选项数 − 1)</td><td>与官方"采集项覆盖比例"口径一致</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="kb-lib">
+      <div class="kb-lib-head"><h3 class="kb-lib-title">三、怎么定级</h3></div>
+      <ul class="kb-list">
+        <li class="kb-item">四级门槛是<strong>三个条件同时满足</strong>，不是只看分数：得分 ≥ 20 / 40 / 60 / 80，且达到该级的应用场景数不少于 6 / 6 / 8 / 10，其中约束性场景数不少于 3 / 3 / 5 / 6。够不到最低一级按官方口径归为「无等级」。</li>
+        <li class="kb-item">场景等级由<strong>企业自评提交</strong>。系统不替企业判断等级，只把自评等级代入官方判定表算分算级，并在结果里保留每条等级判定的官方原文引文。</li>
+        <li class="kb-item">消融评测里专门验证了"约束性场景数"这条要求：去掉它之后，有 4 家合成样本的等级会从「初始级」跳到「规范级」——说明这条规则确实在起作用，不是摆设。</li>
+      </ul>
+    </section>
+
+    <section class="kb-lib">
+      <div class="kb-lib-head"><h3 class="kb-lib-title">四、四类反模式与四类瓶颈</h3></div>
+      <div class="table-wrap">
+        <table>
+          <caption>反模式判据挂在官方采集项与场景等级上，不引入自定义维度；判据是本项目构造的，评审可复核可质疑</caption>
+          <thead><tr><th>编号</th><th>名称</th><th>判据</th><th>命中项 / 场景</th></tr></thead>
+          <tbody>
+            <tr><td>AP1</td><td>只买设备不联网</td><td>采集项 2 设备数字化率 ≥(40%,60%] 且 采集项 3 设备联网率 ≤(10%,20%]</td><td class="num">2、3 / S08 设备管理</td></tr>
+            <tr><td>AP2</td><td>只上系统不跑流程</td><td>采集项 5 覆盖绝大部分业务环节或全覆盖，但生产管控／质量管理场景仍在一级</td><td class="num">5 / S06、S07</td></tr>
+            <tr><td>AP3</td><td>只做数据采集不做分析</td><td>采集项 4 自动采集覆盖环节数 ≥6，但决策支持场景仍在一级</td><td class="num">4 / S16 决策支持</td></tr>
+            <tr><td>AP4</td><td>只追补贴不建能力</td><td>采集项 11 数字化投入占营业额 ≥(20%,40%]，但总分 &lt;40 分（够不到二级规范级）</td><td class="num">11 / —</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="kb-item-meta">除反模式型瓶颈外，还有三类结构性瓶颈：场景断层（约束性场景还停在一级，直接卡等级门槛）、等级缺口（距下一个等级差哪几条硬指标）、基础缺口（数字化基础维度得分低于该维度权重的一半）。每条诊断都带命中采集项、命中场景与官方原文引文。</p>
+    </section>
+
+    <section class="kb-lib">
+      <div class="kb-lib-head"><h3 class="kb-lib-title">五、路径、排序与投入产出</h3></div>
+      <ul class="kb-list">
+        <li class="kb-item"><strong>选步规则</strong>：弱场景（当前等级低于 2 级）→ 一个场景只提一个改造项，优先场景专属动作、底座动作只补没有专属动作的场景 → 按优先级 P 取前 6 步并强制补齐前置依赖 → 步骤顺序按依赖深度，同层按 P 降序。</li>
+        <li class="kb-item"><strong>优先级公式</strong>：<code>P = (等级跃迁分 + 关联成效改善) ÷ 投入成本</code>。等级跃迁分是该改造项相关采集项当前可回收的分数。两个分子项单位不同（分 / 万元），P 只用于同一依赖层内排序，<strong>不作为业务结论数</strong>。</li>
+        <li class="kb-item"><strong>ROI 公式</strong>：<code>ROI = 预期可量化成效收益 ÷ 投入成本</code>。分子取成效采集项 12—15 对应的预期改善收益；分母 = 直接投入 + 年运维 + 内部工时折价。排序取<strong>下界</strong>（最小收益 ÷ 最大成本），保守。</li>
+        <li class="kb-item"><strong>补贴不进分子</strong>。旧口径分子是"预计补贴"，是企业控制不了的外部变量，结论会随政策周期变动；现在的分子是企业自己的成效。</li>
+        <li class="kb-item"><strong>规模折算</strong>：投入区间与收益基数按营业收入等比折算（基准 6000 万元营收），<strong>分子分母必须同系数</strong>，ROI 才是比值、不随企业规模变化。该折算律尚未用真实企业校准。</li>
+        <li class="kb-item"><strong>成效弹性口径</strong>：当前用的是演示估算区间，<strong>未被公开案例支撑</strong>，只用于排序。评测显示：换成知识库里那套有公开案例支撑的弹性区间后，同一改造项的 ROI 相对偏差中位数超过 1000%——说明当前排序对弹性口径高度敏感，这是已知风险。</li>
+      </ul>
+    </section>
+
+    <section class="kb-lib">
+      <div class="kb-lib-head"><h3 class="kb-lib-title">六、知识库口径</h3></div>
+      <ul class="kb-list">
+        <li class="kb-item">四类来源分工明确：<strong>政策库</strong>定判据、门槛与验收口径；<strong>案例库</strong>提供症状 → 根因 → 改造项的证据；<strong>论文库</strong>提供成效弹性区间与评价方法；<strong>专利库</strong>定技术供应侧成熟度与可选方案边界。不做政策全文检索，不做案例展示墙，不做专利质量评价。</li>
+        <li class="kb-item">案例是<strong>证据</strong>、路径是<strong>判断</strong>，两者分开，这样根因可以被单独质疑和修订。案例编号与原文链接逐条可回查。</li>
+        <li class="kb-item">检索入口与分类口径在「知识库」区块公开：政策按文号与用途、案例按行业与来源类型、论文按类型与文献层级、专利按 IPC 大类与映射场景。</li>
+        <li class="kb-item"><strong>真实层与合成层不混写</strong>：案例库全部为公开来源的真实案例；评测样本全部标记为合成样本（<code>synthetic</code>），真实企业样本单独出报告。</li>
+      </ul>
+    </section>
+
+    <section class="kb-lib">
+      <div class="kb-lib-head"><h3 class="kb-lib-title">七、评测口径</h3></div>
+      <ul class="kb-list">
+        <li class="kb-item">评测样本为 <strong>60 家合成样本</strong>（AP1—AP4 各 10 家、正常对照 20 家），每家带"按构造应当命中什么"与"引擎实测命中什么"两份记录，指标直接由这两份记录算出。</li>
+        <li class="kb-item">四组对照：纯 RAG（只检索）、纯规则（只用判据层）、RAG + 计算器、完整闭环；四组消融：去归因、去约束场景、去反模式、去判据锚定。每组只关掉一项能力，关掉什么写在代码的文档字符串里。</li>
+        <li class="kb-item">指标参考值一律取自判据层与样本本身，<strong>不取自被测系统的输出</strong>，避免自己给自己判卷。</li>
+        <li class="kb-item">真实层目前 <strong>0 家</strong>：合成层能证明规则实现没有系统性偏差，不能证明业务结论正确。详见「评测报告」区块。</li>
+      </ul>
+    </section>
+
+    <section class="kb-lib">
+      <div class="kb-lib-head"><h3 class="kb-lib-title">八、局限与合规边界</h3></div>
+      <ul class="kb-list">
+        <li class="kb-item"><strong>不承诺补贴获批</strong>，不承诺任何资金一定拿到；政策注记只说明"有没有这条通道、怎么走"。</li>
+        <li class="kb-item"><strong>不承接申报代理</strong>或任何涉申报中介服务，本项目定位是公益性辅导与决策参考。</li>
+        <li class="kb-item"><strong>不把论文的单一结论写成定论</strong>，也不把专利数量当作技术优劣的判据。</li>
+        <li class="kb-item">不把合成样本写成真实企业；示例企业与评测样本均为合成数据，不得用于对外披露。</li>
+        <li class="kb-item">官方未覆盖的口径（如采集项 8 的 6 选项单选）<strong>显式披露</strong>，不藏着。</li>
+        <li class="kb-item">路径表目前只覆盖 9 个场景（S01、S03、S06—S11、S16），S02、S04、S05、S12—S15 暂无改造建议。</li>
+        <li class="kb-item">检索只做子串匹配，不做分词与同义词；命中数宽不代表相关度高。</li>
+        <li class="kb-item">站点为<strong>演示用途</strong>，结论是决策参考，不替代企业自己的判断，也不替代主管部门的认定。</li>
+      </ul>
+    </section>
+
+    <section class="kb-lib">
+      <div class="kb-lib-head"><h3 class="kb-lib-title">九、可复算入口</h3></div>
+      <div class="table-wrap">
+        <table>
+          <caption>每条结论都能追到采集项、场景、案例或政策文件；下面这些命令能把结果重跑一遍</caption>
+          <thead><tr><th>命令</th><th>做什么</th></tr></thead>
+          <tbody>
+            <tr><td><code>python3 scripts/verify_criteria.py</code></td><td>校验 15 采集项、16 场景、四级门槛与权重合计</td></tr>
+            <tr><td><code>python3 -m unittest discover -s tests -v</code></td><td>判据层复算、推理层一致性、评测口径的守门用例</td></tr>
+            <tr><td><code>python3 scripts/compare_precomputed.py</code></td><td>实时引擎与已发布预计算结果逐项对比</td></tr>
+            <tr><td><code>python3 scripts/build_evaluation_report.py</code></td><td>重跑四组对照、四组消融与六项指标</td></tr>
+            <tr><td><code>python3 scripts/check_knowledge_port.py</code></td><td>校验四类知识库的编号与出处完整性</td></tr>
+            <tr><td><code>node scripts/check_frontend_pages.mjs</code></td><td>前端页面渲染冒烟测试</td></tr>
+            <tr><td><code>python3 scripts/recompute_profile.py 画像.json</code></td><td>用任意一份画像重算等级与四段式结果</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
   </section>
 
 </main>

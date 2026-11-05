@@ -82,6 +82,10 @@ python3 scripts/build_knowledge_fixture.py   # 重新生成前端冒烟测试用
 node scripts/check_frontend_pages.mjs        # 前端渲染冒烟测试（零依赖，无需浏览器）
 ```
 
+站点的「方法与口径」区块回答"结论是怎么来的"：判据出处与权重链乘、算分规则、
+四级门槛与约束性场景要求、AP1—AP4 判据、路径与 ROI/优先级公式、知识库与评测口径、
+局限与合规边界、可复算命令清单。
+
 站点的「评测报告」区块展示四组对照、四组消融与六项指标的实测值与门槛判定，
 数据来自 `data/evaluation/report.json`（在线时走 `GET /api/evaluation/report`）。
 不达标与不可测的指标如实标注，真实层家数如实显示。

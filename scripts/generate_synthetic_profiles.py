@@ -233,7 +233,7 @@ def build_control(rng: random.Random, index: int) -> tuple[dict, dict, dict]:
     其中 4 家做成"场景数够、约束性场景不够"的边界形态：
     6 个场景达到二级，但达到二级的约束性场景只有 1 个（官方要求不少于 3 个），
     按官方口径只能判初始级。这一组专门用来检验"约束性场景"这条要求是否真的起作用
-    （消融组"去约束场景"会去��它，判定就会跳到规范级）。
+    （消融组「去约束场景」会把它去掉，判定就会跳到规范级）。
     """
     answers = solid_answers()
     scenarios = base_scenarios()
