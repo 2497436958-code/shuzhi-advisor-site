@@ -15,6 +15,7 @@
 5. **不要把模型当架构师**：架构冲突由人工或主控模型裁决。
 6. **每个任务必须留“交接说明”**：下一个模型要知道从哪里继续。
 7. **真实层与合成层不能混写**：合成样本要标注 `synthetic`，真实企业单独报告。
+8. **成果要落库**：每完成一项任务就提交并推送到远端，不允许把已完成的工作只留在本地磁盘。推送前必须跑通第 7 节的最小验证，并用 `python3 scripts/check_push_state.py` 自查。
 
 ---
 
@@ -64,6 +65,7 @@
 | 四类知识库 | 已有 | 政策 30 份 / 案例 259 条 / 论文 11 篇 + 3 条检索入口 / 专利 5 个大类口径 |
 | 知识库统计接口 | 已有 | `GET /api/knowledge/stats` |
 | 改造项参数表 | 已有 | `data/pathways.json`、`data/pathway_content.json`（从预计算结果反解，待人工审校） |
+| 推送纪律 | 已有 | 手册第 0 节第 8 条 + 第 7 节第 7 条：每完成一项任务即提交并推送，`scripts/check_push_state.py` 自查 |
 
 ### 已知问题 / 待补齐
 
@@ -172,7 +174,7 @@ GET  /api/evaluation/report
 | ID | 模块 | 任务 | 依赖 | 交付物 | 验收标准 | 状态 | 负责模型 | 模型完成说明 |
 |---|---|---|---|---|---|---|---|---|
 | T000 | 工程化 | 确认源码仓库、分支、运行方式 | 无 | 可本地启动的仓库 | `git clone` 后可运行，前端可打开 | 已完成 | Codex | 已克隆 `work/shuzhi-advisor-site`；本地 8081 可打开静态站。 |
-| T001 | 工程化 | 建立 Git 分支与提交规范 | T000 | 分支规范说明 | 不允许直接改主干，提交有说明 | 已完成 | Codex | 已创建 `fix/scene-level-hint`；本次只提交该任务相关修改。 |
+| T001 | 工程化 | 建立 Git 分支与提交规范 | T000 | 分支规范说明 | 不允许直接改主干，提交有说明 | 已完成 | Codex | 已创建 `fix/scene-level-hint`；本次只提交该任务相关修改。MODEL-008 追加“每完成一项任务即提交并推送”纪律与 `scripts/check_push_state.py`。 |
 | T002 | 工程化 | 建立后端依赖与环境说明 | T000 | `requirements.txt`、README | 新模型可按 README 启动 | 已完成 | Codex | 已补充 FastAPI/Uvicorn 依赖、httpx 开发依赖、后端启动说明。 |
 | T003 | 工程化 | 建立 CI | T000 | GitHub Actions | push 后自动跑测试 | 已完成 | Codex | CI 在 Python 3.10/3.11/3.12 跑判据校验、测试和前端语法检查。 |
 | T004 | 判据层 | 固化 15 个采集项 | 无 | `criteria.json` 或 DB | 数量、权重、选项、题型一致 | 已完成 | Codex | `precomputed/criteria.json` 结构校验通过，15 项权重合计 1.0。 |
@@ -579,6 +581,55 @@ GET  /api/evaluation/report
 - 两条口径冲突（路径表、弹性区间）必须由人工裁决，模型不得自行替换。
 - 验证命令：`python3 -m unittest discover -s tests -v` 与 `python3 scripts/compare_precomputed.py`。
 
+
+---
+
+## MODEL-008 · Codex · 2026-11-05
+
+### 参与范围
+- 任务 ID：T001（补充推送纪律）
+- 模块：手册纪律、Git 推送流程
+
+### 实际完成
+- 手册新增两条硬规则：
+  - 第 0 节第 8 条“成果要落库”：每完成一项任务就提交并推送，不允许只留在本地磁盘；
+  - 第 7 节交接协议扩为 7 条，第 7 条“把成果推上远端”，给出 `git status` /
+    `scripts/check_push_state.py` / `git push` 三步与"推工作分支、合 main 前确认 CI"的分工。
+- 第 10 节输出模板增加“推送”字段（分支、推送提交、自查结果）。
+- 新增 `scripts/check_push_state.py`：检查工作区是否干净、各本地分支是否还有未推送提交，
+  不通过时返回非 0，可直接当作收工前的自检。
+- 把此前只在本地磁盘的 9 个提交全部推送上线，并快进合并到 `main`。
+
+### 验证方式
+- `python3 scripts/check_push_state.py --all` → 通过（工作区干净、无未推送提交）
+- `git rev-list --count origin/main..main` → 0
+- `git push --dry-run` → 凭据可用
+- GitHub Actions：推送后自动触发 CI（含本轮新增的推理层一致性与知识库校验两步）
+
+### 推送
+- 分支：`fix/scene-level-hint` → `origin/fix/scene-level-hint`；`main` → `origin/main`
+- 推送提交：本轮全部提交 + 此前积压的 9 个提交
+- `scripts/check_push_state.py` 结果：通过
+
+### 更新的任务状态
+- T001：已完成的提交规范补充“每完成一项即推送”纪律
+
+### 变更记录
+- 修改：`docs/model_handoff.md`（同步到桌面手册）、`.github/workflows/ci.yml`
+- 新增：`scripts/check_push_state.py`
+
+### 遗留问题
+- 该仓无分支保护、无推送前钩子，本轮 `main` 是快进直推；长期建议改走 PR，
+  或给仓库加 `.githooks/pre-push`（引擎仓已有同类做法可参考）。
+- CI 首次在 GitHub Actions 上实跑，需确认新增两步（推理层一致性、知识库校验）在 CI 环境同样通过。
+
+### 给下一个模型的交接提示
+- 每完成一项任务：先跑验证，再 `git add -A && git commit`，最后 `git push`，
+  收工前跑 `python3 scripts/check_push_state.py` 确认无未推送提交。
+- 不要在没跑通 `python3 -m unittest discover -s tests` 与
+  `python3 scripts/compare_precomputed.py` 的情况下推送。
+- 下一步建议做 T036 前端知识库页面（数据与统计接口已就绪）或 T037 合成样本生成器。
+
 ---
 
 ## 7. 交接协议：换模型前必须做的 6 件事
@@ -606,6 +657,15 @@ GET  /api/evaluation/report
 
 6. **不要留下未提交的半成品**  
    如果必须留下，要写清楚哪个文件、哪一段是临时实现。
+
+7. **把成果推上远端**
+   完成的每一项任务都要落库，不允许只留在本地磁盘：
+   ```bash
+   git status                          # 工作区必须干净
+   python3 scripts/check_push_state.py # 未推送提交数必须为 0
+   git push                            # 推送到工作分支
+   ```
+   推送到工作分支即可；合入 `main` 前确认 CI 通过。
 
 ---
 
@@ -695,6 +755,11 @@ P = (等级跃迁分 + 关联成效指标预期改善) ÷ 投入成本
 ### 验证
 - 命令：
 - 结果：
+
+### 推送
+- 分支：
+- 推送提交：
+- `scripts/check_push_state.py` 结果：
 
 ### 更新
 - 任务状态表：
