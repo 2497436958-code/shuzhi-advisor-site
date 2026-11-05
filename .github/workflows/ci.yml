@@ -44,8 +44,14 @@ jobs:
       - name: Check knowledge library
         run: python scripts/check_knowledge_port.py
 
+      - name: Check knowledge schema and citation chain
+        run: python scripts/check_knowledge_schema.py
+
       - name: Check frontend syntax
         run: node --check app.js
 
       - name: Check frontend page rendering
         run: node scripts/check_frontend_pages.mjs
+
+      - name: Check color contrast (WCAG AA)
+        run: python scripts/check_contrast.py

@@ -201,6 +201,7 @@
         "data-role": "single",
         "data-indicator": indicator.id,
         id: `indicator-${indicator.id}`,
+        "aria-label": `采集项 ${indicator.id} ${indicator.title}（${indicator.option_type}）`,
       });
       select.addEventListener("change", () => updateFormProgress());
       select.appendChild(el("option", { value: "", text: "— 请选择 —" }));
@@ -212,7 +213,11 @@
       });
       body.appendChild(select);
     } else {
-      const list = el("div", { class: "opts" });
+      const list = el("div", {
+        class: "opts",
+        role: "group",
+        "aria-label": `采集项 ${indicator.id} ${indicator.title} 的选项（可多选）`,
+      });
       for (const option of indicator.options) {
         const input = el("input", {
           type: "checkbox",
@@ -322,7 +327,11 @@
     ]));
 
     const desc = el("p", { class: "level-desc none", "data-scenario": scenario.id, text: scenarioEmptyHint });
-    const radios = el("div", { class: "level-radios" });
+    const radios = el("div", {
+      class: "level-radios",
+      role: "radiogroup",
+      "aria-label": `场景 ${scenario.id} ${scenario.name} 的等级`,
+    });
     for (const level of [1, 2, 3, 4]) {
       const input = el("input", {
         type: "radio",
@@ -833,16 +842,16 @@
       }));
       const thead = el("thead");
       thead.appendChild(el("tr", {}, [
-        el("th", { text: "排名" }),
-        el("th", { text: "改造动作" }),
-        el("th", { text: "目标场景" }),
-        el("th", { text: "投入（万元/年）" }),
-        el("th", { text: "预期年化收益（万元）" }),
-        el("th", { text: "ROI 区间" }),
-        el("th", { text: "等级跃迁分" }),
-        el("th", { text: "优先级 P" }),
-        el("th", { text: "受阻" }),
-        el("th", { text: "依据" }),
+        el("th", { scope: "col", text: "排名" }),
+        el("th", { scope: "col", text: "改造动作" }),
+        el("th", { scope: "col", text: "目标场景" }),
+        el("th", { scope: "col", text: "投入（万元/年）" }),
+        el("th", { scope: "col", text: "预期年化收益（万元）" }),
+        el("th", { scope: "col", text: "ROI 区间" }),
+        el("th", { scope: "col", text: "等级跃迁分" }),
+        el("th", { scope: "col", text: "优先级 P" }),
+        el("th", { scope: "col", text: "受阻" }),
+        el("th", { scope: "col", text: "依据" }),
       ]));
       table.appendChild(thead);
 
@@ -1411,11 +1420,11 @@
       text: "门槛与结论取自主控文档；不达标与不可测如实标注，不做粉饰。",
     }));
     table.appendChild(el("thead", {}, [el("tr", {}, [
-      el("th", { text: "指标" }),
-      el("th", { text: "口径" }),
-      el("th", { text: "实测" }),
-      el("th", { text: "门槛" }),
-      el("th", { text: "结论" }),
+      el("th", { scope: "col", text: "指标" }),
+      el("th", { scope: "col", text: "口径" }),
+      el("th", { scope: "col", text: "实测" }),
+      el("th", { scope: "col", text: "门槛" }),
+      el("th", { scope: "col", text: "结论" }),
     ])]));
     const tbody = el("tbody");
     for (const task of EVAL_METRIC_ORDER) {
@@ -1445,9 +1454,9 @@
     table.appendChild(el("caption", {
       text: "每组只关掉一项能力；关掉什么写在 src/advisor/evaluation/variants.py 的文档字符串里。",
     }));
-    const head = el("tr", {}, [el("th", { text: "组" })]);
+    const head = el("tr", {}, [el("th", { scope: "col", text: "组" })]);
     for (const key of EVAL_CAPABILITY_ORDER) {
-      head.appendChild(el("th", { text: labels[key] || key }));
+      head.appendChild(el("th", { scope: "col", text: labels[key] || key }));
     }
     table.appendChild(el("thead", {}, [head]));
     const tbody = el("tbody");
@@ -1474,15 +1483,15 @@
       text: "消融组把对应能力打掉后的实测值；塌陷就是该能力在闭环里的贡献。",
     }));
     table.appendChild(el("thead", {}, [el("tr", {}, [
-      el("th", { text: "组" }),
-      el("th", { text: "关掉了什么" }),
-      el("th", { text: "诊断 F1" }),
-      el("th", { text: "路径命中" }),
-      el("th", { text: "Top-3 一致" }),
-      el("th", { text: "检出率" }),
-      el("th", { text: "误报率" }),
-      el("th", { text: "等级一致" }),
-      el("th", { text: "证据链完整" }),
+      el("th", { scope: "col", text: "组" }),
+      el("th", { scope: "col", text: "关掉了什么" }),
+      el("th", { scope: "col", text: "诊断 F1" }),
+      el("th", { scope: "col", text: "路径命中" }),
+      el("th", { scope: "col", text: "Top-3 一致" }),
+      el("th", { scope: "col", text: "检出率" }),
+      el("th", { scope: "col", text: "误报率" }),
+      el("th", { scope: "col", text: "等级一致" }),
+      el("th", { scope: "col", text: "证据链完整" }),
     ])]));
     const tbody = el("tbody");
     for (const [system, info] of Object.entries(report.systems || {})) {

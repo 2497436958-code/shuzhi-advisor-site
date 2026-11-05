@@ -5,9 +5,10 @@
 :root {
   --ink: #16191d;
   --ink-2: #3d454f;
-  --muted: #6a737d;
+  --muted: #68707a;
   --line: #dfe3e8;
   --line-strong: #c7cdd5;
+  --line-input: #878f9a;
   --bg: #ffffff;
   --bg-2: #f6f7f9;
   --bg-3: #eef0f3;
@@ -31,6 +32,7 @@
     --muted: #9aa3ad;
     --line: #333a42;
     --line-strong: #454e58;
+    --line-input: #646d78;
     --bg: #14171a;
     --bg-2: #1a1e22;
     --bg-3: #22272c;
@@ -172,7 +174,7 @@ main { max-width: 1120px; margin: 0 auto; padding: 0 20px 48px; }
 .btn {
   font: inherit; font-size: 14px; cursor: pointer;
   padding: 8px 16px; border-radius: 3px;
-  border: 1px solid var(--line-strong); background: var(--bg); color: var(--ink);
+  border: 1px solid var(--line-input); background: var(--bg); color: var(--ink);
 }
 .btn:hover { border-color: var(--accent); color: var(--accent); }
 .btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -200,7 +202,7 @@ main { max-width: 1120px; margin: 0 auto; padding: 0 20px 48px; }
 .field-label .unit { color: var(--muted); opacity: .8; }
 .field input {
   font: inherit; font-size: 14px; padding: 6px 8px;
-  border: 1px solid var(--line-strong); border-radius: 3px;
+  border: 1px solid var(--line-input); border-radius: 3px;
   background: var(--bg); color: var(--ink); width: 100%;
 }
 .hint { font-size: 12px; color: var(--muted); margin: 10px 0 0; }
@@ -461,12 +463,12 @@ details.evidence-block > summary { cursor: pointer; font-size: 13px; color: var(
 .kb-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
 .kb-search {
   font: inherit; font-size: 13px; padding: 6px 9px; min-width: 220px; flex: 1 1 260px;
-  border: 1px solid var(--line-strong); border-radius: 3px; background: var(--bg); color: var(--ink);
+  border: 1px solid var(--line-input); border-radius: 3px; background: var(--bg); color: var(--ink);
 }
 .kb-search:disabled { background: var(--bg-3); color: var(--muted); }
 .kb-select {
   font: inherit; font-size: 13px; padding: 6px 8px; max-width: 100%;
-  border: 1px solid var(--line-strong); border-radius: 3px; background: var(--bg); color: var(--ink);
+  border: 1px solid var(--line-input); border-radius: 3px; background: var(--bg); color: var(--ink);
 }
 .kb-select:disabled { background: var(--bg-3); color: var(--muted); }
 .kb-status { font-size: 12px; color: var(--muted); }

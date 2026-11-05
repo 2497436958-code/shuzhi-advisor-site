@@ -39,6 +39,9 @@ python3 scripts/recompute_profile.py path/to/profile.json
 python3 scripts/verify_criteria.py
 python3 -m unittest discover -s tests -v
 node --check app.js
+node scripts/check_frontend_pages.mjs
+python3 scripts/check_contrast.py          # 配色对比度（WCAG AA）
+python3 scripts/check_knowledge_schema.py  # 知识库 schema 与引用链
 git diff --check
 ```
 

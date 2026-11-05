@@ -74,6 +74,8 @@
 | 结果页优化 | 已有 | 结论摘要条、诊断/路径导语、排序表含等级跃迁分与优先级、政策注记折叠 |
 | 免责与边界声明 | 已有 | 页脚「免责与边界」段 + 方法页第八节 + `docs/demo.md` 追问答法，三处一致 |
 | 部署说明 | 已有 | `docs/deployment.md`：两段式架构、环境变量、CORS、静态白名单、Render/Docker 配方与公开站安全注意 |
+| 来源与出处规范 | 已有 | `docs/schemas/*.json` 四库 schema + `scripts/check_knowledge_schema.py`，缺口登记在 `docs/knowledge_sources.md` |
+| 可访问性 | 已有 | 对比度脚本实算并接进 CI（WCAG AA）、aria 名称与表头 scope、窄屏适配、`tests/test_accessibility.py` 守住 |
 
 ### 已知问题 / 待补齐
 
@@ -233,14 +235,14 @@ GET  /api/evaluation/report
 | T047 | 评测 | 评测报告生成 | T037—T046 | `/evaluation/report.md` | 人可读报告含真实层/合成层 | 已完成 | Codex | 人读报告 `data/evaluation/report.md`：样本层分列、四组对照、四组消融、六项指标与门槛判定、已知边界。 |
 | T048 | 评测 | 评测报告 JSON | T047 | API | 页面和接口一致 | 已完成 | Codex | 报告 JSON、接口 `GET /api/evaluation/report` 与前端页面三者一致，页面直接读同一份 JSON。 |
 | T049 | 合规 | 免责与边界声明 | 无 | 页脚/方法页 | 不承诺补贴、不代申报、不替代决策 | 已完成 | Codex | 页脚新增「免责与边界」段：不承诺补贴获批、不承接申报代理或涉申报中介服务、不替代企业自身判断与主管部门认定、引用前请回查原文；方法页第八节为完整版（由前端内容守卫 23 条守住）。 |
-| T050 | 合规 | 来源与出处规范 | 全部 | 数据 schema | 每条引用有来源、日期、用途 | 进行中 | Codex | 入库条目均有来源、日期与链接；统一 schema 文件待落地。 |
+| T050 | 合规 | 来源与出处规范 | 全部 | 数据 schema | 每条引用有来源、日期、用途 | 已完成 | Codex | 四类知识库各有 JSON Schema（`docs/schemas/*.json`），新增 `scripts/check_knowledge_schema.py` 按 schema 校验并核对「每条引用有来源、日期、用途」；缺口如实登记在 `docs/knowledge_sources.md`：案例 39 条缺来源发布日期、论文 3 条是检索入口、专利 5 类小类数待人工检索。 |
 | T051 | 部署 | 静态站部署 | T000 | GitHub Pages | 页面可访问 | 已完成 | Codex | 静态站已部署：GitHub Pages 从 `main` 分支构建，CI 与部署均 success，线上可访问。 |
 | T052 | 部署 | 后端部署 | T016—T023 | Render/Fly/Railway | `/api/health` 可访问 | 未开始 |  |  |
 | T053 | 部署 | CORS 与环境变量 | T052 | 配置文档 | 前后端联调无跨域问题 | 已完成 | Codex | 后端改为白名单公开静态目录（源码、脚本、.git、docs 一律 404）；CORS 默认不同源不开放，需分开部署时用 `ADVISOR_CORS_ORIGINS` 指定来源；环境变量 `ADVISOR_HOST`/`ADVISOR_PORT`/`ADVISOR_CORS_ORIGINS` 与部署说明见 `docs/deployment.md`。 |
 | T054 | QA | 判据层测试 | T006—T008 | 测试 | 打分与门槛可重复验证 | 已完成 | Codex | `tests/test_scoring.py` 8 个用例：判据结构、三/五选项单选、多选三态、官方口径缺口披露、6 个预计算样本复算。 |
 | T055 | QA | 推理层测试 | T024—T030 | 测试 | 输出结构、证据链、反模式可测 | 已完成 | Codex | `tests/test_reasoning.py`、`test_ranking.py`、`test_evidence.py`：判据层复算、诊断一致、ROI 一致、证据链强制。 |
 | T056 | QA | API 测试 | T016—T023 | 测试 | 接口输入输出和错误处理可测 | 已完成 | Codex | `tests/test_api.py` 覆盖 health/criteria/fixtures/evaluate/knowledge stats/四个检索端点与 404、422 分支。 |
-| T057 | QA | 前端可访问性 | T009—T015 | UI 检查 | 键盘、aria、对比度、移动端可用 | 进行中 | Codex | 知识库页面的检索框、筛选下拉与计数都带 aria 标注；全站可访问性审计未做。 |
+| T057 | QA | 前端可访问性 | T009—T015 | UI 检查 | 键盘、aria、对比度、移动端可用 | 已完成 | Codex | 对比度用脚本实算并接进 CI：辅助文字在次级底色上由 4.49:1 提到 4.68:1，输入控件边框新增 `--line-input` 令牌达到 3:1 以上（装饰性分隔线不变）；补 aria 名称（采集项下拉、场景等级组、多选组）、表头 scope、窄屏顶栏收紧；新增 `tests/test_accessibility.py` 守住。 |
 | T058 | QA | 演示脚本 | 全部 | `docs/demo.md` | 5 分钟答辩演示路径固定 | 已完成 | Codex | `docs/demo.md`：5 分钟答辩脚本，八步各有「点哪里、说什么、屏幕出现什么」，数字全部取自实际样例；含后端不可用的兜底方案与九个追问的答法（附口径出处）。 |
 
 ---
@@ -1101,6 +1103,84 @@ GET  /api/evaluation/report
 - 其余四项都要外部输入：真实企业数据（T008/T038/T045）、排序口径裁决（T043）、
   部署账号（T052）、专利人工检索（T035）。
 - 新增文档都要在 `tests/test_docs.py` 里有守门用例，删内容会 CI 报红。
+- 收工三步：`python3 -m unittest discover -s tests` →
+  `node scripts/check_frontend_pages.mjs` → `python3 scripts/check_push_state.py`。
+
+
+---
+
+## MODEL-016 · Codex · 2026-11-05
+
+### 参与范围
+- 任务 ID：T050、T057
+- 模块：来源与出处规范、前端可访问性
+
+### 实际完成
+- **T050 来源与出处规范**：
+  - 四个知识库各有一份 JSON Schema（`docs/schemas/policy|case|paper|patent.schema.json`），
+    把"一条引用必须有什么"写成机器可校验的形式；
+  - 新增 `scripts/check_knowledge_schema.py`：自带极简 JSON Schema 校验器（不引第三方依赖），
+    既校验必填字段与类型，又逐库核对「每条引用有来源、日期、用途」；
+    ERROR 返回非 0，WARNING 只报告不失败——**缺口如实登记，不掩盖也不假装齐全**；
+  - 新增 `docs/knowledge_sources.md`：四个库的引用链字段对照表、回查方式、
+    schema 约束说明，以及三条**如实登记**的缺口：
+    案例库 39 条来源集名不含年份（优秀场景与地方实践，只有抽取日期）、
+    论文库 3 条是检索入口（统计文献数须按 type 过滤）、
+    专利库 5 个分类的小类数量未取到（CNIPA 无公开 API，只出官方 IPC 大类口径）；
+  - CI 增加 schema 与引用链校验这一步。
+- **T057 前端可访问性**：
+  - 新增 `scripts/check_contrast.py`：从 `styles.css` 的 CSS 变量实算 WCAG 对比度
+    （浅色与深色两套），逐组合检查，CI 接管；
+  - **查出并修掉两处真实不达标**：辅助文字 `--muted` 在次级底色上 4.49:1（差 0.01 不达标），
+    调深到 4.68:1；表单输入框边框只有 1.60:1（UI 控件要求 3:1），
+    新增 `--line-input` 令牌（浅色 3.27:1 / 深色 3.43:1）专供输入控件与次要按钮，
+    装饰性分隔线保持原样；
+  - 补 aria：采集项下拉有可访问名称、场景等级组标 `role="radiogroup"`、
+    多选组标 `role="group"`、26 处表头补 `scope="col"`；
+  - 窄屏（≤720px）收紧顶栏入口字号并让结果摘要单列排布；
+  - 新增 `tests/test_accessibility.py`（8 个用例）守住上述各项，并检查
+    `aria-labelledby`/`aria-controls` 指向的 id 真实存在。
+- 方法页「可复算入口」补上两条新命令（schema 校验、对比度检查）。
+
+### 验证方式
+- `python3 scripts/check_knowledge_schema.py` → schema 无错误；3 处引用链缺口如实登记
+- `python3 scripts/check_contrast.py` → 浅色与深色共 26 个组合全部达到 WCAG AA
+- `python3 -m unittest discover -s tests -v` → 116 个用例全部通过
+- `node scripts/check_frontend_pages.mjs` → 四个页面全部通过，方法页内容守卫 23 条齐全
+- `node --check app.js`、`git diff --check` → 通过
+
+### 更新的任务状态
+- T050：进行中 → 已完成
+- T057：进行中 → 已完成
+- 当前状态快照：补 2 行已完成能力
+
+### 变更记录
+- 新增：`docs/schemas/`（4 份 schema）、`scripts/check_knowledge_schema.py`、
+  `scripts/check_contrast.py`、`docs/knowledge_sources.md`、`tests/test_accessibility.py`
+- 修改：`styles.css`（配色令牌与控件边框、窄屏适配）、`app.js`（aria 名称、表头 scope）、
+  `index.html`（方法页补两条命令）、`.github/workflows/ci.yml`（两步新校验）、`README.md`
+- **未改动** 知识库数据文件本身、判据层、推理层逻辑与评测口径
+
+### 遗留问题
+- 可访问性这轮是**自动化检查 + 代码走查**，没有用真实读屏软件（NVDA/VoiceOver）逐项走一遍，
+  也没有做纯键盘操作的完整走查（只验证了跳转链接、焦点样式与原生控件可聚焦）。
+  真机走查仍建议在 T057 收尾前补一次。
+- 引用链的三条缺口是**现状登记**：案例 39 条缺来源发布日期、论文 3 条是检索入口、
+  专利 5 类小类数待人工检索。前两条补起来要回原始出处，第三条要人工检索 CNIPA。
+- T008/T038 真实企业、T045 真值 ROI 偏差、T043 排序口径、T052 后端部署、T035 专利人工检索
+  五项仍待外部输入或人工裁决。
+
+### 给下一个模型的交接提示
+- **能自己做的活已经做完了**：59 项任务里 53 项完成，剩下的五项都需要外部输入或人工裁决。
+- 若要继续推进，建议的顺序：
+  1. 拿真实企业数据（T008/T038/T045）；
+  2. 裁决排序口径（T043）；
+  3. 给部署账号（T052）；
+  4. 人工检索专利小类数量（T035）。
+- 口径类改动（判据、门槛、ROI、优先级、选步规则、计分规则）**必须先人工裁决**；
+  改完要重跑 `python3 scripts/build_evaluation_report.py` 看六项指标与判定。
+- 新增文档与配色改动都要过守门用例：`tests/test_docs.py`、`tests/test_accessibility.py`、
+  `scripts/check_knowledge_schema.py`、`scripts/check_contrast.py`。
 - 收工三步：`python3 -m unittest discover -s tests` →
   `node scripts/check_frontend_pages.mjs` → `python3 scripts/check_push_state.py`。
 

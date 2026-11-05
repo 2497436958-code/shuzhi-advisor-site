@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shuzhi-advisor-site/schemas/patent.schema.json",
+  "title": "专利库分类条目",
+  "description": "一个专利分类必须有：类别名、关键词、IPC 号、映射场景、官方大类口径与检索状态。小类数量未取到时必须为 null 且 status 标明待人工检索，不得冒充。",
+  "type": "object",
+  "required": ["id", "category", "keywords", "ipc", "maps_to_scenarios", "status", "official_aggregate"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^PATENT-CAT-[0-9]{2}$" },
+    "category": { "type": "string", "minLength": 1 },
+    "keywords": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "ipc": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "maps_to_scenarios": { "type": "array", "items": { "type": "string", "pattern": "^S[0-9]{2}$" } },
+    "applications_cn": { "type": ["integer", "null"] },
+    "grants_cn": { "type": ["integer", "null"] },
+    "status": { "type": "string", "minLength": 1 },
+    "official_aggregate": {
+      "type": "object",
+      "required": ["ipc_class", "year"],
+      "properties": {
+        "ipc_class": { "type": "string", "minLength": 1 },
+        "ipc_class_desc": { "type": "string" },
+        "year": { "type": "integer" },
+        "applications_cn": { "type": ["integer", "null"] },
+        "grants_cn": { "type": ["integer", "null"] }
+      }
+    }
+  }
+}

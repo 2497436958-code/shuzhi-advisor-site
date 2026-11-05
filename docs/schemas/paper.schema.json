@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shuzhi-advisor-site/schemas/paper.schema.json",
+  "title": "论文库条目",
+  "description": "一条论文引用必须有：出处（期刊或检索入口）、链接、结论与用途。检索入口类条目没有年份与 DOI 属正常。",
+  "type": "object",
+  "required": ["id", "type", "title", "authors", "journal", "url", "claim", "used_where", "tier"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^PAPER-[0-9]{3}$" },
+    "type": { "enum": ["方法", "成效证据", "检索入口"] },
+    "doi": { "type": ["string", "null"] },
+    "title": { "type": "string", "minLength": 1 },
+    "authors": { "type": "string", "minLength": 1 },
+    "year": { "type": ["integer", "null"] },
+    "journal": { "type": "string", "minLength": 1 },
+    "tier": { "type": "string", "minLength": 1 },
+    "url": { "type": "string", "pattern": "^https?://" },
+    "claim": { "type": "string", "minLength": 1 },
+    "used_where": { "type": "string", "minLength": 1 },
+    "verified": { "type": ["object", "null"] }
+  }
+}

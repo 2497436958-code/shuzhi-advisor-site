@@ -56,6 +56,28 @@ class DeploymentDocTests(unittest.TestCase):
         self.assertIn("不要写", self.deployment)
 
 
+class KnowledgeSourceDocTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.doc = (ROOT / "docs/knowledge_sources.md").read_text(encoding="utf-8")
+
+    def test_citation_dimensions_documented(self):
+        for dimension in ("来源", "日期", "用途", "回查"):
+            self.assertIn(dimension, self.doc, dimension)
+
+    def test_known_gaps_are_registered(self):
+        for gap in ("39 条没有来源发布日期", "3 条是检索入口", "5 个分类的小类数量未取到"):
+            self.assertIn(gap, self.doc, gap)
+
+    def test_schemas_exist(self):
+        for name in ("policy", "case", "paper", "patent"):
+            path = ROOT / "docs" / "schemas" / f"{name}.schema.json"
+            self.assertTrue(path.exists(), path)
+            import json as _json
+            schema = _json.loads(path.read_text(encoding="utf-8"))
+            self.assertTrue(schema.get("required"), name)
+
+
 class FooterTests(unittest.TestCase):
     def test_footer_has_disclaimer(self):
         html = (ROOT / "index.html").read_text(encoding="utf-8")

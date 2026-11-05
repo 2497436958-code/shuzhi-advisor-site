@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://shuzhi-advisor-site/schemas/case.schema.json",
+  "title": "案例库条目",
+  "description": "一条案例引用必须有：原文出处（文档名 + 链接）、摘录、抽取记录与合成层标记。集合级条目（如 191 家参评/66 家入选的口径条目）没有单一企业的症状，symptom 由校验器按「有条目动作则必须有症状」另行把关。",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "source_type",
+    "collection",
+    "evidence",
+    "extracted"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^CASE-[0-9]{3}$"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "source_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "collection": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "industry": {
+      "type": "string"
+    },
+    "sector": {
+      "type": "string"
+    },
+    "symptom": {
+      "type": "string"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "action",
+          "target_scenario"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_scenario": {
+            "type": "string",
+            "pattern": "^S[0-9]{2}$"
+          },
+          "target_items": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "estimated": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "doc",
+        "url",
+        "quoted"
+      ],
+      "properties": {
+        "doc": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https?://"
+        },
+        "quoted": {
+          "type": "string"
+        }
+      }
+    },
+    "extracted": {
+      "type": "object",
+      "required": [
+        "at",
+        "by",
+        "synthetic"
+      ],
+      "properties": {
+        "at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "synthetic": {
+          "type": "boolean"
+        }
+      }
+    },
+    "outcome": {
+      "type": "object"
+    },
+    "remark": {
+      "type": "string"
+    }
+  }
+}
