@@ -1263,6 +1263,61 @@ GET  /api/evaluation/report
 - 收工三步：`python3 -m unittest discover -s tests` →
   `node scripts/check_frontend_pages.mjs` → `python3 scripts/check_push_state.py`。
 
+
+---
+
+## MODEL-018 · Codex · 2026-11-05
+
+### 参与范围
+- 任务 ID：T057（补实机浏览器验收）、T051（补实机部署验收）
+- 模块：线上站点真机验收、窄屏布局修复
+
+### 实际完成
+- **第一次在真实浏览器里验收线上站点**（此前只有 DOM 桩模拟，因为执行环境回环 HTTP 被拦；
+  线上站点在公网，可以直接打开）：
+  - 离线回退路径正常：后端未部署时站点显示「预计算结果（非实时计算）」，
+    知识库页降级为"可浏览不检索"（检索框自动禁用）、评测报告页与四段式结果照常渲染；
+  - 页面结构完整：四库统计 4 张卡 + 4 个库块 + 59 条条目，评测报告 3 张表 + 7 行指标
+    （状态如实显示：达标 / 达标 / **未达标** / 达标 / 达标 / **不可测** / 达标），方法页 9 个小节；
+  - 四段式结果页正常：摘要 5 格、诊断 4 张卡、路径 4 步、排序 4 行（含新增的等级跃迁分与优先级 P 两列）、
+    不建议做 1 条、政策注记折叠成 8 条；
+  - **控制台零报错零警告**。
+- **查出并修掉一个真实布局缺陷**：390px 窄屏下整页横向溢出 **342px**。
+  根因是表格 `min-width: 680px` 放在 grid 容器里——grid 项默认 `min-width: auto`，
+  会被内容撑到 680px，把整页顶宽。修复：`.table-wrap` 与 grid/flex 子项 `min-width: 0`、
+  表格容器 `max-width: 100%`，表格改为在容器内横向滚动。
+  **这个问题此前所有自动化都测不出来**（DOM 桩没有布局引擎）——说明真实浏览器验收不可省。
+- 新增 `tests/test_accessibility.py` 里的回归用例守住该修复。
+
+### 验证方式
+- 真实浏览器（in-app browser）打开线上站点：见上面的验收清单
+- 窄屏复验：390×844 视口下 `documentElement.scrollWidth - clientWidth` 从 342px 降为 0
+- `python3 -m unittest discover -s tests -v` → 128 个用例全部通过
+- `python3 scripts/check_contrast.py`、`scripts/check_knowledge_schema.py`、
+  `scripts/compare_precomputed.py`、`node scripts/check_frontend_pages.mjs` → 全部通过
+- CI 与 Pages：两条分支 CI success，Pages 部署 success
+
+### 更新的任务状态
+- T057：已完成（补实机浏览器验收与窄屏修复）
+- T051：已完成（Pages 部署线上站点已实机访问验证）
+
+### 变更记录
+- 修改：`styles.css`（表格容器限宽与 grid 子项 min-width）、`tests/test_accessibility.py`
+- **未改动** 判据层、推理层逻辑、评测口径与任何数据文件
+
+### 遗留问题
+- Pages 静态资源缓存 10 分钟（`Cache-Control: max-age=600`），
+  改完样式要等缓存过期才能在浏览器里看到，验收时容易误判成"没修好"。
+- 真实企业数据、排序口径、部署账号、专利人工检索四项仍待外部动作（见 MODEL-017）。
+
+### 给下一个模型的交接提示
+- **线上站点可以直接用浏览器打开验收**（公网可达），不要再只依赖 DOM 桩；
+  DOM 桩没有布局引擎，宽度类问题它一个都测不出来。
+- 改完样式等 Pages 部署完成（约 40 秒）+ 清浏览器缓存（10 分钟 TTL）再看。
+- 窄屏自查：`documentElement.scrollWidth > clientWidth` 的差值应为 0。
+- 收工三步：`python3 -m unittest discover -s tests` →
+  `node scripts/check_frontend_pages.mjs` → `python3 scripts/check_push_state.py`。
+
 ---
 
 ## 7. 交接协议：换模型前必须做的 6 件事
