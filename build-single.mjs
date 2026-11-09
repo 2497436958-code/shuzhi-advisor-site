@@ -154,6 +154,10 @@ html = html.replace(/(data-image|src)="(assets\/img\/[^"]+)"/g, (whole, attr, re
 let injected = false;
 for (const src of jsSrcs) {
   const tag = `<script src="${src}"></script>`;
+  if (src.startsWith('http://') || src.startsWith('https://')) {
+    html = html.split(tag).join('');
+    continue;
+  }
   const head = injected ? '' : `<script>window.__ASSETS = ${JSON.stringify(assetMap)};</script>\n<script>window.__DATASETS = ${JSON.stringify(datasets)};</script>\n`;
   html = html.split(tag).join(`${head}<script>\n${loadScript(src)}\n</script>`);
   injected = true;
