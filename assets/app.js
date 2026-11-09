@@ -1473,7 +1473,7 @@
       if (progress) progress.hidden = false;
       updateProgress();
       navigateTo(panel);
-    } else if (mode === "demo") {
+    } else if (mode === "demo" || document.body.classList.contains("page-report")) {
       const preferred = state.fixtures.find((f) => f.name.startsWith("ap1")) || state.fixtures[0];
       const select = $("#fixture-select");
       if (!preferred) return;

@@ -64,7 +64,7 @@
     <canvas class="hero-particles" id="hero-particles" aria-hidden="true"></canvas>
     <div class="hero-transition" aria-hidden="true"></div>
     <div class="hero-copy">
-      <p class="eyebrow"><span class="eyebrow-year">2024 年版</span><span class="eyebrow-divider" aria-hidden="true"></span>工信部中小企业数字化水平评测指标</p>
+      <p class="eyebrow"><span class="eyebrow-year">2024</span><span class="eyebrow-divider" aria-hidden="true"></span>工信部中小企业数字化水平评测指标</p>
       <h1><span class="hero-line hero-line-first">中小制造企业</span><em class="hero-line hero-line-second">数字化诊断</em></h1>
       <p class="lede">
         填完 15 项指标算出当前等级，再逐个核对 16 个业务场景找出卡点。报告按依赖关系排出改造顺序，写明不建议现在做的事，并挂上政策原文；有成本参数时给出投入产出区间。
@@ -78,18 +78,18 @@
       <div class="hero-trust hero-facts" aria-label="评测工具概要">
         <div class="hero-fact"><strong>15<em>项</em></strong><span>评测指标</span></div>
         <div class="hero-fact"><strong>16<em>个</em></strong><span>业务场景</span></div>
-        <div class="hero-fact"><strong>6<em>份</em></strong><span>示例样本</span></div>
+        <div class="hero-fact"><strong>2024<em>年版</em></strong><span>指标依据</span></div>
       </div>
     </div>
     <div class="hero-scroll" aria-hidden="true"><span>Next · 请往下滑</span><i></i></div>
   </section>
 
-  <div class="motion-marquee" aria-label="知识库与输出侧写：企业案例、政策、归因路径、促进中心">
+  <div class="motion-marquee" aria-label="使用流程：填写评测内容、核对场景等级、排列改造先后、查看政策依据">
     <div class="marquee-track" aria-hidden="true">
-      <span><b>1349</b> 条企业案例</span>
-      <span><b>17</b> 条 AI+制造政策</span>
-      <span><b>32</b> 条归因路径</span>
-      <span><b>87</b> 家促进中心</span>
+      <span><b>01</b> 填写评测内容</span>
+      <span><b>02</b> 核对场景等级</span>
+      <span><b>03</b> 排列改造先后</span>
+      <span><b>04</b> 查看政策依据</span>
     </div>
   </div>
   <!-- ============================================================ 方法 -->
@@ -132,7 +132,7 @@
     <div class="signal-inner">
       <div class="signal-copy reveal">
         <h2 id="signal-title">分数背后，<br><em>还有 16 个具体环节。</em></h2>
-        <p class="signal-description">点选右边的节点，就能查看评测涉及的环节：设计、生产、质量、物流……这张图展示评测范围。</p>
+        <p class="signal-description">点选右边的节点，就能查看评测涉及的环节：设计、生产、质量、物流……这张图展示评测范围，企业的实际等级仍以填表结果为准。</p>
         <div class="signal-active" aria-live="off">
           <button class="signal-preview-zoom" id="signal-preview-zoom" type="button" aria-label="放大当前场景主题图">
             <img class="signal-preview-image is-current" id="signal-preview-a" src="assets/img/scenes/s01.webp" alt="" width="1200" height="676" decoding="async">
@@ -159,6 +159,11 @@
         </div>
         <div class="signal-meta"><span>官方场景图</span><span>01 到 16 / 可交互</span></div>
       </div>
+    </div>
+    <div class="signal-handoff reveal">
+      <span class="handoff-line"><i></i></span>
+      <p>知道评测涵盖什么，再来看看一份结果究竟长什么样。</p>
+      <span class="handoff-arrow">↓</span>
     </div>
     <dialog class="signal-lightbox" id="signal-lightbox" aria-label="业务场景主题图预览">
       <button class="signal-lightbox-close" id="signal-lightbox-close" type="button" aria-label="关闭预览">×</button>
@@ -211,10 +216,11 @@
 <footer class="footer">
   <div class="footer-inner">
     <p><strong>判据基准</strong>：工业和信息化部办公厅《中小企业数字化水平评测指标（2024 年版）》（工信厅企业〔2024〕56 号）附件（一）数字化基础、管理及成效评测表、附件（二）数字化经营应用场景等级判定表。</p>
+    <p style="margin-top:10px"><strong>计算与说明</strong>：总分、等级与场景门槛由前端规则计算，并用 6 份预计算样本逐项校验。官方文件没有明确规定的部分，以及工具自行补充的「不建议做」判据，都会在报告中说明来源与适用范围。</p>
     <div class="footer-meta">
-      <span>演示用途 · 示例企业为合成样本</span>
+      <span>演示用途</span>
+      <span>示例企业为合成样本</span>
       <span id="footer-mode">浏览器端计算</span>
-      <span>计算口径见报告</span>
     </div>
   </div>
 </footer>
