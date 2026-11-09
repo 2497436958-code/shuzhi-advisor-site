@@ -318,6 +318,26 @@ const check = (condition, message) => {
   if (!condition) failures.push(message);
 };
 
+/* ---- 窄屏菜单：结构与基础开关守卫 ---- */
+
+const menuToggle = registry.get("menu-toggle");
+const compactMenu = registry.get("compact-menu");
+check(Boolean(menuToggle), "找不到窄屏 menu+ 开关");
+check(Boolean(compactMenu), "找不到窄屏菜单面板");
+if (menuToggle && compactMenu) {
+  check(html.includes('id="menu-toggle"') && html.includes('>menu+</button>'), "窄屏开关文案必须为 menu+");
+  check(html.includes('aria-expanded="false" aria-controls="compact-menu"'), "menu+ 未关联菜单面板或初始状态错误");
+  check(/id="compact-menu"[^>]* hidden/.test(html), "窄屏菜单初始应隐藏");
+  const menuHtml = html.slice(html.indexOf('id="compact-menu"'), html.indexOf("</nav>", html.indexOf('id="compact-menu"')));
+  check((menuHtml.match(/href="#/g) || []).length === 3, "窄屏菜单应包含 3 个导航链接");
+  compactMenu.hidden = true;
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.dispatch("click");
+  check(!compactMenu.hidden && menuToggle.getAttribute("aria-expanded") === "true", "点击 menu+ 后应展开菜单");
+  menuToggle.dispatch("click");
+  check(compactMenu.hidden && menuToggle.getAttribute("aria-expanded") === "false", "再次点击 menu+ 后应关闭菜单");
+}
+
 const knowledgeBody = registry.get("knowledge-body");
 const statCards = knowledgeBody.querySelectorAll(".kb-stat");
 const libBlocks = knowledgeBody.querySelectorAll(".kb-lib");

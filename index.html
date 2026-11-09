@@ -27,7 +27,22 @@
       <span class="chip chip-quiet" title="判据基准文件">工信厅企业〔2024〕56 号</span>
       <span class="chip" id="mode-chip" data-state="checking">正在检测服务…</span>
     </div>
+    <button type="button" class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="compact-menu">menu+</button>
   </div>
+  <div class="compact-menu-backdrop" id="compact-menu-backdrop" hidden></div>
+  <nav class="compact-menu" id="compact-menu" aria-label="站点导航" hidden>
+    <div class="compact-menu-head">
+      <span>导航</span>
+      <button type="button" class="compact-menu-close" id="compact-menu-close" aria-label="关闭菜单">关闭 ×</button>
+    </div>
+    <a href="#knowledge-panel">知识库</a>
+    <a href="#evaluation-panel">评测报告</a>
+    <a href="#method-panel">方法与口径</a>
+    <div class="compact-menu-meta">
+      <span class="chip chip-quiet">工信厅企业〔2024〕56 号</span>
+      <span class="chip" id="compact-mode-chip" data-state="checking">正在检测服务…</span>
+    </div>
+  </nav>
 </header>
 
 <section class="summary" id="summary" aria-label="评测结论摘要" aria-live="polite">

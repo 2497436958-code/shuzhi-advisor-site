@@ -64,16 +64,16 @@
   /* ------------------------------------------------------------ 模式检测 */
 
   function setModeChip() {
-    const chip = $("#mode-chip");
-    if (state.mode === "online") {
-      chip.dataset.state = "online";
-      chip.textContent = "实时计算（后端在线）";
-    } else if (state.mode === "offline") {
-      chip.dataset.state = "offline";
-      chip.textContent = "预计算结果（非实时计算）";
-    } else {
-      chip.dataset.state = "checking";
-      chip.textContent = "正在检测服务…";
+    const chips = [$("#mode-chip"), $("#compact-mode-chip")].filter(Boolean);
+    const labels = {
+      online: "实时计算（后端在线）",
+      offline: "预计算结果（非实时计算）",
+      checking: "正在检测服务…",
+    };
+    const mode = state.mode === "online" || state.mode === "offline" ? state.mode : "checking";
+    for (const target of chips) {
+      target.dataset.state = mode;
+      target.textContent = labels[mode];
     }
   }
 
@@ -1581,9 +1581,35 @@
     }
   }
 
+  function bindCompactMenu() {
+    const toggle = $("#menu-toggle");
+    const panel = $("#compact-menu");
+    const backdrop = $("#compact-menu-backdrop");
+    const closeButton = $("#compact-menu-close");
+    if (!toggle || !panel || !backdrop || !closeButton) return;
+
+    function setOpen(open) {
+      panel.hidden = !open;
+      backdrop.hidden = !open;
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) panel.querySelector("a").focus();
+      else toggle.focus();
+    }
+
+    toggle.addEventListener("click", () => setOpen(panel.hidden));
+    closeButton.addEventListener("click", () => setOpen(false));
+    backdrop.addEventListener("click", () => setOpen(false));
+    for (const link of panel.querySelectorAll("a")) link.addEventListener("click", () => setOpen(false));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !panel.hidden) setOpen(false);
+    });
+    window.addEventListener("resize", () => setOpen(false));
+  }
+
   function bindActions() {
     syncTopbarHeight();
     syncLevelDetails();
+    bindCompactMenu();
     window.addEventListener("resize", () => {
       syncTopbarHeight();
       syncLevelDetails();
