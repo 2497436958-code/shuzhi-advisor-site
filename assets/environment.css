@@ -25,6 +25,15 @@ html[data-input="touch"] :is(button, .topnav a, input, select) { min-height: 44p
   .sm-prelayers { position:absolute; top:calc(100% + 10px); right:0; width:min(420px, calc(100vw - 32px)); height:min(560px, calc(100vh - 100px)); z-index:25; pointer-events:none; }
   .sm-prelayer { position:absolute; inset:0; }
 }
+
+/* 菜单抽屉已移除，恢复原有导航栏布局 */
+.nav-toggle, .sm-prelayers { display: none !important; }
+@media (max-width: 900px) {
+  .topnav { position: static; display: flex !important; flex-direction: row; align-items: center; gap: 4px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; opacity: 1; visibility: visible; transform: none; pointer-events: auto; overflow-x: auto; }
+  .topnav::before, .topnav::after { display: none; }
+  .topnav a { display: inline-flex; flex-shrink: 0; padding: 6px 10px; color: inherit !important; font-size: inherit; transform: none; opacity: 1; transition: none; }
+  .topnav a::before, .topnav a::after { display: none; }
+}
 html[data-input="touch"] :is(input, select, textarea) { font-size: 16px; }
 html[data-effects="reduced"] :is(#hero-cinema, #hero-particles) { display: none; }
 html[data-effects="reduced"] *, html[data-effects="reduced"] *::before, html[data-effects="reduced"] *::after {

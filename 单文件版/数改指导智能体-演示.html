@@ -3125,6 +3125,15 @@ html[data-input="touch"] :is(button, .topnav a, input, select) { min-height: 44p
   .sm-prelayers { position:absolute; top:calc(100% + 10px); right:0; width:min(420px, calc(100vw - 32px)); height:min(560px, calc(100vh - 100px)); z-index:25; pointer-events:none; }
   .sm-prelayer { position:absolute; inset:0; }
 }
+
+/* 菜单抽屉已移除，恢复原有导航栏布局 */
+.nav-toggle, .sm-prelayers { display: none !important; }
+@media (max-width: 900px) {
+  .topnav { position: static; display: flex !important; flex-direction: row; align-items: center; gap: 4px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; opacity: 1; visibility: visible; transform: none; pointer-events: auto; overflow-x: auto; }
+  .topnav::before, .topnav::after { display: none; }
+  .topnav a { display: inline-flex; flex-shrink: 0; padding: 6px 10px; color: inherit !important; font-size: inherit; transform: none; opacity: 1; transition: none; }
+  .topnav a::before, .topnav a::after { display: none; }
+}
 html[data-input="touch"] :is(input, select, textarea) { font-size: 16px; }
 html[data-effects="reduced"] :is(#hero-cinema, #hero-particles) { display: none; }
 html[data-effects="reduced"] *, html[data-effects="reduced"] *::before, html[data-effects="reduced"] *::after {
@@ -6096,39 +6105,6 @@ html[data-effects="reduced"] *, html[data-effects="reduced"] *::before, html[dat
   window.addEventListener("resize", onScroll, { passive: true });
   reduced.addEventListener?.("change", onScroll);
   onScroll();
-})();
-
-</script>
-<script>
-(() => {
-  const nav = document.querySelector('.topnav');
-  const bar = document.querySelector('.topbar-inner');
-  if (!nav || !bar) return;
-  nav.classList.add('staggered-menu-panel');
-  nav.setAttribute('id', 'staggered-menu-panel');
-  nav.setAttribute('aria-hidden', 'true');
-  const pre = document.createElement('div'); pre.className = 'sm-prelayers'; pre.setAttribute('aria-hidden','true');
-  ['#B497CF','#5227FF'].forEach(color => { const layer=document.createElement('div'); layer.className='sm-prelayer'; layer.style.background=color; pre.appendChild(layer); });
-  bar.appendChild(pre);
-  [...nav.querySelectorAll('a')].forEach((a, i) => { a.classList.add('sm-panel-item'); a.dataset.index=String(i+1); });
-  const button = document.createElement('button');
-  button.className = 'nav-toggle'; button.type = 'button'; button.setAttribute('aria-label','打开导航菜单'); button.setAttribute('aria-expanded','false');
-  button.innerHTML = '<span></span><span></span><span></span>'; bar.appendChild(button);
-  const lines = [...button.children];
-  const setOpen = (open) => {
-    nav.classList.toggle('is-open', open); nav.setAttribute('aria-hidden', String(!open)); button.setAttribute('aria-expanded', String(open)); button.setAttribute('aria-label', open ? '关闭导航菜单' : '打开导航菜单');
-    if (window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const tl = window.gsap.timeline({defaults:{ease:'power4.out'}});
-      tl.fromTo(nav, {xPercent:8, autoAlpha:0}, {xPercent:0, autoAlpha:1, duration:.55})
-        .fromTo([...nav.querySelectorAll('a')], {yPercent:140, rotation:8, autoAlpha:0}, {yPercent:0, rotation:0, autoAlpha:1, duration:.7, stagger:.07}, '-=.25');
-      window.gsap.to(lines[0], {rotation: open ? 45 : 0, y: open ? 6.5 : 0, duration:.22, ease:'power2.out'});
-      window.gsap.to(lines[1], {autoAlpha: open ? 0 : 1, duration:.16});
-      window.gsap.to(lines[2], {rotation: open ? -45 : 0, y: open ? -6.5 : 0, duration:.22, ease:'power2.out'});
-    }
-  };
-  button.addEventListener('click', () => setOpen(!nav.classList.contains('is-open')));
-  nav.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
 })();
 
 </script>
