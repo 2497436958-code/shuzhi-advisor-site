@@ -3117,15 +3117,22 @@ html[data-input="touch"] :is(button, .topnav a, input, select) { min-height: 44p
   .hero .eyebrow-year { font-size: clamp(11px, 3.8vw, 15px); }
 }
 @media (max-width: 900px) {
-  .topbar-inner { flex-wrap:nowrap; gap:clamp(3px, 1vw, 10px); padding-inline:clamp(10px, 3vw, 16px); }
-  .brand { gap:clamp(5px, 1.5vw, 10px); flex:0 1 auto; }
-  .brand-mark { width:clamp(26px, 6vw, 34px); height:clamp(26px, 6vw, 34px); font-size:clamp(14px, 3.5vw, 18px); }
-  .brand-name { font-size:clamp(12px, 3.2vw, 15px); white-space:nowrap; }
-  .brand-sub { display:none; }
-  .topnav { margin-left:auto; display:flex !important; flex:1 1 auto; min-width:0; justify-content:flex-end; gap:0; white-space:nowrap; overflow:visible; }
-  .topnav a { flex:0 1 auto; min-height:0; padding:clamp(3px, .8vw, 6px) clamp(3px, .9vw, 8px); font-size:clamp(9px, 2.35vw, 13px); letter-spacing:-.02em; white-space:nowrap; }
+  .topbar-inner { position:relative; }
+  .site-menu-toggle { display:inline-flex; align-items:center; gap:8px; min-height:38px; margin-left:auto; padding:0 4px; border:0; background:transparent; color:#f5f0e6; font:12px var(--font-mono); letter-spacing:.12em; cursor:pointer; }
+  .site-menu-toggle i, .site-menu-toggle i::before, .site-menu-toggle i::after { display:block; width:18px; height:1px; background:currentColor; content:""; transition:transform .22s ease; }
+  .site-menu-toggle i { position:relative; }.site-menu-toggle i::before { position:absolute; top:-6px; }.site-menu-toggle i::after { position:absolute; top:6px; }
+  .site-menu-toggle[aria-expanded="true"] i { background:transparent; }.site-menu-toggle[aria-expanded="true"] i::before { transform:translateY(6px) rotate(45deg); }.site-menu-toggle[aria-expanded="true"] i::after { transform:translateY(-6px) rotate(-45deg); }
+  .topnav { position:absolute; top:calc(100% + 1px); right:12px; left:12px; display:flex !important; flex-direction:column; align-items:stretch; gap:0; padding:8px; background:rgba(7,26,43,.98); border:1px solid rgba(244,187,117,.32); box-shadow:0 16px 36px rgba(0,0,0,.28); opacity:0; visibility:hidden; transform:translateY(-8px); pointer-events:none; transition:opacity .18s ease, transform .18s ease, visibility .18s; }
+  .topnav.is-open { opacity:1; visibility:visible; transform:none; pointer-events:auto; }.topnav a { display:flex; align-items:center; min-height:44px; padding:0 12px; color:#f5f0e6 !important; font-size:15px; border-bottom:1px solid rgba(255,255,255,.10); }.topnav a:last-child { border-bottom:0; }
 }
-@media (max-width: 380px) { .topnav a { padding-inline:2px; font-size:8.5px; } .brand-name { font-size:11px; } }
+@media (min-width: 901px) { .site-menu-toggle { display:none; } }
+
+/* 三项说明在窄屏单行显示，空间不足时缩小文字。 */
+@media (max-width: 480px) {
+  .hero .hero-facts { display:flex; flex-wrap:nowrap; gap:0; max-width:none; }
+  .hero .hero-fact { flex:1 1 0; min-width:0; padding-inline:clamp(5px, 2.6vw, 13px); }
+  .hero .hero-fact > span { white-space:nowrap; font-size:clamp(7px, 2.55vw, 10px); letter-spacing:0; }
+}
 html[data-input="touch"] :is(input, select, textarea) { font-size: 16px; }
 html[data-effects="reduced"] :is(#hero-cinema, #hero-particles) { display: none; }
 html[data-effects="reduced"] *, html[data-effects="reduced"] *::before, html[data-effects="reduced"] *::after {
@@ -6371,6 +6378,16 @@ html[data-effects="reduced"] *, html[data-effects="reduced"] *::before, html[dat
     userPaused = heroToggle.getAttribute("aria-pressed") === "true";
     sync();
   });
+})();
+
+</script>
+<script>
+(() => {
+  const nav=document.querySelector('.topnav'), shell=document.querySelector('.topbar-inner'); if(!nav||!shell)return;
+  const toggle=document.createElement('button'); toggle.type='button'; toggle.className='site-menu-toggle'; toggle.setAttribute('aria-expanded','false'); toggle.setAttribute('aria-controls','site-navigation'); toggle.innerHTML='<span>目录</span><i aria-hidden="true"></i>'; nav.id='site-navigation'; shell.appendChild(toggle);
+  const close=()=>{nav.classList.remove('is-open');toggle.setAttribute('aria-expanded','false');};
+  toggle.addEventListener('click',()=>{const open=!nav.classList.contains('is-open');nav.classList.toggle('is-open',open);toggle.setAttribute('aria-expanded',String(open));});
+  nav.addEventListener('click',event=>{if(event.target.closest('a'))close();}); document.addEventListener('keydown',event=>{if(event.key==='Escape')close();}); document.addEventListener('click',event=>{if(!shell.contains(event.target))close();}); window.addEventListener('resize',()=>{if(window.innerWidth>900)close();});
 })();
 
 </script>
