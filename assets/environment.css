@@ -17,6 +17,13 @@ html[data-input="touch"] :is(button, .topnav a, input, select) { min-height: 44p
   .topnav.is-open a:nth-child(1){transition-delay:.12s}.topnav.is-open a:nth-child(2){transition-delay:.17s}.topnav.is-open a:nth-child(3){transition-delay:.22s}.topnav.is-open a:nth-child(4){transition-delay:.27s}.topnav.is-open a:nth-child(5){transition-delay:.32s}.topnav.is-open a:nth-child(6){transition-delay:.37s}
   .topnav a::before { content:counter(nav-item, decimal-leading-zero); counter-increment:nav-item; display:inline-block; width:34px; color:#f4bb75; font:11px var(--font-mono); vertical-align:middle; }
   .topnav { counter-reset:nav-item; }
+  .staggered-menu-panel { top:calc(100% + 10px); right:0; left:auto; width:min(420px, calc(100vw - 32px)); min-height:min(560px, calc(100vh - 100px)); padding:88px 28px 28px; display:flex !important; background:#f7f4ee; border:0; border-radius:0; z-index:30; }
+  .staggered-menu-panel .sm-panel-item { color:#101820 !important; font-size:clamp(30px,7vw,52px); letter-spacing:-1px; padding-right:1.4em; }
+  .staggered-menu-panel .sm-panel-item::before { display:none; }
+  .staggered-menu-panel .sm-panel-item::after { content:counter(smItem, decimal-leading-zero); counter-increment:smItem; position:absolute; top:.1em; right:0; font:12px var(--font-mono); color:#5227ff; opacity:1; }
+  .staggered-menu-panel { counter-reset:smItem; }
+  .sm-prelayers { position:absolute; top:calc(100% + 10px); right:0; width:min(420px, calc(100vw - 32px)); height:min(560px, calc(100vh - 100px)); z-index:25; pointer-events:none; }
+  .sm-prelayer { position:absolute; inset:0; }
 }
 html[data-input="touch"] :is(input, select, textarea) { font-size: 16px; }
 html[data-effects="reduced"] :is(#hero-cinema, #hero-particles) { display: none; }

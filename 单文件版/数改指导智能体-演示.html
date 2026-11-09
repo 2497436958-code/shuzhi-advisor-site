@@ -3117,6 +3117,13 @@ html[data-input="touch"] :is(button, .topnav a, input, select) { min-height: 44p
   .topnav.is-open a:nth-child(1){transition-delay:.12s}.topnav.is-open a:nth-child(2){transition-delay:.17s}.topnav.is-open a:nth-child(3){transition-delay:.22s}.topnav.is-open a:nth-child(4){transition-delay:.27s}.topnav.is-open a:nth-child(5){transition-delay:.32s}.topnav.is-open a:nth-child(6){transition-delay:.37s}
   .topnav a::before { content:counter(nav-item, decimal-leading-zero); counter-increment:nav-item; display:inline-block; width:34px; color:#f4bb75; font:11px var(--font-mono); vertical-align:middle; }
   .topnav { counter-reset:nav-item; }
+  .staggered-menu-panel { top:calc(100% + 10px); right:0; left:auto; width:min(420px, calc(100vw - 32px)); min-height:min(560px, calc(100vh - 100px)); padding:88px 28px 28px; display:flex !important; background:#f7f4ee; border:0; border-radius:0; z-index:30; }
+  .staggered-menu-panel .sm-panel-item { color:#101820 !important; font-size:clamp(30px,7vw,52px); letter-spacing:-1px; padding-right:1.4em; }
+  .staggered-menu-panel .sm-panel-item::before { display:none; }
+  .staggered-menu-panel .sm-panel-item::after { content:counter(smItem, decimal-leading-zero); counter-increment:smItem; position:absolute; top:.1em; right:0; font:12px var(--font-mono); color:#5227ff; opacity:1; }
+  .staggered-menu-panel { counter-reset:smItem; }
+  .sm-prelayers { position:absolute; top:calc(100% + 10px); right:0; width:min(420px, calc(100vw - 32px)); height:min(560px, calc(100vh - 100px)); z-index:25; pointer-events:none; }
+  .sm-prelayer { position:absolute; inset:0; }
 }
 html[data-input="touch"] :is(input, select, textarea) { font-size: 16px; }
 html[data-effects="reduced"] :is(#hero-cinema, #hero-particles) { display: none; }
@@ -6097,12 +6104,19 @@ html[data-effects="reduced"] *, html[data-effects="reduced"] *::before, html[dat
   const nav = document.querySelector('.topnav');
   const bar = document.querySelector('.topbar-inner');
   if (!nav || !bar) return;
+  nav.classList.add('staggered-menu-panel');
+  nav.setAttribute('id', 'staggered-menu-panel');
+  nav.setAttribute('aria-hidden', 'true');
+  const pre = document.createElement('div'); pre.className = 'sm-prelayers'; pre.setAttribute('aria-hidden','true');
+  ['#B497CF','#5227FF'].forEach(color => { const layer=document.createElement('div'); layer.className='sm-prelayer'; layer.style.background=color; pre.appendChild(layer); });
+  bar.appendChild(pre);
+  [...nav.querySelectorAll('a')].forEach((a, i) => { a.classList.add('sm-panel-item'); a.dataset.index=String(i+1); });
   const button = document.createElement('button');
   button.className = 'nav-toggle'; button.type = 'button'; button.setAttribute('aria-label','打开导航菜单'); button.setAttribute('aria-expanded','false');
   button.innerHTML = '<span></span><span></span><span></span>'; bar.appendChild(button);
   const lines = [...button.children];
   const setOpen = (open) => {
-    nav.classList.toggle('is-open', open); button.setAttribute('aria-expanded', String(open)); button.setAttribute('aria-label', open ? '关闭导航菜单' : '打开导航菜单');
+    nav.classList.toggle('is-open', open); nav.setAttribute('aria-hidden', String(!open)); button.setAttribute('aria-expanded', String(open)); button.setAttribute('aria-label', open ? '关闭导航菜单' : '打开导航菜单');
     if (window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       const tl = window.gsap.timeline({defaults:{ease:'power4.out'}});
       tl.fromTo(nav, {xPercent:8, autoAlpha:0}, {xPercent:0, autoAlpha:1, duration:.55})
