@@ -1,0 +1,24 @@
+/* These media-query fallbacks also work without JavaScript. */
+.ask-grid > *, .ask-side > * { min-width: 0; overflow-wrap: anywhere; }
+html[data-input="touch"] :is(button, .topnav a, input, select) { min-height: 44px; }
+html[data-input="touch"] :is(input, select, textarea) { font-size: 16px; }
+html[data-effects="reduced"] :is(#hero-cinema, #hero-particles) { display: none; }
+html[data-effects="reduced"] *, html[data-effects="reduced"] *::before, html[data-effects="reduced"] *::after {
+  animation: none !important; transition: none !important; scroll-behavior: auto !important;
+}
+@media (pointer: coarse) {
+  :is(button, .topnav a, input, select) { min-height: 44px; }
+  :is(input, select, textarea) { font-size: 16px; }
+}
+@media (max-width: 720px) {
+  .topbar-inner { flex-wrap: wrap; gap: 8px; padding-inline: max(12px, env(safe-area-inset-left)); }
+  .topnav { max-width: 100%; overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; }
+  .topnav a { flex-shrink: 0; display: inline-flex; align-items: center; }
+  .ask-grid, .ask-chat, .ask-side, .ask-composer { min-width: 0; }
+  .ask-composer { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .ask-composer input { min-width: 0; font-size: 16px; }
+  .ask-flow { min-height: 200px; max-height: min(60dvh, var(--app-height, 600px)); overflow-y: auto; }
+  .bubble { overflow-wrap: anywhere; }
+  .bubble pre { max-width: 100%; overflow-x: auto; }
+  dialog { max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow-y: auto; }
+}

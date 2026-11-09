@@ -1,0 +1,108 @@
+/* 首页可读性调整：正文与按钮放大，辅助信息不低于正文字号的一半以上。
+   只在 index.html 生效，避免影响问答/报告等子页面的既有排版。 */
+
+.hero .lede {
+  font-size: 18px;
+  line-height: 1.85;
+  max-width: 620px;
+}
+
+/* 两个按钮：沿用正文字体，字号放大，格子尺寸不变 */
+.hero .hero-actions {
+  gap: 16px;
+  align-items: stretch;
+}
+
+.hero .hero-actions .btn {
+  font-size: 21px;
+  letter-spacing: 0.02em;
+  width: 216px;
+  min-width: 216px;
+  min-height: 58px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* 指标行：数字与单位排成一行，标签下沉一级 */
+.hero .hero-facts {
+  display: flex;
+  align-items: flex-start;
+  gap: 44px;
+  margin-top: 38px;
+}
+
+.hero .hero-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 44px;
+  border-right: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.hero .hero-fact:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+
+.hero .hero-fact strong {
+  display: flex;
+  align-items: baseline;
+  font-size: 46px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.hero .hero-fact strong em {
+  margin-left: 8px;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.hero .hero-fact span {
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* 首屏其余小字抬到可读区间 */
+.hero .eyebrow { font-size: 16px; line-height: 26px; }
+.hero .eyebrow-year { font-size: 20px; }
+.hero .hero-scroll { font-size: 15px; }
+.hero .hero-scroll span { font-size: 15px; letter-spacing: 0.05em; }
+
+/* 顶栏：字号放大，行高与内边距固定，模块体积不变 */
+.brand-name { font-size: 18px; line-height: 23px; }
+.brand-sub { font-size: 14px; line-height: 17px; }
+.topnav a { font-size: 17px; line-height: 25px; padding: 6px 10px; }
+
+/* 页面其他位置的辅助文字 */
+.marquee-track > span { font-size: 16px; }
+.footer p { font-size: 14px; line-height: 1.9; }
+.footer-meta { font-size: 13px; }
+
+/* 场景图与脚注：图内编号保持图形比例，其余说明文字抬到可读字号 */
+.signal-disclaimer { font-size: 15px; line-height: 1.8; }
+.signal-type, .signal-active-label { font-size: 15px; }
+.signal-preview-action { font-size: 15px; }
+.signal-lightbox-kicker, .signal-lightbox-note { font-size: 14px; }
+.signal-node { font-size: 13px; }
+.skip-link { font-size: 15px; }
+
+@media (max-width: 720px) {
+  .hero .lede { font-size: 17px; }
+  .hero .hero-actions { gap: 12px; }
+  .hero .hero-actions .btn { width: 100%; min-width: 0; font-size: 17px; }
+  .hero .hero-facts { gap: 16px; }
+  .hero .hero-fact { padding-right: 16px; gap: 6px; }
+  .hero .hero-fact strong { font-size: 28px; }
+  .hero .hero-fact strong em { font-size: 12px; margin-left: 4px; }
+  .hero .hero-fact span { font-size: 13px; letter-spacing: 0.04em; }
+}

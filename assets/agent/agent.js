@@ -1,0 +1,498 @@
+/* agent.js —— 问答运行时
+ * 一条链路：意图识别 → 计划工具 → 执行 → 自检 → 组织回答 →（必要时）长尾兜底
+ * 设计约束：
+ *   1. 所有数字只能来自确定性评测结果，模型/模板不产生新数字
+ *   2. 涉及外部知识的回答必须带检索引用，检索不到就明说，不编
+ *   3. 每一次调用都进 trace，供「可观测」面板展示
+ */
+(() => {
+  "use strict";
+
+  const CN_NUM = { 一: 1, 二: 2, 两: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9, 十: 10 };
+
+  const RULES = [
+    { intent: "greeting", re: /^(你好|您好|在吗|嗨|hi|hello|哈喽)/i },
+    { intent: "step", re: /第\s*([一二两三四五六七八九十\d]+)\s*步|这一步|下一步|上一步/ },
+    { intent: "do_not", re: /不建议|不要做|别做|白花|避坑|无效投入|没必要/ },
+    { intent: "roi", re: /投入|产出|回本|回收期|值不值|划算|多少钱|预算|费用|roi/i },
+    { intent: "gaps", re: /差多少|还差|差几|缺什么|差距|门槛|够不够/ },
+    // 问某条依据的原文：编号 + 原文/出处/依据，必须排在场景之前（否则「S08 的原文」会被判成场景）
+    { intent: "evidence", re: /(原文|出处).*(采集项|场景|案例|S\d{2}|CASE)|(采集项\s*\d+|S\d{2}|CASE-\d+).*(原文|出处)/i },
+    // 场景问句要先于「几级」判断：问「设备管理现在几级」时，主语是场景不是总分
+    { intent: "scenario", re: /S\d{2}|场景|设备管理|质量管理|排产|计划排程|能耗|仓储|物流|采购|营销|售后|安全生产|财务|人力|协同办公|产品设计|工艺设计/ },
+    { intent: "score", re: /多少分|几分|分数|得分|什么等级|几级|评级|我的分/ },
+    { intent: "pathway", re: /先做|先改|改哪|做什么|干什么|第一步|顺序|路线|怎么改|改造路径|从哪(开始|下手)|优先/ },
+    { intent: "diagnosis", re: /诊断|问题在哪|瓶颈|卡在|短板/ },
+    { intent: "policy", re: /政策|补贴|补助|文件|文号|申报|试点|验收|支持/ },
+    // 跨画像对比：跟…比 / 对比 / 相比
+    { intent: "compare", re: /对比|相比|比一比|比差|跟.{0,16}比|和.{0,16}比|另一家|别的样本/ },
+    { intent: "case", re: /案例|别家|同行|有没有企业|借鉴|别人怎么/ },
+    { intent: "paper", re: /论文|研究|文献|学术/ },
+    { intent: "explain", re: /为什么|原因|依据|凭什么|怎么算的|哪来的/ },
+  ];
+
+  function matchIntent(text) {
+    for (const rule of RULES) {
+      const m = text.match(rule.re);
+      if (m) return { intent: rule.intent, match: m };
+    }
+    return { intent: "unknown", match: null };
+  }
+
+  function parseStepIndex(text) {
+    const m = text.match(/第\s*([一二两三四五六七八九十\d]+)\s*步/);
+    if (!m) return null;
+    const raw = m[1];
+    if (/^\d+$/.test(raw)) return Number(raw);
+    if (raw === "十") return 10;
+    if (raw.length === 2 && raw[0] === "十") return 10 + (CN_NUM[raw[1]] || 1);
+    if (raw.length === 2 && raw[1] === "十") return (CN_NUM[raw[0]] || 1) * 10;
+    return CN_NUM[raw] || null;
+  }
+
+  /* 把「跟 ap2 比」「和 baseline 比」「跟只上系统那家比」解析成样本文件名 */
+  const SAMPLE_ALIAS = [
+    [/ap0|无等级/, "ap0_无等级.json"],
+    [/ap1|只买设备不联网/, "ap1_只买设备不联网.json"],
+    [/ap2|只上系统不跑流程/, "ap2_只上系统不跑流程.json"],
+    [/ap3|只做数据采集不做分析/, "ap3_只做数据采集不做分析.json"],
+    [/ap4|只追补贴不建能力/, "ap4_只追补贴不建能力.json"],
+    [/baseline|二级规范级/, "baseline_二级规范级.json"],
+  ];
+
+  function resolveSampleName(text, current) {
+    const hit = SAMPLE_ALIAS.find(([re]) => re.test(text));
+    if (hit) return hit[1];
+    // 没指定就挑一个和当前不同的默认对照
+    return current === "baseline_二级规范级.json" ? "ap1_只买设备不联网.json" : "baseline_二级规范级.json";
+  }
+
+  function parseScenario(text) {
+    const m = text.match(/S(\d{2})/i);
+    if (m) return "S" + m[1];
+    const ALIAS = [
+      ["设备管理", "S08"], ["质量管理", "S07"], ["排产", "S05"], ["计划排程", "S05"],
+      ["能耗", "S10"], ["仓储", "S12"], ["物流", "S12"], ["采购", "S11"],
+      ["营销", "S03"], ["售后", "S04"], ["安全生产", "S09"], ["财务", "S13"],
+      ["人力", "S14"], ["协同办公", "S15"], ["产品设计", "S01"], ["工艺设计", "S02"],
+      ["生产管控", "S06"],
+    ];
+    const hit = ALIAS.find(([word]) => text.includes(word));
+    return hit ? hit[1] : null;
+  }
+
+  /* ---------------- 计划器 ---------------- */
+
+  function plan(intent, text, session) {
+    switch (intent) {
+      case "score": return [{ tool: "score" }];
+      case "gaps": return [{ tool: "gaps" }];
+      case "pathway": return [{ tool: "pathway" }];
+      case "roi": return [{ tool: "roi" }];
+      case "do_not": return [{ tool: "do_not" }];
+      case "diagnosis": return [{ tool: "diagnosis" }];
+      case "step": {
+        const index = parseStepIndex(text) || (session.last && session.last.step) || 1;
+        return [{ tool: "step", args: { index } }];
+      }
+      case "scenario": {
+        const id = parseScenario(text) || (session.last && session.last.scenario);
+        return [{ tool: "scenario", args: id ? { id } : {} }];
+      }
+      case "evidence": {
+        const m = text.match(/采集项\s*(\d+)/) || text.match(/S(\d{2})/i) || text.match(/CASE-(\d{3})/i);
+        let ref = "";
+        if (m) {
+          if (/采集项/.test(m[0])) ref = "采集项 " + m[1];
+          else if (/S\d/i.test(m[0])) ref = "S" + m[1];
+          else ref = "CASE-" + m[1];
+        }
+        return [{ tool: "evidence", args: ref ? { ref } : {} }];
+      }
+      case "compare": return [{ tool: "compare", args: { target: resolveSampleName(text, session.profileName) } }];
+      case "policy": return [{ tool: "policy", args: { query: text } }];
+      case "case": return [{ tool: "case", args: { query: text } }];
+      case "paper": return [{ tool: "paper", args: { query: text } }];
+      case "explain": {
+        const last = session.last || {};
+        if (last.intent === "pathway" || last.tool === "step") {
+          return [{ tool: "step", args: { index: last.step || 1 } }];
+        }
+        if (last.intent === "policy" || last.intent === "case") {
+          return [{ tool: last.intent, args: { query: session.lastQuery || text } }];
+        }
+        return [{ tool: "diagnosis" }];
+      }
+      case "greeting": return [];
+      // 未识别：不直接调工具，交给兜底节点统一加「超出判据范围」的前缀
+      default: return [];
+    }
+  }
+
+  /* ---------------- 组织回答 ---------------- */
+
+  const OPENERS = {
+    score: "按当前画像算，结果是这样的：",
+    gaps: "升级还差这几项：",
+    pathway: "改造顺序按前置依赖排，不用按 ROI 排：",
+    step: "这一步的细节：",
+    roi: "投入产出只给区间，不给点值：",
+    do_not: "这几件事现在做会白花钱：",
+    diagnosis: "卡点在这儿：",
+    scenario: "这个场景的情况：",
+    evidence: "这些是原文与出处：",
+    compare: "两家放在一起看：",
+    policy: "在政策库里检索到：",
+    case: "案例库里有相似的做法：",
+    paper: "论文库里相关的条目：",
+    explain: "依据是这样推出来的：",
+    greeting: "我在。可以问：我现在几级、差多少分、先改什么、有哪些政策依据。",
+  };
+
+  function compose(ctx) {
+    const { intent, outputs, session } = ctx;
+    const blocks = [];
+    if (OPENERS[intent] && intent !== "greeting") {
+      blocks.push({ type: "p", text: OPENERS[intent], src: "opener" });
+    }
+    const citations = [];
+    outputs.forEach((out) => {
+      // 打上来源标记，句级核验据此判断「字段 / 引用 / 说明」
+      (out.blocks || []).forEach((block) => blocks.push({ ...block, src: "tool:" + out.tool }));
+      (out.citations || []).forEach((cit) => citations.push(cit));
+    });
+
+    if (intent === "greeting") {
+      return {
+        intent,
+        blocks: [{ type: "p", text: OPENERS.greeting }],
+        citations: [],
+        suggested: ["我现在是什么等级？", "还差多少分到 3 级？", "先改哪一步？", "有哪些政策依据？"],
+      };
+    }
+
+    if (!blocks.length) return null;
+    // 未知意图且检索不到任何引用：交给兜底节点，别硬答
+    if (intent === "unknown" && citations.length === 0) return null;
+
+    return {
+      intent,
+      blocks,
+      citations,
+      suggested: suggestFor(intent, session, ctx.result),
+    };
+  }
+
+  function suggestFor(intent, session, result) {
+    const current = (result && result.evaluation && result.evaluation.level) || 0;
+    const target = Math.min(4, current + 1);
+    const gapChip = `还差多少分到 ${target} 级？`;
+    const base = {
+      score: [gapChip, "先改哪一步？", "哪些事不建议做？"],
+      gaps: ["第一步该做什么？", "这些场景的官方要求是什么？"],
+      pathway: ["第一步要花多少钱？", "为什么先做这一步？", "有没有类似企业的案例？"],
+      roi: ["哪些事不建议做？", "第一步的验收口径是什么？"],
+      do_not: ["那我应该先做什么？", "有没有相反的成功案例？"],
+      diagnosis: ["还差多少分？", "第一步做什么？"],
+      policy: ["有补贴类的政策吗？", "试点申报有什么要求？"],
+      case: ["政策依据是什么？", "这家企业投了多少钱？"],
+    };
+    return base[intent] || ["我现在是什么等级？", "先改哪一步？"];
+  }
+
+  /* ---------------- 自检 ---------------- */
+
+  function verify(ctx) {
+    const { answer } = ctx;
+    if (!answer) return { ok: false, reason: "empty" };
+    // 只核对两位小数的分数/金额（模板里写死的说明文字不参与）
+    const checked = answer.blocks
+      .filter((block) => block.type !== "note")
+      .map((block) => JSON.stringify(block))
+      .join(" ");
+    const numeric = [...new Set(checked.match(/-?\d+\.\d{2}/g) || [])].map(Number);
+    // 数字必须在评测结果或工具输出里明确出现，不能用任意两数相减碰撞。
+    const pool = (JSON.stringify(ctx.result || {}).match(/-?\d+(\.\d+)?/g) || []).map(Number);
+    const near = (a, b) => Math.abs(a - b) < 0.005;
+    const missing = numeric.filter((n) => {
+      return !pool.some((v) => near(v, n));
+    });
+    return {
+      ok: missing.length === 0,
+      missing: missing.map((n) => n.toFixed(2)),
+      cited: answer.citations.length > 0,
+      reason: missing.length ? "数字未在评测结果中找到：" + missing.map((n) => n.toFixed(2)).join("、") : "ok",
+    };
+  }
+
+  /* ---------------- 会话 ---------------- */
+
+  /* ---------------- OpenTelemetry 结构（gen_ai.* 语义约定子集） ---------------- */
+
+  const NODE_OP = {
+    understand: "agent.intent",
+    plan: "agent.plan",
+    execute: "execute_tool",
+    compose: "agent.compose",
+    verify: "agent.verify",
+    fallback: "agent.fallback",
+  };
+
+  function hexId(len) {
+    let out = "";
+    while (out.length < len) out += Math.floor(Math.random() * 0xffffffff).toString(16).padStart(8, "0");
+    return out.slice(0, len);
+  }
+
+  function toNanos(ms) {
+    return Math.max(0, Math.round(ms * 1e6));
+  }
+
+  /* 把一次问答转成 OTel span 树：根 span 是 invoke_agent，子 span 是各节点 */
+  function buildOtel(trace, startedAt, meta) {
+    const traceId = hexId(32);
+    const rootId = hexId(16);
+    const spans = [];
+    const base = startedAt;
+
+    spans.push({
+      traceId, spanId: rootId, parentSpanId: null,
+      name: "invoke_agent",
+      kind: "INTERNAL",
+      startTimeUnixNano: toNanos(base),
+      endTimeUnixNano: toNanos(base + trace.reduce((sum, n) => sum + (n.ms || 0), 0)),
+      attributes: {
+        "gen_ai.operation.name": "invoke_agent",
+        "gen_ai.agent.name": "shuzhi-advisor",
+        "gen_ai.agent.version": "1.0.0",
+        "shuzhi.profile": meta.profileName || "",
+        "shuzhi.intent": meta.intent || "",
+        "shuzhi.tools": (meta.tools || []).join(","),
+        "shuzhi.citations": meta.citations || 0,
+        "shuzhi.verified": Boolean(meta.verified),
+      },
+      status: { code: meta.verified && meta.verified.ok ? "OK" : "ERROR" },
+    });
+
+    let cursor = base;
+    trace.forEach((node) => {
+      const start = cursor;
+      cursor += node.ms || 0;
+      spans.push({
+        traceId, spanId: hexId(16), parentSpanId: rootId,
+        name: NODE_OP[node.id] || node.id,
+        kind: "INTERNAL",
+        startTimeUnixNano: toNanos(start),
+        endTimeUnixNano: toNanos(start + (node.ms || 0)),
+        attributes: {
+          "gen_ai.operation.name": NODE_OP[node.id] || node.id,
+          "shuzhi.node.label": node.label,
+          "shuzhi.node.status": node.status,
+        },
+        status: { code: node.status === "error" ? "ERROR" : "OK" },
+      });
+    });
+
+    return {
+      resourceSpans: [{
+        resource: { attributes: [{ key: "service.name", value: { stringValue: "shuzhi-advisor-web" } }] },
+        scopeSpans: [{ scope: { name: "shuzhi.agent", version: "1.0.0" }, spans }],
+      }],
+    };
+  }
+
+  function createSession(profileName) {
+    return {
+      id: "s" + Date.now().toString(36),
+      profileName: profileName || "",
+      turns: [],
+      last: null,
+      lastQuery: "",
+    };
+  }
+
+  async function ask(question, ctx, onEvent) {
+    const text = String(question || "").trim();
+    const session = ctx.session;
+    const started = performance.now();
+
+    const nodes = [
+      {
+        id: "understand", label: "识别意图",
+        run: (c) => {
+          const { intent, match } = matchIntent(text);
+          let resolved = intent;
+          let inherited = false;
+          // 省略式追问沿用上一轮意图：那…呢 / 这个呢 / 广东的呢（短句 + 呢）
+          const isFollowUp = /^(那|这|它|还有|再)/.test(text)
+            || (text.length <= 12 && /呢[？?]?$/.test(text));
+          if (resolved === "unknown" && isFollowUp
+            && session.last && session.last.intent && session.last.intent !== "unknown") {
+            resolved = session.last.intent;
+            inherited = true;
+          }
+          c.intent = resolved;
+          c.match = match;
+          c.inherited = inherited;
+          return { intent: resolved, inherited };
+        },
+      },
+      {
+        id: "plan", label: "编排工具计划",
+        run: async (c) => {
+          const wanted = (c.options && c.options.planner) || "rules";
+          const strategy = window.AdvisorPlanner ? window.AdvisorPlanner.get(wanted) : null;
+          let calls = null;
+          let used = "rules";
+          let note = "";
+          if (strategy) {
+            try {
+              calls = await strategy(c.intent, text, session, c.options || {});
+              used = wanted;
+            } catch (error) {
+              note = String(error.message || error);
+              calls = null;
+            }
+          }
+          // 契约校验：工具必须已注册、args 必须是对象；不过就回落规则
+          const check = window.AdvisorPlanner ? window.AdvisorPlanner.validate(calls) : { ok: true };
+          if (!calls || !check.ok) {
+            if (!note && !check.ok) note = check.reason;
+            calls = plan(c.intent, text, session);
+            used = used === "rules" ? "rules" : "rules(fallback)";
+          }
+          c.plan = calls;
+          c.plannerUsed = used;
+          c.plannerNote = note;
+          return calls;
+        },
+      },
+      {
+        id: "execute", label: "执行工具",
+        when: (c) => (c.plan || []).length > 0,
+        run: async (c) => {
+          const outputs = [];
+          let pool = "";
+          for (const call of c.plan) {
+            const out = await window.AdvisorTools.run(call.tool, {
+              result: c.result,
+              sample: c.sample,
+              criteria: c.criteria,
+              sampleName: session.profileName,
+              query: (call.args && call.args.query) || text,
+            }, call.args);
+            if (out.pool) pool += JSON.stringify(out.pool);
+            outputs.push(out);
+          }
+          c.outputs = outputs;
+          c.poolExtra = pool;
+          return outputs.map((o) => o.tool);
+        },
+      },
+      {
+        id: "compose", label: "组织回答",
+        run: (c) => {
+          c.answer = compose({ ...c, outputs: c.outputs || [], session });
+          return Boolean(c.answer);
+        },
+      },
+      {
+        id: "verify", label: "自检数字与引用",
+        run: (c) => {
+          // 句级核验是唯一实现：数字可追溯 + 每句有字段或引用来源
+          if (window.AdvisorClaims) {
+            c.claims = window.AdvisorClaims.verify(c.answer, c.result, c.poolExtra);
+            c.verifyResult = {
+              ok: c.claims.unverified.length === 0,
+              missing: c.claims.unverified,
+              cited: c.claims.verified > 0,
+              reason: c.claims.unverified.length ? "存在未核验句" : "ok",
+            };
+          } else {
+            c.verifyResult = verify(c);
+          }
+          return c.verifyResult;
+        },
+      },
+      {
+        id: "fallback", label: "长尾兜底",
+        when: (c) => !c.answer || (c.intent === "unknown" && !(c.answer && c.answer.citations.length)),
+        optional: true,
+        run: async (c) => {
+          const searchSafe = async (kind) => {
+            try {
+              return await window.AdvisorKB.search(kind, text, { k: 2, minScore: 0.8 });
+            } catch (error) {
+              return [];
+            }
+          };
+          const [policies, cases, publicCases] = await Promise.all([
+            searchSafe("policy"), searchSafe("cases"), searchSafe("public_cases"),
+          ]);
+          const citations = [
+            ...policies.map(({ doc }) => ({ kind: "政策", ref: doc.id, title: doc.title, quote: doc.text, doc: doc.issuer || "政策库", url: doc.url || "" })),
+            ...cases.map(({ doc }) => ({ kind: "案例", ref: doc.id, title: doc.title, quote: doc.text, doc: doc.industry || "案例库", url: "" })),
+            ...publicCases.map(({ doc }) => ({ kind: "公开案例复现", ref: doc.id, title: doc.title, quote: doc.text, doc: doc.industry || "公开案例复现", url: doc.url || "" })),
+          ];
+          c.answer = {
+            intent: "fallback",
+            blocks: [
+              { type: "p", src: "opener", text: citations.length
+                ? "这个问题不在我的判据范围内，先把库里相关的原文给你，别当成结论用："
+                : "这个问题超出我的判据范围：我只回答本企业的等级、缺口、改造顺序、投入产出与政策案例。要不要换个问法？" },
+              ...(citations.length ? [{ type: "list", src: "tool:policy", items: citations.slice(0, 4).map((cit) => ({
+                title: `${cit.kind}｜${cit.title}`, body: cit.quote,
+              })) }] : []),
+            ],
+            citations,
+            suggested: ["我现在是什么等级？", "还差多少分到 3 级？", "先改哪一步？"],
+            fallback: true,
+          };
+          c.verifyResult = { ok: true, cited: citations.length > 0, reason: "fallback" };
+          return citations.length;
+        },
+      },
+    ];
+
+    const state = { ...ctx, session };
+    const { trace } = await window.AdvisorGraph.run(nodes, state, onEvent);
+    const planner = { used: state.plannerUsed || "rules", note: state.plannerNote || "" };
+
+    const ms = Math.round(performance.now() - started);
+
+    // 记住上下文，供下一轮指代（"那第二步呢""为什么要改这个"）
+    const plan0 = (state.plan && state.plan[0]) || {};
+    session.turns.push({ q: text, intent: state.intent, ms });
+    session.last = {
+      intent: state.intent,
+      tool: plan0.tool || null,
+      step: plan0.tool === "step" ? (plan0.args && plan0.args.index) : (session.last && session.last.step) || null,
+      scenario: plan0.tool === "scenario" ? (plan0.args && plan0.args.id) : (session.last && session.last.scenario) || null,
+    };
+    session.lastQuery = text;
+
+    const answer = state.answer;
+    const tools = (state.outputs || []).map((o) => o.tool);
+    const claims = state.claims
+      || (window.AdvisorClaims ? window.AdvisorClaims.verify(answer, state.result, state.poolExtra) : null);
+    return {
+      answer,
+      claims,
+      trace,
+      planner,
+      ms,
+      intent: state.intent,
+      verified: state.verifyResult,
+      tools,
+      otel: buildOtel(trace, started, {
+        profileName: session.profileName,
+        intent: state.intent,
+        tools,
+        citations: (answer && answer.citations.length) || 0,
+        verified: state.verifyResult,
+      }),
+    };
+  }
+
+  window.AdvisorAgent = { ask, createSession, matchIntent, parseStepIndex, parseScenario };
+})();
