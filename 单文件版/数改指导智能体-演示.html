@@ -5,7 +5,7 @@
 <script>document.documentElement.className="js";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>数改指导智能体 · 中小企业数字化水平评测</title>
-<meta name="description" content="依据工信厅企业〔2024〕56 号《中小企业数字化水平评测指标（2024 年版）》，输出可回查的诊断、改造路径与投入产出排序。">
+<meta name="description" content="依据当前公开正式评测指标，并结合《中小企业数字化赋能专项行动方案（2025—2027年）》等最新政策，输出可回查的诊断与改造路径。">
 <meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1916'/%3E%3Ctext x='16' y='23' font-size='17' text-anchor='middle' fill='%23fbfaf7' font-family='serif'%3E数%3C/text%3E%3C/svg%3E">
@@ -3220,7 +3220,7 @@ html[data-effects="reduced"] *, html[data-effects="reduced"] *::before, html[dat
       <div class="hero-trust hero-facts" aria-label="评测工具概要">
         <div class="hero-fact"><strong>15<em>项</em></strong><span>评测指标</span></div>
         <div class="hero-fact"><strong>16<em>个</em></strong><span>业务场景</span></div>
-        <div class="hero-fact"><strong>2024<em>年版</em></strong><span>指标依据</span></div>
+        <div class="hero-fact"><strong>当前</strong><span>正式指标依据</span></div>
       </div>
     </div>
     <div class="hero-scroll" aria-hidden="true"><span>Next · 请往下滑</span><i></i></div>
@@ -3357,7 +3357,7 @@ html[data-effects="reduced"] *, html[data-effects="reduced"] *::before, html[dat
 
 <footer class="footer">
   <div class="footer-inner">
-    <p><strong>判据基准</strong>：工业和信息化部办公厅《中小企业数字化水平评测指标（2024 年版）》（工信厅企业〔2024〕56 号）附件（一）数字化基础、管理及成效评测表、附件（二）数字化经营应用场景等级判定表。</p>
+    <p><strong>指标依据</strong>：评分采用当前公开的正式评测指标（现行版本为《中小企业数字化水平评测指标（2024 年版）》）；同时参考《中小企业数字化赋能专项行动方案（2025—2027年）》等最新政策进行解释，最新政策不直接改变评分公式。</p>
     <p style="margin-top:10px"><strong>计算与说明</strong>：总分、等级与场景门槛由前端规则计算，并用 6 份预计算样本逐项校验。官方文件没有明确规定的部分，以及工具自行补充的「不建议做」判据，都会在报告中说明来源与适用范围。</p>
     <div class="footer-meta">
       <span>演示用途</span>
@@ -4596,7 +4596,7 @@ html[data-effects="reduced"] *, html[data-effects="reduced"] *::before, html[dat
         { label: "数据质量", value: `依据 ${refs.length} 条，其中官方原文 ${official} 条；官方口径逐字转写，可用 tools/check_official_doc.py 回查` },
         { label: "原始数据", value: raw || "—" },
         { label: "处理方法", value: basis || entry.basis_kind || "—" },
-        { label: "判据版本", value: "《中小企业数字化水平评测指标（2024 年版）》工信厅企业〔2024〕56 号" },
+        { label: "指标依据", value: "当前公开正式指标（现行版本：2024 年版）；最新政策用于解释，不改变评分公式" },
       ],
     };
   }

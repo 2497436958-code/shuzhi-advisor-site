@@ -942,7 +942,7 @@
         { label: "数据质量", value: `依据 ${refs.length} 条，其中官方原文 ${official} 条；官方口径逐字转写，可用 tools/check_official_doc.py 回查` },
         { label: "原始数据", value: raw || "—" },
         { label: "处理方法", value: basis || entry.basis_kind || "—" },
-        { label: "判据版本", value: "《中小企业数字化水平评测指标（2024 年版）》工信厅企业〔2024〕56 号" },
+        { label: "指标依据", value: "当前公开正式指标（现行版本：2024 年版）；最新政策用于解释，不改变评分公式" },
       ],
     };
   }
