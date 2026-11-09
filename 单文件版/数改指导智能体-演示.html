@@ -3103,6 +3103,21 @@ html.js .signal-preview-image:not(.is-current):not(.is-next) {
 html[data-input="touch"] :is(button, .topnav a, input, select) { min-height: 44px; }
 
 .nav-toggle { display:none; }
+
+/* 首屏评分说明在窄屏保持单行，随可用宽度收缩字号而不折行。 */
+.hero .eyebrow {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  font-size: clamp(10px, 3.1vw, 16px);
+  line-height: 1.2;
+  letter-spacing: clamp(0, .08vw, .07em);
+}
+.hero .eyebrow-year { font-size: clamp(13px, 4vw, 20px); flex: 0 0 auto; }
+.hero .eyebrow-divider { flex: 0 0 clamp(12px, 5vw, 30px); }
+@media (max-width: 420px) {
+  .hero .eyebrow { gap: clamp(6px, 2vw, 9px); font-size: clamp(8px, 2.8vw, 11px); }
+  .hero .eyebrow-year { font-size: clamp(11px, 3.8vw, 15px); }
+}
 @media (max-width: 900px) {
   .nav-toggle { display:grid; place-items:center; gap:5px; width:44px; height:44px; margin-left:auto; border:0; border-radius:0; background:transparent; color:inherit; cursor:pointer; }
   .nav-toggle span { display:block; width:18px; height:1.5px; background:currentColor; transform-origin:center; }
